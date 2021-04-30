@@ -1,4 +1,4 @@
-namespace PrometheusWeb.Data
+namespace PrometheusWeb.Data.Models
 {
     using System;
     using System.Collections.Generic;
@@ -6,17 +6,15 @@ namespace PrometheusWeb.Data
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("Enrollment")]
-    public partial class Enrollment
+    public partial class Teach
     {
-        public int EnrollmentID { get; set; }
+        [Key]
+        public int TeacherCourseID { get; set; }
 
-        public int? StudentID { get; set; }
+        public int? TeacherID { get; set; }
 
         public int? CourseID { get; set; }
 
         public virtual Course Course { get; set; }
-
-        public virtual Student Student { get; set; }
     }
 }

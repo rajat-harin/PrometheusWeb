@@ -1,4 +1,4 @@
-namespace PrometheusWeb.Data
+namespace PrometheusWeb.Data.Models
 {
     using System;
     using System.Collections.Generic;
