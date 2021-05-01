@@ -1,4 +1,4 @@
-namespace PrometheusWeb.Data.Models
+namespace PrometheusWeb.Data.DataModels
 {
     using System;
     using System.Collections.Generic;
@@ -28,6 +28,7 @@ namespace PrometheusWeb.Data.Models
         [Column(TypeName = "date")]
         public DateTime? EndDate { get; set; }
 
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Assignment> Assignments { get; set; }
 
@@ -36,5 +37,7 @@ namespace PrometheusWeb.Data.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Teach> Teaches { get; set; }
+
+        
     }
 }

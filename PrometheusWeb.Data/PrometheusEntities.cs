@@ -1,4 +1,4 @@
-using PrometheusWeb.Data.Models;
+using PrometheusWeb.Data.DataModels;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;

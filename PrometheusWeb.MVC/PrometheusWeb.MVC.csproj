@@ -147,6 +147,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModels\AssignedHomework.cs" />
+    <Compile Include="Models\ViewModels\EnrolledCourse.cs" />
+    <Compile Include="Models\ViewModels\ExtendedHomeworkPlan.cs" />
+    <Compile Include="Models\ViewModels\SelectedCourse.cs" />
+    <Compile Include="Models\ViewModels\TeacherCourses.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -185,11 +190,12 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Student\MyCourses.cshtml" />
     <Content Include="Views\Student\Index.cshtml" />
+    <Content Include="Views\Student\ViewCourses.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -212,6 +218,10 @@
     <ProjectReference Include="..\PrometheusWeb.Data\PrometheusWeb.Data.csproj">
       <Project>{c0bd8152-7652-443b-af37-d24885ac120f}</Project>
       <Name>PrometheusWeb.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PrometheusWeb.Utilities\PrometheusWeb.Utilities.csproj">
+      <Project>{11d563aa-dd2a-47c4-b660-fa1348242f4b}</Project>
+      <Name>PrometheusWeb.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

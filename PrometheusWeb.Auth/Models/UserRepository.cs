@@ -1,5 +1,5 @@
 ﻿using PrometheusWeb.Data;
-using PrometheusWeb.Data.Models;
+using PrometheusWeb.Data.DataModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

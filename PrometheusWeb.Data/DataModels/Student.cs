@@ -1,4 +1,4 @@
-namespace PrometheusWeb.Data
+namespace PrometheusWeb.Data.DataModels
 {
     using System;
     using System.Collections.Generic;
@@ -6,16 +6,16 @@ namespace PrometheusWeb.Data
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("Teacher")]
-    public partial class Teacher
+    [Table("Student")]
+    public partial class Student
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Teacher()
+        public Student()
         {
-            Assignments = new HashSet<Assignment>();
+            Enrollments = new HashSet<Enrollment>();
         }
 
-        public int TeacherID { get; set; }
+        public int StudentID { get; set; }
 
         [StringLength(30)]
         public string FName { get; set; }
@@ -37,11 +37,11 @@ namespace PrometheusWeb.Data
         [StringLength(13)]
         public string MobileNo { get; set; }
 
-        public bool? IsAdmin { get; set; }
-
+   
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Assignment> Assignments { get; set; }
+        public virtual ICollection<Enrollment> Enrollments { get; set; }
 
         public virtual User User { get; set; }
+       
     }
 }
