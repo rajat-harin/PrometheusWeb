@@ -215,6 +215,70 @@ namespace PrometheusWeb.MVC.Controllers
         }
 
         //
+        // GET: /Account/RegisterTeacher
+        [AllowAnonymous]
+        public ActionResult RegisterTeacher()
+        {
+            return View();
+        }
+
+        // GET: /Account/RegisterStudent
+        [AllowAnonymous]
+        public ActionResult RegisterStudent()
+        {
+            return View();
+        }
+
+        //
+        // POST: /Account/RegisterTeacher
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisterTeacher(RegisterViewModelTeacher model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser() { UserName = model.UserID };
+                var result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    AddErrors(result);
+                }
+            }
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        // POST: /Account/RegisterStudent
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisterStudent(RegisterViewModelStudent model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser() { UserName = model.UserID };
+                var result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    AddErrors(result);
+                }
+            }
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
