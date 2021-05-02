@@ -1,6 +1,4 @@
 ﻿using Newtonsoft.Json;
-using PrometheusWeb.Data;
-using PrometheusWeb.Data.DataModels;
 using PrometheusWeb.Data.UserModels;
 using PrometheusWeb.MVC.Models.ViewModels;
 using System;
@@ -17,40 +15,14 @@ namespace PrometheusWeb.MVC.Controllers
     public class StudentController : Controller
     {
         //Hosted web API REST Service base url  
-        string Baseurl = "https://localhost:44375/";
+        string BaseURL = "https://localhost:44375/";
         // GET: Student
-        
+
         public async Task<ActionResult> Index()
         {
-            List<Student> EmpInfo = new List<Student>();
 
-            using (var client = new HttpClient())
-            {
-                //Passing service base url  
-                client.BaseAddress = new Uri(Baseurl);
-
-                client.DefaultRequestHeaders.Clear();
-                //Define request data format  
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                //Sending request to find web api REST service resource GetAllEmployees using HttpClient  
-                HttpResponseMessage Res = await client.GetAsync("api/Students/");
-
-                //Checking the response is successful or not which is sent using HttpClient  
-                if (Res.IsSuccessStatusCode)
-                {
-                    //Storing the response details recieved from web api   
-                    var StuResponse = Res.Content.ReadAsStringAsync().Result;
-
-                    //Deserializing the response recieved from web api and storing into the Employee list  
-                    EmpInfo = JsonConvert.DeserializeObject<List<Student>>(StuResponse);
-
-                }
-                //returning the employee list to view  
-                return View(EmpInfo);
-            }
+            return View();
         }
-
         // GET: Student/MyCourses
         public async Task<ActionResult> MyCourses(int id = 1)  //@TODO: change default to 0 after auth
         {
@@ -60,7 +32,7 @@ namespace PrometheusWeb.MVC.Controllers
             using (var client = new HttpClient())
             {
                 //Passing service base url  
-                client.BaseAddress = new Uri(Baseurl);
+                client.BaseAddress = new Uri(BaseURL);
 
                 client.DefaultRequestHeaders.Clear();
                 //Define request data format  
@@ -120,7 +92,7 @@ namespace PrometheusWeb.MVC.Controllers
             using (var client = new HttpClient())
             {
                 //Passing service base url  
-                client.BaseAddress = new Uri(Baseurl);
+                client.BaseAddress = new Uri(BaseURL);
 
                 client.DefaultRequestHeaders.Clear();
                 //Define request data format  
@@ -128,14 +100,14 @@ namespace PrometheusWeb.MVC.Controllers
 
                 //Sending request to find web api REST service resource Get:Courses & Get:Enrollemnts using HttpClient  
                 HttpResponseMessage ResFromCourses = await client.GetAsync("api/Courses/");
-                
+
 
                 //Checking the response is successful or not which is sent using HttpClient  
                 if (ResFromCourses.IsSuccessStatusCode)
                 {
                     //Storing the response details recieved from web api   
                     var courseResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
-                    
+
 
                     //Deserializing the response recieved from web api and storing into the list  
                     courses = JsonConvert.DeserializeObject<List<CourseUserModel>>(courseResponse);
@@ -145,6 +117,5 @@ namespace PrometheusWeb.MVC.Controllers
                 return View(courses);
             }
         }
-
     }
 }

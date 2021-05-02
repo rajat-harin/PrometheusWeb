@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrometheusWeb.MVC", "PrometheusWeb.MVC\PrometheusWeb.MVC.csproj", "{F42EABDF-2254-483F-9007-FBDA773A8F45}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrometheusWeb.Auth", "PrometheusWeb.Auth\PrometheusWeb.Auth.csproj", "{D05134E1-77F0-4CA6-B43C-56644D16443E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrometheusWeb.Data", "PrometheusWeb.Data\PrometheusWeb.Data.csproj", "{C0BD8152-7652-443B-AF37-D24885AC120F}"
@@ -13,16 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrometheusWeb.Services", "P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrometheusWeb.Utilities", "PrometheusWeb.Utilities\PrometheusWeb.Utilities.csproj", "{11D563AA-DD2A-47C4-B660-FA1348242F4B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrometheusWeb.MVC", "PrometheusWeb.MVC\PrometheusWeb.MVC.csproj", "{0A944A51-B1AB-4CB0-9C91-2ABC199CE297}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F42EABDF-2254-483F-9007-FBDA773A8F45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F42EABDF-2254-483F-9007-FBDA773A8F45}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F42EABDF-2254-483F-9007-FBDA773A8F45}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F42EABDF-2254-483F-9007-FBDA773A8F45}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D05134E1-77F0-4CA6-B43C-56644D16443E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D05134E1-77F0-4CA6-B43C-56644D16443E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D05134E1-77F0-4CA6-B43C-56644D16443E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +35,10 @@ Global
 		{11D563AA-DD2A-47C4-B660-FA1348242F4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11D563AA-DD2A-47C4-B660-FA1348242F4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11D563AA-DD2A-47C4-B660-FA1348242F4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A944A51-B1AB-4CB0-9C91-2ABC199CE297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A944A51-B1AB-4CB0-9C91-2ABC199CE297}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A944A51-B1AB-4CB0-9C91-2ABC199CE297}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A944A51-B1AB-4CB0-9C91-2ABC199CE297}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
