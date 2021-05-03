@@ -125,6 +125,10 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PrometheusWeb.Auth\PrometheusWeb.Auth.csproj">
+      <Project>{d05134e1-77f0-4ca6-b43c-56644d16443e}</Project>
+      <Name>PrometheusWeb.Auth</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PrometheusWeb.Data\PrometheusWeb.Data.csproj">
       <Project>{c0bd8152-7652-443b-af37-d24885ac120f}</Project>
       <Name>PrometheusWeb.Data</Name>
@@ -167,7 +171,7 @@
     </ItemGroup>
     <MakeDir Directories="$(WebProjectOutputDir)\bin\roslyn" />
     <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(WebProjectOutputDir)\bin\roslyn" SkipUnchangedFiles="true" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
-</Target>
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

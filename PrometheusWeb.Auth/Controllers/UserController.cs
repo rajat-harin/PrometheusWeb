@@ -33,7 +33,7 @@ namespace PrometheusWeb.Auth.Controllers
         }
 
         // This resource can be accessible only for admin.
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Student")]
         [HttpGet]
         [Route("api/user/admin")]
         public IHttpActionResult ResourceAdmin()

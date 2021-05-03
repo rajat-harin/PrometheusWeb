@@ -70,7 +70,7 @@ namespace PrometheusWeb.MVC.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        /* public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        /* public async Task<ActionResult> Login(LoginModel model, string returnUrl)
          {
              if (!ModelState.IsValid)
              {
@@ -79,7 +79,7 @@ namespace PrometheusWeb.MVC.Controllers
 
              // This doesn't count login failures towards account lockout
              // To enable password failures to trigger account lockout, change to shouldLockout: true
-             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+             var result = await SignInManager.PasswordSignInAsync(model.UserID, model.Password, model.RememberMe, false);
              switch (result)
              {
                  case SignInStatus.Success:
@@ -96,6 +96,10 @@ namespace PrometheusWeb.MVC.Controllers
          }*/
         public ActionResult Login(LoginModel model, string returnUrl)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
             var getTokenUrl = string.Format("https://localhost:44382/token");
 
             using (HttpClient httpClient = new HttpClient())
@@ -110,28 +114,36 @@ namespace PrometheusWeb.MVC.Controllers
                 HttpResponseMessage result = httpClient.PostAsync(getTokenUrl, content).Result;
 
                 string resultContent = result.Content.ReadAsStringAsync().Result;
-
-                var token = JsonConvert.DeserializeObject<Token>(resultContent);
-
-                AuthenticationProperties options = new AuthenticationProperties();
-
-                options.AllowRefresh = true;
-                options.IsPersistent = true;
-                options.ExpiresUtc = DateTime.UtcNow.AddSeconds(token.ExpiresIn);
-
-                var claims = new[]
+                if (result.IsSuccessStatusCode)
                 {
+                    var token = JsonConvert.DeserializeObject<Token>(resultContent);
+
+                    AuthenticationProperties options = new AuthenticationProperties();
+
+                    options.AllowRefresh = true;
+                    options.IsPersistent = true;
+                    options.ExpiresUtc = DateTime.UtcNow.AddSeconds(token.ExpiresIn);
+
+                    var claims = new[]
+                    {
                     new Claim(ClaimTypes.Name, model.UserID),
                     new Claim("AcessToken", string.Format("Bearer {0}", token.AccessToken)),
                 };
 
-                var identity = new ClaimsIdentity(claims, "ApplicationCookie");
+                    var identity = new ClaimsIdentity(claims, "ApplicationCookie");
 
-                Request.GetOwinContext().Authentication.SignIn(options, identity);
+                    Request.GetOwinContext().Authentication.SignIn(options, identity);
 
+
+
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Invalid Login Attempt");
+                    return View("Login", model);
+                }
             }
-
-            return RedirectToAction("Index", "Home");
         }
         //
         // GET: /Account/VerifyCode

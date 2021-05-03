@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using PrometheusWeb.Utilities.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +7,13 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PrometheusWeb.Utilities
+namespace ToeknManager
 {
-    public class TokenManager
+    public class ClsTokenMgr
     {
         private static string Username = string.Empty;
         private static string Password = string.Empty;
-        private static string baseAddress = "https://localhost:44382/token";
+        private static string baseAddress = "http://localhost:44382/";
 
         public static Token GetAccessToken(string username, string password)
         {
@@ -27,7 +26,7 @@ namespace PrometheusWeb.Utilities
                 {"username", username},
                 {"password", password},
                 };
-            var tokenResponse = client.PostAsync(baseAddress, new FormUrlEncodedContent(RequestBody)).Result;
+            var tokenResponse = client.PostAsync(baseAddress + "token", new FormUrlEncodedContent(RequestBody)).Result;
 
             if (tokenResponse.IsSuccessStatusCode)
             {
@@ -42,7 +41,7 @@ namespace PrometheusWeb.Utilities
             return token;
         }
 
-        public static void CallAPIResource(string AccessToken)
+        protected static void CallAPIResource(string AccessToken)
         {
             HttpClientHandler handler = new HttpClientHandler();
             HttpClient client = new HttpClient(handler);
@@ -53,7 +52,7 @@ namespace PrometheusWeb.Utilities
                 {"Parameter1", "value1"},
                 {"Parameter2", "vakue2"},
                 };
-            var APIResponse = client.PostAsync(baseAddress + "api/Courses", new FormUrlEncodedContent(RequestBody)).Result;
+            var APIResponse = client.PostAsync(baseAddress + "api/test/method1", new FormUrlEncodedContent(RequestBody)).Result;
 
             if (APIResponse.IsSuccessStatusCode)
             {
@@ -68,3 +67,4 @@ namespace PrometheusWeb.Utilities
         }
     }
 }
+

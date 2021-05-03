@@ -21,6 +21,7 @@ namespace PrometheusWeb.Services.Controllers
         // GET: api/Courses
         public IQueryable<CourseUserModel> GetCourses()
         {
+
             return db.Courses.Select(item => new CourseUserModel
             {
                 CourseID = item.CourseID,
