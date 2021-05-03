@@ -54,6 +54,7 @@
     <Compile Include="DataModels\Course.cs" />
     <Compile Include="DataModels\Enrollment.cs" />
     <Compile Include="DataModels\Homework.cs" />
+    <Compile Include="IPrometheusEntities.cs" />
     <Compile Include="PrometheusEntities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataModels\Student.cs" />
