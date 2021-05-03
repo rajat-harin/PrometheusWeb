@@ -10,6 +10,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using PrometheusWeb.Data;
 using PrometheusWeb.Data.DataModels;
+using PrometheusWeb.Data.UserModels;
 
 namespace PrometheusWeb.Services.Controllers
 {
@@ -17,15 +18,29 @@ namespace PrometheusWeb.Services.Controllers
     {
         private PrometheusEntities db = new PrometheusEntities();
 
-        // GET: api/Students
-        public IQueryable<Student> GetStudents()
+        // GET: api/Students -- not showing the list hence changed to below function
+        /*public IQueryable<Student> GetStudents()
         {
             IQueryable<Student> students = db.Students;
             return students;
+        }*/
+        public IQueryable<StudentUserModel> GetStudents()
+        {
+            return db.Students.Select(item => new StudentUserModel
+            {
+                StudentID = item.StudentID,
+                FName = item.FName,
+                LName = item.LName,
+                Address = item.Address,
+                City = item.City,
+                MobileNo = item.MobileNo,
+                DOB = item.DOB
+            });
         }
 
-        // GET: api/Students/5
-        [ResponseType(typeof(Student))]
+
+            // GET: api/Students/5
+            [ResponseType(typeof(Student))]
         public IHttpActionResult GetStudent(int id)
         {
             Student student = db.Students.Find(id);
