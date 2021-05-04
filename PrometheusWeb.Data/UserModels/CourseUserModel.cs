@@ -1,7 +1,9 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PrometheusWeb.Data.UserModels
 {
+    [Table("Course")]
     public class CourseUserModel
     {
         public int CourseID { get; set; }

@@ -27,7 +27,7 @@ namespace PrometheusWeb.Services.Controllers
                 Name = item.Name,
                 StartDate = item.StartDate,
                 EndDate = item.EndDate
-            }) ;
+            });
         }
 
         // GET: api/Courses/5

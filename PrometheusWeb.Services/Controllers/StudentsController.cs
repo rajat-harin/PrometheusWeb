@@ -10,6 +10,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using PrometheusWeb.Data;
 using PrometheusWeb.Data.DataModels;
+using PrometheusWeb.Data.UserModels;
 
 namespace PrometheusWeb.Services.Controllers
 {
@@ -18,29 +19,59 @@ namespace PrometheusWeb.Services.Controllers
         private PrometheusEntities db = new PrometheusEntities();
 
         // GET: api/Students
-        public IQueryable<Student> GetStudents()
+        public IQueryable<StudentUserModel> GetStudents()
         {
-            IQueryable<Student> students = db.Students;
-            return students;
+            return db.Students.Select(item => new StudentUserModel
+            {
+                StudentID = item.StudentID,
+                FName = item.FName,
+                LName = item.LName,
+                UserID = item.UserID,
+                DOB = item.DOB,
+                Address = item.Address,
+                City = item.City,
+                MobileNo = item.MobileNo
+            });
         }
 
         // GET: api/Students/5
         [ResponseType(typeof(Student))]
-        public IHttpActionResult GetStudent(int id)
+        public IHttpActionResult GetStudent(string id)
         {
             Student student = db.Students.Find(id);
             if (student == null)
             {
                 return NotFound();
             }
-
+            StudentUserModel studentUser = new StudentUserModel
+            {
+                StudentID = student.StudentID,
+                FName = student.FName,
+                LName = student.LName,
+                UserID = student.UserID,
+                DOB = student.DOB,
+                Address = student.Address,
+                City = student.City,
+                MobileNo = student.MobileNo
+            };
             return Ok(student);
         }
 
         // PUT: api/Students/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutStudent(int id, Student student)
+        public IHttpActionResult PutStudent(int id, StudentUserModel studentModel)
         {
+            Student student = new Student
+            {
+                StudentID = studentModel.StudentID,
+                FName = studentModel.FName,
+                LName = studentModel.LName,
+                UserID = studentModel.UserID,
+                DOB = studentModel.DOB,
+                Address = studentModel.Address,
+                City = studentModel.City,
+                MobileNo = studentModel.MobileNo
+            };
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -74,8 +105,19 @@ namespace PrometheusWeb.Services.Controllers
 
         // POST: api/Students
         [ResponseType(typeof(Student))]
-        public IHttpActionResult PostStudent(Student student)
+        public IHttpActionResult PostStudent(StudentUserModel studentModel)
         {
+            Student student = new Student
+            {
+                StudentID = studentModel.StudentID,
+                FName = studentModel.FName,
+                LName = studentModel.LName,
+                UserID = studentModel.UserID,
+                DOB = studentModel.DOB,
+                Address = studentModel.Address,
+                City = studentModel.City,
+                MobileNo = studentModel.MobileNo
+            };
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

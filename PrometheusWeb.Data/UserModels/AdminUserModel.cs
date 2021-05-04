@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace PrometheusWeb.MVC.Models.ViewModels
+namespace PrometheusWeb.Data.UserModels
 {
-    public class UserViewModel
+    public class AdminUserModel
     {
+
         public int StudentID { get; set; }
         public string FName { get; set; }
         public string LName { get; set; }
