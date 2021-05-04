@@ -13,7 +13,7 @@ using PrometheusWeb.Data.DataModels;
 
 namespace PrometheusWeb.Services.Controllers
 {
-    public class AssignmentsController : ApiController
+    public class AssignmentsController : ApiController, IAssignmentsController
     {
         private PrometheusEntities db = new PrometheusEntities();
 

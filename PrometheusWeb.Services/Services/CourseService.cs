@@ -12,7 +12,11 @@ namespace PrometheusWeb.Services.Services
 {
     public class CourseService : ICourseService
     {
-        private PrometheusEntities db = new PrometheusEntities();
+        private PrometheusEntities db = null;
+        public CourseService()
+        {
+            db = new PrometheusEntities();
+        }
         public bool AddCourse(CourseUserModel courseModel)
         {
             Course course = new Course
