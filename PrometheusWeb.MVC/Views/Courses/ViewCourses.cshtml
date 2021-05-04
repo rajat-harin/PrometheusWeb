@@ -45,7 +45,8 @@
             </td>
             <td>
                 <a href="@Url.Action("AddOrEditCourses", "Courses", new { id = item.CourseID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Edit</a>
-                <a onclick="Delete(@item.CourseID)" class="btn btn-default"><i class="fa fa-trash"></i>  Delete</a>
+                <a href="@Url.Action("Delete", "Courses", new { id = item.CourseID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Delete</a>
+                @*<a onclick="Delete(@item.CourseID)" class="btn btn-default"><i class="fa fa-trash"></i>  Delete</a>*@
             </td>
         </tr>
     }

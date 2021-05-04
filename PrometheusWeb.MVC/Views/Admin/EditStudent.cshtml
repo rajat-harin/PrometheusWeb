@@ -1,9 +1,7 @@
-﻿@model PrometheusWeb.Data.UserModels.AdminUserModel
+﻿@model PrometheusWeb.Data.UserModels.StudentUserModel
 @{
-    ViewBag.Title = "AddOrEditStudent";
+    ViewBag.Title = "EditStudent";
 }
-
-<h2>AddOrEditStudent</h2>
 
 <div class="form-group">
     @using (Html.BeginForm())
@@ -49,30 +47,6 @@
             @Html.LabelFor(model => model.MobileNo)
             @Html.EditorFor(model => model.MobileNo)
             @Html.ValidationMessageFor(model => model.MobileNo)
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Password)
-            @Html.EditorFor(model => model.Password)
-            @Html.ValidationMessageFor(model => model.Password)
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Role)
-            @Html.EditorFor(model => model.Role)
-            @Html.ValidationMessageFor(model => model.Role)
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.SecurityQuestion)
-            @Html.EditorFor(model => model.SecurityQuestion)
-            @Html.ValidationMessageFor(model => model.SecurityQuestion)
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.SecurityAnswer)
-            @Html.EditorFor(model => model.SecurityAnswer)
-            @Html.ValidationMessageFor(model => model.SecurityAnswer)
         </div>
 
         <div class="form-group">
