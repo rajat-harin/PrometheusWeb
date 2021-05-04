@@ -19,24 +19,15 @@ namespace PrometheusWeb.Services.Controllers
         private PrometheusEntities db = new PrometheusEntities();
 
         // GET: api/Students
-        public IQueryable<StudentUserModel> GetStudents()
+        public IQueryable<Student> GetStudents()
         {
-            return db.Students.Select(item => new StudentUserModel
-            {
-                StudentID = item.StudentID,
-                FName = item.FName,
-                LName = item.LName,
-                UserID = item.UserID,
-                DOB = item.DOB,
-                Address = item.Address,
-                City = item.City,
-                MobileNo = item.MobileNo
-            });
+            IQueryable<Student> students = db.Students;
+            return students;
         }
 
         // GET: api/Students/5
         [ResponseType(typeof(Student))]
-        public IHttpActionResult GetStudent(string id)
+        public IHttpActionResult GetStudent(int id)
         {
             Student student = db.Students.Find(id);
             if (student == null)

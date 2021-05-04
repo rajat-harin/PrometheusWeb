@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrometheusWeb.Utilities", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrometheusWeb.MVC", "PrometheusWeb.MVC\PrometheusWeb.MVC.csproj", "{0A944A51-B1AB-4CB0-9C91-2ABC199CE297}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrometheusWeb.UnitTest", "PrometheusWeb.UnitTest\PrometheusWeb.UnitTest.csproj", "{2B51712C-A2F5-4E35-BDD2-66C392092FFB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{0A944A51-B1AB-4CB0-9C91-2ABC199CE297}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A944A51-B1AB-4CB0-9C91-2ABC199CE297}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A944A51-B1AB-4CB0-9C91-2ABC199CE297}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B51712C-A2F5-4E35-BDD2-66C392092FFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B51712C-A2F5-4E35-BDD2-66C392092FFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B51712C-A2F5-4E35-BDD2-66C392092FFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B51712C-A2F5-4E35-BDD2-66C392092FFB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

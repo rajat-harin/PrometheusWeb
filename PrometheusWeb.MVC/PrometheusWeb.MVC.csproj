@@ -58,7 +58,9 @@
     <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+
     <Reference Include="System.Runtime.Serialization" />
+
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -183,6 +185,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
+    <Compile Include="Controllers\TeacherController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -259,12 +262,20 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Student\MyCourses.cshtml" />
     <Content Include="Views\Student\ViewCourses.cshtml" />
+
     <Content Include="Views\Account\RegisterTeacher.cshtml" />
     <Content Include="Views\Account\RegisterStudent.cshtml" />
     <Content Include="Views\Courses\ViewCourses.cshtml" />
     <Content Include="Views\Courses\AddOrEditCourses.cshtml" />
     <Content Include="Views\Admin\AddOrEditStudent.cshtml" />
     <Content Include="Views\Admin\ViewStudents.cshtml" />
+
+    <Content Include="Views\Student\Index.cshtml" />
+    <Content Include="Views\Teacher\MyCourses.cshtml" />
+    <Content Include="Views\Teacher\MyStudents.cshtml" />
+    <Content Include="Views\Teacher\SaveCourses.cshtml" />
+    <Content Include="Views\Teacher\ViewCourses.cshtml" />
+
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
