@@ -1,10 +1,8 @@
-using PrometheusWeb.Data;
-using PrometheusWeb.Services.Services;
 using System;
 
 using Unity;
 
-namespace PrometheusWeb.Services
+namespace PrometheusWeb.Auth
 {
     /// <summary>
     /// Specifies the Unity configuration for the main container.
@@ -44,10 +42,6 @@ namespace PrometheusWeb.Services
 
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
-
-            container.RegisterType<ICourseService, CourseService>();
-            container.RegisterType<IHomeworkService, HomeworkService>();
-
         }
     }
 }

@@ -10,61 +10,59 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using PrometheusWeb.Data;
 using PrometheusWeb.Data.DataModels;
+using PrometheusWeb.Data.UserModels;
+using PrometheusWeb.Services.Services;
 
 namespace PrometheusWeb.Services.Controllers
 {
     public class HomeworkController : ApiController
     {
-        private PrometheusEntities db = new PrometheusEntities();
+        private IHomeworkService _homeworkService = null;
+        public HomeworkController(IHomeworkService homeworkService)
+        {
+            _homeworkService = homeworkService;
+        }
 
         // GET: api/Homework
-        public IQueryable<Homework> GetHomework()
+        public IQueryable<HomeworkUserModel> GetHomeworks()
         {
-            return db.Homework;
+            return _homeworkService.GetHomeworks();
         }
 
         // GET: api/Homework/5
-        [ResponseType(typeof(Homework))]
+        [ResponseType(typeof(HomeworkUserModel))]
         public IHttpActionResult GetHomework(int id)
         {
-            Homework homework = db.Homework.Find(id);
+            HomeworkUserModel homework = _homeworkService.GetHomework(id);
             if (homework == null)
             {
                 return NotFound();
             }
-
             return Ok(homework);
         }
 
         // PUT: api/Homework/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutHomework(int id, Homework homework)
+        public IHttpActionResult PutHomework(int id, HomeworkUserModel homeworkModel)
         {
+            bool result;
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            if (id != homework.HomeWorkID)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(homework).State = EntityState.Modified;
-
             try
             {
-                db.SaveChanges();
+                result = _homeworkService.UpdateHomework(id, homeworkModel);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception)
             {
-                if (!HomeworkExists(id))
+                if (!_homeworkService.ifHomeworkExists(id))
                 {
                     return NotFound();
                 }
                 else
                 {
-                    throw;
+                    return StatusCode(HttpStatusCode.InternalServerError);
                 }
             }
 
@@ -73,62 +71,22 @@ namespace PrometheusWeb.Services.Controllers
 
         // POST: api/Homework
         [ResponseType(typeof(Homework))]
-        public IHttpActionResult PostHomework(Homework homework)
+        public IHttpActionResult PostHomework(HomeworkUserModel homeworkModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Homework.Add(homework);
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateException)
-            {
-                if (HomeworkExists(homework.HomeWorkID))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtRoute("DefaultApi", new { id = homework.HomeWorkID }, homework);
+            var result = _homeworkService.AddHomework(homeworkModel);
+            if (result)
+                return CreatedAtRoute("DefaultApi", new { id = homeworkModel.HomeWorkID }, homeworkModel);
+            else
+                return StatusCode(HttpStatusCode.InternalServerError);
         }
 
         // DELETE: api/Homework/5
         [ResponseType(typeof(Homework))]
         public IHttpActionResult DeleteHomework(int id)
         {
-            Homework homework = db.Homework.Find(id);
-            if (homework == null)
-            {
-                return NotFound();
-            }
-
-            db.Homework.Remove(homework);
-            db.SaveChanges();
+            HomeworkUserModel homework = _homeworkService.DeleteHomework(id);
 
             return Ok(homework);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool HomeworkExists(int id)
-        {
-            return db.Homework.Count(e => e.HomeWorkID == id) > 0;
         }
     }
 }
