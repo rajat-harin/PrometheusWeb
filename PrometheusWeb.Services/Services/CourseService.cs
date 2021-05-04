@@ -105,7 +105,7 @@ namespace PrometheusWeb.Services.Services
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CourseExists(id))
+                if (!IsCourseExists(id))
                 {
                     return false;
                 }
