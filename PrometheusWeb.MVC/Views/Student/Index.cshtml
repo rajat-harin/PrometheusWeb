@@ -3,5 +3,15 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
 
+<div class="container">
+    <h2>Index</h2>
+    <button class="btn btn-primary">@Html.ActionLink("Student", "Index", "Student")</button>
+    <br>
+    <button class="btn btn-primary">@Html.ActionLink("My Courses", "MyCourses", "Student")</button>
+    <br>
+    <button class="btn btn-primary">@Html.ActionLink("View Courses", "ViewCourses", "Student")</button>
+    <br>
+    <button class="btn btn-primary">@Html.ActionLink("View Homework", "GetHomeworks", "Student")</button>
+    <br>
+</div>

@@ -24,7 +24,14 @@ namespace PrometheusWeb.Services.Services
             {
                 EnrollmentID = item.EnrollmentID,
                 CourseID = item.CourseID,
-                StudentID = item.StudentID
+                StudentID = item.StudentID,
+                Course = new CourseUserModel
+                {
+                    CourseID = item.Course.CourseID,
+                    Name = item.Course.Name,
+                    StartDate = item.Course.StartDate,
+                    EndDate = item.Course.EndDate
+                }
             });
         }
         public EnrollmentUserModel GetEnrollment(int id)
@@ -38,7 +45,14 @@ namespace PrometheusWeb.Services.Services
             {
                 EnrollmentID = enrollment.EnrollmentID,
                 CourseID = enrollment.CourseID,
-                StudentID = enrollment.StudentID
+                StudentID = enrollment.StudentID,
+                Course = new CourseUserModel
+                {
+                    CourseID = enrollment.Course.CourseID,
+                    Name = enrollment.Course.Name,
+                    StartDate = enrollment.Course.StartDate,
+                    EndDate = enrollment.Course.EndDate
+                }
             };
             return enrolledUser;
         }
@@ -80,7 +94,7 @@ namespace PrometheusWeb.Services.Services
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EnrollmentExists(id))
+                if (!IsEnrollmentExists(id))
                 {
                     return false;
                 }
@@ -110,7 +124,7 @@ namespace PrometheusWeb.Services.Services
                 StudentID = enrollment.StudentID
             };
         }
-        public bool EnrollmentExists(int id)
+        public bool IsEnrollmentExists(int id)
         {
             return db.Enrollments.Count(e => e.EnrollmentID == id) > 0;
         }

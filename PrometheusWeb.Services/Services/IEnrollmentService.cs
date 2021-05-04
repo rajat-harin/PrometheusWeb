@@ -12,6 +12,6 @@ namespace PrometheusWeb.Services.Services
         IQueryable<EnrollmentUserModel> GetEnrollments();
         bool AddEnrollment(EnrollmentUserModel enrollmentModel);
         bool UpdateEnrollment(int id, EnrollmentUserModel enrollmentModel);
-        bool EnrollmentExists(int id);
+        bool IsEnrollmentExists(int id);
     }
 }

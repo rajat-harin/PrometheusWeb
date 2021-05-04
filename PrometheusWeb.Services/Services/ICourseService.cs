@@ -11,6 +11,6 @@ namespace PrometheusWeb.Services.Services
         IQueryable<CourseUserModel> GetCourses();
         bool AddCourse(CourseUserModel courseModel);
         bool UpdateCourse(int id, CourseUserModel courseModel);
-        bool CourseExists(int id);
+        bool IsCourseExists(int id);
     }
 }

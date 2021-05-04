@@ -11,22 +11,24 @@ using System.Web.Http.Description;
 using PrometheusWeb.Data;
 using PrometheusWeb.Data.DataModels;
 using PrometheusWeb.Data.UserModels;
+using PrometheusWeb.Services.Services;
 
 namespace PrometheusWeb.Services.Controllers
 {
     public class TeachesController : ApiController
     {
         private PrometheusEntities db = new PrometheusEntities();
+        private ITeachesService _teachesService = null;
+
+        public TeachesController(ITeachesService teachesService)
+        {
+            _teachesService = teachesService;
+        }
 
         // GET: api/Teaches
         public IQueryable<TeacherCourseUserModel> GetTeacherCourses()
         {
-            return db.Teaches.Select(item => new TeacherCourseUserModel
-            {
-                TeacherCourseID = item.TeacherCourseID,
-                CourseID = item.CourseID,
-                TeacherID = item.TeacherID
-            });
+            return _teachesService.GetTeacherCourses();
         }
 
         // GET: api/Teaches/5

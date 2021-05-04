@@ -124,6 +124,9 @@
     <Compile Include="Controllers\HomeworkController.cs" />
     <Compile Include="Services\HomeworkService.cs" />
     <Compile Include="Services\IHomeworkService.cs" />
+    <Compile Include="Services\ITeachesService.cs" />
+    <Compile Include="Services\AssignmentService.cs" />
+    <Compile Include="Services\IAssignmentService.cs" />
     <Compile Include="Services\EnrollmentService.cs" />
     <Compile Include="Services\IEnrollmentService.cs" />
     <Compile Include="Controllers\TeachesController.cs" />
@@ -135,6 +138,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CourseService.cs" />
+    <Compile Include="Services\TeachesService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

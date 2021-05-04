@@ -10,24 +10,30 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using PrometheusWeb.Data;
 using PrometheusWeb.Data.DataModels;
+using PrometheusWeb.Data.UserModels;
+using PrometheusWeb.Services.Services;
 
 namespace PrometheusWeb.Services.Controllers
 {
     public class AssignmentsController : ApiController
     {
-        private PrometheusEntities db = new PrometheusEntities();
+        private IAssignmentService _assignmentService = null;
+        public AssignmentsController(IAssignmentService assignmentService)
+        {
+            _assignmentService = assignmentService;
+        }
 
         // GET: api/Assignments
-        public IQueryable<Assignment> GetAssignments()
+        public IQueryable<AssignmentUserModel> GetAssignments()
         {
-            return db.Assignments;
+            return _assignmentService.GetAssignments();
         }
 
         // GET: api/Assignments/5
         [ResponseType(typeof(Assignment))]
         public IHttpActionResult GetAssignment(int id)
         {
-            Assignment assignment = db.Assignments.Find(id);
+            AssignmentUserModel assignment = _assignmentService.GetAssignment(id);
             if (assignment == null)
             {
                 return NotFound();
@@ -38,33 +44,26 @@ namespace PrometheusWeb.Services.Controllers
 
         // PUT: api/Assignments/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutAssignment(int id, Assignment assignment)
+        public IHttpActionResult PutAssignment(int id, AssignmentUserModel assignment)
         {
+            bool result;
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            if (id != assignment.AssignmentID)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(assignment).State = EntityState.Modified;
-
             try
             {
-                db.SaveChanges();
+                result = _assignmentService.UpdateAssignment(id, assignment);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception)
             {
-                if (!AssignmentExists(id))
+                if (!_assignmentService.IsAssignmentExists(id))
                 {
                     return NotFound();
                 }
                 else
                 {
-                    throw;
+                    return StatusCode(HttpStatusCode.InternalServerError);
                 }
             }
 
@@ -73,47 +72,49 @@ namespace PrometheusWeb.Services.Controllers
 
         // POST: api/Assignments
         [ResponseType(typeof(Assignment))]
-        public IHttpActionResult PostAssignment(Assignment assignment)
+        public IHttpActionResult PostAssignment(AssignmentUserModel assignment)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Assignments.Add(assignment);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = assignment.AssignmentID }, assignment);
+            var result = _assignmentService.AddAssignment(assignment);
+            if (result)
+                return CreatedAtRoute("DefaultApi", new { id = assignment.AssignmentID }, assignment);
+            else
+                return StatusCode(HttpStatusCode.InternalServerError);
         }
 
         // DELETE: api/Assignments/5
         [ResponseType(typeof(Assignment))]
         public IHttpActionResult DeleteAssignment(int id)
         {
-            Assignment assignment = db.Assignments.Find(id);
-            if (assignment == null)
+            try
             {
-                return NotFound();
+                AssignmentUserModel assignment = _assignmentService.DeleteAssignment(id);
+                if(assignment != null)
+                {
+                    return Ok(assignment);
+                }
+                else
+                {
+                    return StatusCode(HttpStatusCode.NotFound);
+                }
+            }
+            catch(Exception)
+            {
+                return StatusCode(HttpStatusCode.InternalServerError);
             }
 
-            db.Assignments.Remove(assignment);
-            db.SaveChanges();
-
-            return Ok(assignment);
+            
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+           
             base.Dispose(disposing);
         }
 
-        private bool AssignmentExists(int id)
-        {
-            return db.Assignments.Count(e => e.AssignmentID == id) > 0;
-        }
     }
 }
