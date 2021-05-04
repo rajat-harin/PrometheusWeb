@@ -58,7 +58,7 @@ namespace PrometheusWeb.Services.Controllers
             }
             catch (Exception)
             {
-                if (!_courseService.CourseExists(id))
+                if (!_courseService.IsCourseExists(id))
                 {
                     return NotFound();
                 }

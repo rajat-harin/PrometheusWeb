@@ -12,6 +12,7 @@ namespace PrometheusWeb.Services.Services
 {
     public class CourseService : ICourseService
     {
+ 
         private PrometheusEntities db = null;
         public CourseService()
         {
@@ -116,7 +117,7 @@ namespace PrometheusWeb.Services.Services
 
             return true;
         }
-        public  bool CourseExists(int id)
+        public  bool IsCourseExists(int id)
         {
             return db.Courses.Count(e => e.CourseID == id) > 0;
         }

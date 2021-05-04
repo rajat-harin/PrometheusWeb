@@ -18,7 +18,10 @@ namespace PrometheusWeb.MVC.Controllers
         //Hosted web API REST Service base url  
         string BaseURL = "https://localhost:44375/";
         // GET: Student
-
+        public StudentController()
+        {
+            ApiHelper.InitializeClient();
+        }
         public async Task<ActionResult> Index()
         {
 
@@ -129,5 +132,16 @@ namespace PrometheusWeb.MVC.Controllers
                 return View(courses);
             }
         }
+
+        // GET: Student/GetHomeworks
+
+        public async Task<ActionResult> GetHomeworks(int id)
+        {
+            //string url = "api/h";
+            List<AssignedHomework> assignments = new List<AssignedHomework>();
+            
+            return View(assignments);
+        }
+
     }
 }

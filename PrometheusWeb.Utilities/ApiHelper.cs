@@ -9,12 +9,14 @@ using System.Threading.Tasks;
 namespace PrometheusWeb.Utilities
 {
     //Api Helper Class to help with making requests to WebApi.
-    public class ApiHelper
+    public class ApiHelper 
     {
         const string BaseUrl = "https://localhost:44375/";
-        public  HttpClient ApiClient { get; set; }
+        public static HttpClient ApiClient { get; set; }
 
-        public  void InitializeClient()
+        
+
+        public static void InitializeClient()
         {
             ApiClient = new HttpClient();
             //Passing service base url  
@@ -25,5 +27,10 @@ namespace PrometheusWeb.Utilities
             ApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
         }
+
+        /*public void Dispose()
+        {
+            ApiClient.Dispose();
+        }*/
     }
 }

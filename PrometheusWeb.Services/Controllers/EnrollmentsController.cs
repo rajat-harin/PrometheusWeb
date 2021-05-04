@@ -70,7 +70,7 @@ namespace PrometheusWeb.Services.Controllers
                 }
                 else
                 {
-                    throw;
+                    return StatusCode(HttpStatusCode.NoContent);
                 }
             }
 
