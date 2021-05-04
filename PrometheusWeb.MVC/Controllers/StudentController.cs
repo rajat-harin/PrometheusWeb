@@ -144,8 +144,8 @@ namespace PrometheusWeb.MVC.Controllers
                     //Storing the response details recieved from web api   
                    
                     var enrollmentResponse = ResFromEnrollment.Content.ReadAsStringAsync().Result;
-                    var AssignmentResponse = ResFromEnrollment.Content.ReadAsStringAsync().Result;
-                    var HomeworkResponse = ResFromEnrollment.Content.ReadAsStringAsync().Result;
+                    var AssignmentResponse = ResFromAssignment.Content.ReadAsStringAsync().Result;
+                    var HomeworkResponse = ResFromHomework.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the list  
                     assignments = JsonConvert.DeserializeObject<List<AssignmentUserModel>>(AssignmentResponse);
                     enrollments = JsonConvert.DeserializeObject<List<EnrollmentUserModel>>(enrollmentResponse).Where(item => item.StudentID == id).ToList();

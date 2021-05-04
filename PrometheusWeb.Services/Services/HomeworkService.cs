@@ -12,34 +12,132 @@ namespace PrometheusWeb.Services.Services
 {
     public class HomeworkService : IHomeworkService
     {
+        private PrometheusEntities db = null;
+
+        public HomeworkService()
+        {
+            db = new PrometheusEntities();
+        }
         public bool AddHomework(HomeworkUserModel homeworkModel)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Homework homework = new Homework
+                {
+                    HomeWorkID = homeworkModel.HomeWorkID,
+                    Description = homeworkModel.Description,
+                    Deadline = homeworkModel.Deadline,
+                    ReqTime = homeworkModel.ReqTime,
+                    LongDescription = homeworkModel.LongDescription
+                };
+                db.Homework.Add(homework);
+                db.SaveChanges();
+                return true;
+            }
+            catch(Exception)
+            {
+                throw;
+            }          
+            
         }
 
         public HomeworkUserModel DeleteHomework(int id)
         {
-            throw new NotImplementedException();
+            Homework homework = db.Homework.Find(id);
+            if (homework == null)
+            {
+                return null;
+            }
+
+            db.Homework.Remove(homework);
+            db.SaveChanges();
+
+            return new HomeworkUserModel
+            {
+                HomeWorkID = homework.HomeWorkID,
+                Description = homework.Description,
+                Deadline = homework.Deadline,
+                ReqTime = homework.ReqTime,
+                LongDescription = homework.LongDescription
+            };
         }
 
         public HomeworkUserModel GetHomework(int id)
         {
-            throw new NotImplementedException();
+            try
+            { 
+                Homework homework = db.Homework.Find(id);
+                if (homework == null)
+                {
+                    return null;
+                }
+                return new HomeworkUserModel
+                {
+                    HomeWorkID = homework.HomeWorkID,
+                    Description = homework.Description,
+                    Deadline = homework.Deadline,
+                    ReqTime = homework.ReqTime,
+                    LongDescription = homework.LongDescription
+                };
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public IQueryable<HomeworkUserModel> GetHomeworks()
         {
-            throw new NotImplementedException();
+            return db.Homework.Select(item => new HomeworkUserModel
+            {
+                HomeWorkID = item.HomeWorkID,
+                Description = item.Description,
+                Deadline = item.Deadline,
+                ReqTime = item.ReqTime,
+                LongDescription = item.LongDescription
+            });
         }
 
-        public bool ifHomeworkExists(int id)
+        public bool IsHomeworkExists(int id)
         {
-            throw new NotImplementedException();
+            return db.Homework.Count(e => e.HomeWorkID == id) > 0;
         }
 
         public bool UpdateHomework(int id, HomeworkUserModel homeworkModel)
         {
-            throw new NotImplementedException();
+            Homework homework = new Homework
+            {
+                HomeWorkID = homeworkModel.HomeWorkID,
+                Description = homeworkModel.Description,
+                Deadline = homeworkModel.Deadline,
+                ReqTime = homeworkModel.ReqTime,
+                LongDescription = homeworkModel.LongDescription
+            };
+
+            if (id != homework.HomeWorkID)
+            {
+                return false;
+            }
+
+            db.Entry(homework).State = EntityState.Modified;
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!IsHomeworkExists(id))
+                {
+                    return false;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return true;
         }
     }
 }

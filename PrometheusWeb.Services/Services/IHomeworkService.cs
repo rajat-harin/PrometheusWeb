@@ -12,6 +12,6 @@ namespace PrometheusWeb.Services.Services
         IQueryable<HomeworkUserModel> GetHomeworks();
         bool AddHomework(HomeworkUserModel homeworkModel);
         bool UpdateHomework(int id, HomeworkUserModel homeworkModel);
-        bool ifHomeworkExists(int id);
+        bool IsHomeworkExists(int id);
     }
 }

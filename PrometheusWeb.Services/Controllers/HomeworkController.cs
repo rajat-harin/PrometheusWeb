@@ -56,7 +56,7 @@ namespace PrometheusWeb.Services.Controllers
             }
             catch (Exception)
             {
-                if (!_homeworkService.ifHomeworkExists(id))
+                if (!_homeworkService.IsHomeworkExists(id))
                 {
                     return NotFound();
                 }

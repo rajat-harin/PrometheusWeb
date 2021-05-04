@@ -12,7 +12,7 @@ namespace PrometheusWeb.Services.Services
 {
     public class EnrollmentService : IEnrollmentService
     {
-        private PrometheusEntities db;
+        private PrometheusEntities db = null;
 
         public EnrollmentService()
         {
@@ -58,6 +58,10 @@ namespace PrometheusWeb.Services.Services
         }
         public bool AddEnrollment(EnrollmentUserModel enrollmentModel)
         {
+            try
+            {
+
+            
             Enrollment enrollment = new Enrollment
             {
 
@@ -70,6 +74,11 @@ namespace PrometheusWeb.Services.Services
             db.SaveChanges();
 
             return true;
+            }
+            catch(Exception)
+            {
+                throw;
+            }
         }
         public bool UpdateEnrollment(int id, EnrollmentUserModel enrollmentModel)
         {
