@@ -3,34 +3,44 @@
     ViewBag.Title = "AddOrEditCourses";
 }
 
-<div class="form-group">
-    @using (Html.BeginForm())
-    {
-        @Html.HiddenFor(model => model.CourseID)
-        <div class="form-group">
-            @Html.LabelFor(model => model.Name)
-            @Html.EditorFor(model => model.Name)
-            @Html.ValidationMessageFor(model => model.Name)
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.StartDate)
-            @Html.EditorFor(model => model.StartDate)
-            @Html.ValidationMessageFor(model => model.StartDate)
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.EndDate)
-            @Html.EditorFor(model => model.EndDate)
-            @Html.ValidationMessageFor(model => model.EndDate)
-        </div>
-
-        <div class="form-group">
-            <input type="submit" value="Submit" class="btn button" />
-            <input type="reset" value="Reset" class="btn button" />
-        </div>
-    }
+<div style="padding-left:700px; ">
+    <h2>Add Student</h2>
 </div>
+@using (Html.BeginForm("AddOrEditCourses", "Courses", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <div style="padding-left:665px; ">
+        <h4>Create a new course.</h4>
+    </div>
+    <hr />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.CourseID)
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.Name)
+            @Html.ValidationMessageFor(m => m.Name)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.StartDate, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.StartDate)
+            @Html.ValidationMessageFor(m => m.StartDate)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.EndDate, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.EndDate)
+            @Html.ValidationMessageFor(m => m.EndDate)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:750px">
+        <input type="submit" value="Submit" class="btn button" />
+        <input type="reset" value="Reset" class="btn button" />
+    </div>
+}
 @section scripts{
     @Scripts.Render("~/bundles/jqueryval");
 }

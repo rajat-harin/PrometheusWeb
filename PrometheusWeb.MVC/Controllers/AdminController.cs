@@ -62,8 +62,9 @@ namespace PrometheusWeb.MVC.Controllers
         public ActionResult AddStudent(int id = 0)
         {
             if (id == 0)
+            {
                 return View(new AdminUserModel());
-
+            }
             else
             {
                 HttpResponseMessage responseStudent = GlobalVariables.WebApiClient.GetAsync("api/Students/" + id.ToString()).Result;
@@ -84,32 +85,6 @@ namespace PrometheusWeb.MVC.Controllers
             {
                 HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Students/" + user.StudentID, user).Result;
                 TempData["SuccessMessage"] = "Student Updated Successfully";
-            }
-            return RedirectToAction("ViewStudents");
-        }
-
-        public ActionResult EditStudent(int id = 0)
-        {
-            if (id == 0)
-                return View(new StudentUserModel());
-            else
-            {
-                HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("api/Students/" + id.ToString()).Result;
-                return View(response.Content.ReadAsAsync<StudentUserModel>().Result);
-            }
-        }
-        [HttpPost]
-        public ActionResult EditStudent(StudentUserModel student)
-        {
-            if (student.StudentID == 0)
-            {
-                HttpResponseMessage response = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Students/", student).Result;
-                TempData["SuccessMessage"] = "Course Added Successfully";
-            }
-            else
-            {
-                HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Students/" + student.StudentID, student).Result;
-                TempData["SuccessMessage"] = "Course Updated Successfully";
             }
             return RedirectToAction("ViewStudents");
         }
