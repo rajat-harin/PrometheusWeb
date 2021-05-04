@@ -26,8 +26,6 @@ namespace PrometheusWeb.Services.Controllers
         // GET: api/Courses
         public IQueryable<CourseUserModel> GetCourses()
         {
-
-
             return _courseService.GetCourses();
         }
 
@@ -58,7 +56,7 @@ namespace PrometheusWeb.Services.Controllers
             }
             catch (Exception)
             {
-                if (!_courseService.CourseExists(id))
+                if (!_courseService.IsCourseExists(id))
                 {
                     return NotFound();
                 }
@@ -91,7 +89,11 @@ namespace PrometheusWeb.Services.Controllers
             return Ok(course);
         }
 
-        
+        protected override void Dispose(bool disposing)
+        {
+
+            base.Dispose(disposing);
+        }
 
     }
 }

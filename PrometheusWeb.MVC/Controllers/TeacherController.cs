@@ -119,7 +119,6 @@ namespace PrometheusWeb.MVC.Controllers
         //GET: Teacher/Save
         public async Task<ActionResult> SaveCourses(int courseId, int teacherId)
         {
-            
             var client = new HttpClient();
             //Passing service base url  
             client.BaseAddress = new Uri(Baseurl);
@@ -131,6 +130,7 @@ namespace PrometheusWeb.MVC.Controllers
             //Sending request to find web api REST service resource Get:Courses & Get:Enrollemnts using HttpClient  
             HttpResponseMessage ResFromCourses = await client.GetAsync("api/Courses/"+ courseId.ToString());
             HttpResponseMessage ResFromTeaches = await client.GetAsync("api/Teaches/" + teacherId.ToString());
+            
             //Storing the response details recieved from web api   
             var teacherCourseResponse = ResFromCourses.Content.ReadAsAsync<TeacherCourses>().Result;
 
