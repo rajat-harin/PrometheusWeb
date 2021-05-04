@@ -85,7 +85,7 @@ namespace PrometheusWeb.Services.Services.Tests
             int id = 5;
 
             //Act
-            var result = enrollmentService.DeleteEnrollment(5);
+            var result = enrollmentService.DeleteEnrollment(id);
 
             //Assert
             Assert.IsNotNull(result);
