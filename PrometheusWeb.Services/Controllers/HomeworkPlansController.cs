@@ -10,24 +10,40 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using PrometheusWeb.Data;
 using PrometheusWeb.Data.DataModels;
+using PrometheusWeb.Data.UserModels;
+using PrometheusWeb.Services.Services;
 
 namespace PrometheusWeb.Services.Controllers
 {
     public class HomeworkPlansController : ApiController
     {
-        private PrometheusEntities db = new PrometheusEntities();
+        private IHomeworkPlanService _homeworkPlanService;
 
-        // GET: api/HomeworkPlans
-        public IQueryable<HomeworkPlan> GetHomeworkPlans()
+        public HomeworkPlansController(IHomeworkPlanService homeworkPlanService)
         {
-            return db.HomeworkPlans;
+            _homeworkPlanService = homeworkPlanService;
         }
 
+        // GET: api/HomeworkPlans
+        public IQueryable<HomeworkPlanUserModel> GetHomeworkPlans()
+        {
+            return _homeworkPlanService.GetHomeworkPlans();
+        }
+
+        // GET: api/HomeworkPlansByStudentID
+        [Route("api/HomeworkPlansByStudentID/{StudentID}")]
+        public IQueryable<HomeworkPlanUserModel> GetHomeworkPlans(int StudentID)
+        {
+            return _homeworkPlanService.GetHomeworkPlans(StudentID);
+        }
+            
+       
+
         // GET: api/HomeworkPlans/5
-        [ResponseType(typeof(HomeworkPlan))]
+        [ResponseType(typeof(HomeworkPlanUserModel))]
         public IHttpActionResult GetHomeworkPlan(int id)
         {
-            HomeworkPlan homeworkPlan = db.HomeworkPlans.Find(id);
+            HomeworkPlanUserModel homeworkPlan = _homeworkPlanService.GetHomeworkPlan(id);
             if (homeworkPlan == null)
             {
                 return NotFound();
@@ -38,33 +54,26 @@ namespace PrometheusWeb.Services.Controllers
 
         // PUT: api/HomeworkPlans/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutHomeworkPlan(int id, HomeworkPlan homeworkPlan)
+        public IHttpActionResult PutHomeworkPlan(int id, HomeworkPlanUserModel homeworkPlan)
         {
+            bool result;
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            if (id != homeworkPlan.HomeworkPlanID)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(homeworkPlan).State = EntityState.Modified;
-
             try
             {
-                db.SaveChanges();
+                result = _homeworkPlanService.UpdateHomeworkPlan(id, homeworkPlan);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception)
             {
-                if (!HomeworkPlanExists(id))
+                if (!_homeworkPlanService.IsHomeworkPlanExists(id))
                 {
                     return NotFound();
                 }
                 else
                 {
-                    throw;
+                    return StatusCode(HttpStatusCode.InternalServerError);
                 }
             }
 
@@ -72,48 +81,52 @@ namespace PrometheusWeb.Services.Controllers
         }
 
         // POST: api/HomeworkPlans
+     
         [ResponseType(typeof(HomeworkPlan))]
-        public IHttpActionResult PostHomeworkPlan(HomeworkPlan homeworkPlan)
+        public IHttpActionResult PostHomeworkPlan(HomeworkPlanUserModel homeworkPlan)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            var result = _homeworkPlanService.AddHomeworkPlan(homeworkPlan);
+            if (result)
+                return CreatedAtRoute("DefaultApi", new { id = homeworkPlan.HomeworkPlanID }, homeworkPlan);
+            else
+                return StatusCode(HttpStatusCode.InternalServerError);
+        }
 
-            db.HomeworkPlans.Add(homeworkPlan);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = homeworkPlan.HomeworkPlanID }, homeworkPlan);
+        // POST: api/HomeworkPlans/Many
+        [HttpPost]
+        [Route("api/HomeworkPlans/Many")]
+        [ResponseType(typeof(HomeworkPlan))]
+        public IHttpActionResult PostHomeworkPlans(List<HomeworkPlanUserModel> homeworkPlans)
+        {
+            var result = _homeworkPlanService.AddHomeworkPlans(homeworkPlans.AsQueryable());
+            if (result)
+                return Ok(result);
+            else
+                return StatusCode(HttpStatusCode.InternalServerError);
         }
 
         // DELETE: api/HomeworkPlans/5
         [ResponseType(typeof(HomeworkPlan))]
         public IHttpActionResult DeleteHomeworkPlan(int id)
         {
-            HomeworkPlan homeworkPlan = db.HomeworkPlans.Find(id);
-            if (homeworkPlan == null)
-            {
-                return NotFound();
-            }
-
-            db.HomeworkPlans.Remove(homeworkPlan);
-            db.SaveChanges();
+            HomeworkPlanUserModel homeworkPlan = _homeworkPlanService.DeleteHomeworkPlan(id);
 
             return Ok(homeworkPlan);
         }
 
-        protected override void Dispose(bool disposing)
+        // DELETE: api/HomeworkPlansByStudentID/5
+        [ResponseType(typeof(bool))]
+        public IHttpActionResult DeleteHomeworkPlans(int StudentID)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            var result = _homeworkPlanService.DeleteHomeworkPlans(StudentID);
+
+            return Ok(result);
+        }
+
+        protected override void Dispose(bool disposing)
+        {       
             base.Dispose(disposing);
         }
 
-        private bool HomeworkPlanExists(int id)
-        {
-            return db.HomeworkPlans.Count(e => e.HomeworkPlanID == id) > 0;
-        }
     }
 }

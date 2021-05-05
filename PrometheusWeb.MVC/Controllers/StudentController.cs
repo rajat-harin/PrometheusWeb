@@ -229,5 +229,148 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
+        public async Task<ActionResult> GetHomeworkPlan(int id = 1)  //@TODO: change default to 0 after auth
+        {
+            
+            List<HomeworkPlanUserModel> homeworkPlans = new List<HomeworkPlanUserModel>();
+
+            using (var client = new HttpClient())
+            {
+                //Passing service base url  
+                client.BaseAddress = new Uri(BaseURL);
+
+                client.DefaultRequestHeaders.Clear();
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                //Sending request to find web api REST service resource Get:Courses & Get:Enrollemnts using HttpClient  
+                HttpResponseMessage Res = await client.GetAsync("api/HomeworkPlansByStudentID/"+ id);
+               
+                //Checking the response is successful or not which is sent using HttpClient  
+                if (Res.IsSuccessStatusCode)
+                {
+                    //Storing the response details recieved from web api   
+                    try
+                    {                   
+                        var HomeworkPlanResponse = Res.Content.ReadAsStringAsync().Result;
+                        //Deserializing the response recieved from web api and storing into the list  
+                        homeworkPlans = JsonConvert.DeserializeObject<List<HomeworkPlanUserModel>>(HomeworkPlanResponse);
+                        if (homeworkPlans != null)
+                        {
+                            ViewBag.Message = "";
+                            return View(homeworkPlans);
+                        }
+                        else
+                        {
+                            
+                            ViewBag.Message = "No Plans Found!";
+                            return View(homeworkPlans);
+                        }
+                    }
+                    catch
+                    {
+                        return new HttpStatusCodeResult(500);
+                    }
+
+                }
+
+                return new HttpStatusCodeResult(404);
+            }
+            
+        }
+
+        public async Task<ActionResult> GeneratePlan(int id = 1)  //@TODO: change default to 0 after auth
+        {
+
+            
+            List<HomeworkPlanUserModel> homeworkPlans = new List<HomeworkPlanUserModel>();
+            List<EnrollmentUserModel> enrollments = new List<EnrollmentUserModel>();
+            List<AssignmentUserModel> assignments = new List<AssignmentUserModel>();
+            List<HomeworkUserModel> homeworks = new List<HomeworkUserModel>();
+
+            using (var client = new HttpClient())
+            {
+                //Passing service base url  
+                client.BaseAddress = new Uri(BaseURL);
+
+                client.DefaultRequestHeaders.Clear();
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                //Sending request to find web api REST service resource Get:Courses & Get:Enrollemnts using HttpClient  
+                HttpResponseMessage ResFromEnrollment = await client.GetAsync("api/Enrollments/");
+                HttpResponseMessage ResFromAssignment = await client.GetAsync("api/Assignments/");
+                HttpResponseMessage ResFromHomework = await client.GetAsync("api/Homework/");
+                //Checking the response is successful or not which is sent using HttpClient  
+                if (ResFromAssignment.IsSuccessStatusCode && ResFromEnrollment.IsSuccessStatusCode && ResFromHomework.IsSuccessStatusCode)
+                {
+                    //Storing the response details recieved from web api   
+
+                    var enrollmentResponse = ResFromEnrollment.Content.ReadAsStringAsync().Result;
+                    var AssignmentResponse = ResFromAssignment.Content.ReadAsStringAsync().Result;
+                    var HomeworkResponse = ResFromHomework.Content.ReadAsStringAsync().Result;
+                    //Deserializing the response recieved from web api and storing into the list  
+                    assignments = JsonConvert.DeserializeObject<List<AssignmentUserModel>>(AssignmentResponse);
+                    enrollments = JsonConvert.DeserializeObject<List<EnrollmentUserModel>>(enrollmentResponse).Where(item => item.StudentID == id).ToList();
+                    homeworks = JsonConvert.DeserializeObject<List<HomeworkUserModel>>(HomeworkResponse);
+
+                    try
+                    {
+                        var result = from course in enrollments
+                                     join assignment in assignments
+                                     on course.CourseID equals assignment.CourseID
+                                     join homework in homeworks
+                                     on assignment.HomeWorkID equals homework.HomeWorkID
+                                     select new AssignedHomework
+                                     {
+                                         AssignmentID = assignment.AssignmentID,
+                                         Description = homework.Description,
+                                         Deadline = (System.DateTime)homework.Deadline,
+                                         ReqTime = (System.DateTime)homework.ReqTime,
+                                         LongDescription = homework.LongDescription,
+                                         CourseName = course.Course.Name,
+                                         HomeworkID = homework.HomeWorkID
+                                     };
+                        //returning the employee list to view  if list is not empty
+                        if (result != null)
+                        {
+                            int count = result.Count();
+                            homeworkPlans =  result.OrderBy(item => item.Deadline).Select(item => new HomeworkPlanUserModel
+                            {
+                                HomeworkID = item.HomeworkID,
+                                isCompleted = false,
+                                PriorityLevel = count--,
+                                StudentID = id,
+                            }).ToList();
+                            HttpResponseMessage ResForDeletion = await client.GetAsync("api/HomeworkPlansByStudentID/"+id);
+                            if(ResForDeletion.IsSuccessStatusCode)
+                            {
+                                HttpResponseMessage ResForAdd = await client.PostAsJsonAsync("api/HomeworkPlans/Many", homeworkPlans);
+                                if(ResForAdd.IsSuccessStatusCode)
+                                {
+                                    RedirectToAction("GetHomeworkPlan", id = 1 );
+                                }
+                                else
+                                {
+                                    return new HttpStatusCodeResult(500);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            return new HttpStatusCodeResult(404);
+                        }
+                    }
+                    catch
+                    {
+                        return new HttpStatusCodeResult(500);
+                    }
+
+                }
+
+                return new HttpStatusCodeResult(404);
+            }
+
+        }
     }
 }

@@ -1,0 +1,64 @@
+﻿@model IEnumerable<PrometheusWeb.Data.UserModels.HomeworkPlanUserModel>
+
+@{
+    ViewBag.Title = "GetHomeworkPlan";
+}
+
+<h2>GetHomeworkPlan</h2>
+
+<p>
+    <button class="btn btn-lg btn-warning">@Html.ActionLink("Generate New Plan", "GeneratePlan")</button>
+</p>
+@if (Model != null)
+{
+    <table class="table">
+        <tr>
+
+
+            <th>
+                @Html.DisplayNameFor(model => model.HomeworkID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Homework.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PriorityLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.isCompleted)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.HomeworkID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Homework.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PriorityLevel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.isCompleted)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+            else
+            {
+    <h3>@ViewBag.Message</h3>
+            }
+
