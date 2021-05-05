@@ -1,7 +1,7 @@
-﻿@model IEnumerable<PrometheusWeb.Data.UserModels.StudentUserModel>
+﻿@model IEnumerable<PrometheusWeb.Data.UserModels.TeacherUserModel>
 
 @{
-    ViewBag.Title = "ViewStudents";
+    ViewBag.Title = "ViewTeachers";
 }
 <style>
     table {
@@ -34,46 +34,16 @@
         caption-side: bottom;
     }
 </style>
-<h2>ViewStudents</h2>
+
+<h2>ViewTeachers</h2>
 
 <p>
-    @Html.ActionLink("Create New", "AddStudent")
+    @Html.ActionLink("Create New", "AddTeacher")
 </p>
-<style>
-    table {
-        width: 150px;
-        table-layout: auto;
-        width: 180px;
-    }
-
-    th {
-        background-color: #4CAF50;
-        font-weight: bold;
-        color: black;
-        border: groove;
-    }
-
-    tr:nth-child(even) {
-        background-color: #d9dad9;
-        color: black;
-    }
-
-    tr:nth-child(odd) {
-        color: black;
-    }
-
-    tr:hover {
-        background-color: #a0c3e2;
-    }
-
-    caption {
-        caption-side: bottom;
-    }
-</style>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.StudentID)
+            @Html.DisplayNameFor(model => model.TeacherID)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.FName)
@@ -96,6 +66,9 @@
         <th>
             @Html.DisplayNameFor(model => model.MobileNo)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsAdmin)
+        </th>
         <th></th>
     </tr>
 
@@ -103,7 +76,7 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.StudentID)
+                @Html.DisplayFor(modelItem => item.TeacherID)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FName)
@@ -127,8 +100,12 @@
                 @Html.DisplayFor(modelItem => item.MobileNo)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.IsAdmin)
+            </td>
+            <td>
+                @*<a href="@Url.Action("EditTeacherProfile", "Admin", new { id = item.TeacherID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Edit</a>*@
                 @*<a href="@Url.Action("Delete", "Admin", new { id = item.StudentID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Delete</a>*@
-                <a onclick="Delete(@item.StudentID)" class="btn btn-default"><i class="fa fa-trash"></i>  Delete</a>
+                <a onclick="Delete(@item.TeacherID)" class="btn btn-default"><i class="fa fa-trash"></i>  Delete</a>
             </td>
         </tr>
     }
@@ -145,8 +122,8 @@
 
         function Delete(id) {
             alertify.confirm('Student delete','Are You Sure to Delete this Record ?',function(){
-                window.location.href  = '@Url.Action("DeleteStudent","Admin")/'+id;
-            },null );
+                window.location.href = '@Url.Action("DeleteTeacher","Admin")/' + id;
+            }, null);
         }
     </script>
 }

@@ -16,11 +16,10 @@ namespace PrometheusWeb.MVC.Controllers
 {
     public class CoursesController : Controller
     {
-
         //Hosted web API REST Service base url  
         string Baseurl = "https://localhost:44375/";
+        
         // GET: Course
-
         public async Task<ActionResult> Index()
         {
             List<Course> CourseInfo = new List<Course>();
@@ -87,7 +86,7 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
-
+        // POST: Course/AddOrEditCourses
         public ActionResult AddOrEditCourses(int id = 0)
         {
             if (id == 0)
@@ -98,6 +97,7 @@ namespace PrometheusWeb.MVC.Controllers
                 return View(response.Content.ReadAsAsync<CourseUserModel>().Result);
             }
         }
+
         [HttpPost]
         public ActionResult AddOrEditCourses(CourseUserModel course)
         {
@@ -114,140 +114,12 @@ namespace PrometheusWeb.MVC.Controllers
             return RedirectToAction("ViewCourses");
         }
 
+        // DELETE: Course/Delete
         public ActionResult Delete(int id)
         {
             HttpResponseMessage response = GlobalVariables.WebApiClient.DeleteAsync("api/Courses/" + id.ToString()).Result;
             return RedirectToAction("ViewCourses");
         }
-
-        /*
-           [HttpPost]
-           // GET: Course/AddCourses
-           public async Task<ActionResult> AddCourses()
-           {
-               List<CourseUserModel> courses = new List<CourseUserModel>();
-
-               using (var client = new HttpClient())
-               {
-                   //Passing service base url  
-                   client.BaseAddress = new Uri(Baseurl);
-
-                   client.DefaultRequestHeaders.Clear();
-                   //Define request data format  
-                   client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                   //Sending request to find web api REST service resource Get:Courses & Get:Enrollemnts using HttpClient  
-                   HttpResponseMessage ResFromCourses = await client.PostAsJsonAsync("api/Courses/", courses);
-
-
-                   //Checking the response is successful or not which is sent using HttpClient  
-                   if (ResFromCourses.IsSuccessStatusCode)
-                   {
-                       //Storing the response details recieved from web api   
-                       var courseResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
-
-
-                       //Deserializing the response recieved from web api and storing into the list  
-                       courses = JsonConvert.DeserializeObject<List<CourseUserModel>>(courseResponse);
-
-                   }
-                   //returning the employee list to view  
-                   return View(courses);
-               }
-           }
-        */
-        /*
-                public ActionResult EditCourses(int id)
-                {
-                    return View();
-                }
-
-                [HttpPut]
-                public ActionResult EditCourses(CourseUserModel course)
-                {
-                    if (course.CourseID != 0)
-                    {
-                        HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Courses/"+ course.CourseID, course).Result;
-                        return RedirectToAction("ViewCourses");
-                    }
-
-                    return RedirectToAction("EditCourses");
-                }
-        */
-
-
-        /*
-           [HttpPut]
-           // GET: Course/EditCourses
-           public async Task<ActionResult> EditCourses()
-           {
-               List<CourseUserModel> courses = new List<CourseUserModel>();
-
-               using (var client = new HttpClient())
-               {
-                   //Passing service base url  
-                   client.BaseAddress = new Uri(Baseurl);
-
-                   client.DefaultRequestHeaders.Clear();
-                   //Define request data format  
-                   client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                   //Sending request to find web api REST service resource Get:Courses & Get:Enrollemnts using HttpClient  
-                   HttpResponseMessage ResFromCourses = await client.PutAsJsonAsync("api/Courses/", courses);
-
-
-                   //Checking the response is successful or not which is sent using HttpClient  
-                   if (ResFromCourses.IsSuccessStatusCode)
-                   {
-                       //Storing the response details recieved from web api   
-                       var courseResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
-
-
-                       //Deserializing the response recieved from web api and storing into the list  
-                       courses = JsonConvert.DeserializeObject<List<CourseUserModel>>(courseResponse);
-
-                   }
-                   //returning the employee list to view  
-                   return View(courses);
-               }
-           }
-        */
-        /*
-        [HttpDelete]
-           // GET: Course/EditCourses
-           public async Task<ActionResult> DeleteCourses()
-           {
-               List<CourseUserModel> courses = new List<CourseUserModel>();
-
-               using (var client = new HttpClient())
-               {
-                   //Passing service base url  
-                   client.BaseAddress = new Uri(Baseurl);
-
-                   client.DefaultRequestHeaders.Clear();
-                   //Define request data format  
-                   client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                   //Sending request to find web api REST service resource Get:Courses & Get:Enrollemnts using HttpClient  
-                   HttpResponseMessage ResFromCourses = await client.DeleteAsync("api/Courses/");
-
-
-                   //Checking the response is successful or not which is sent using HttpClient  
-                   if (ResFromCourses.IsSuccessStatusCode)
-                   {
-                       //Storing the response details recieved from web api   
-                       var courseResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
-
-
-                       //Deserializing the response recieved from web api and storing into the list  
-                       courses = JsonConvert.DeserializeObject<List<CourseUserModel>>(courseResponse);
-
-                   }
-                   //returning the employee list to view  
-                   return View(courses);
-               }
-           }
-        */
 
     }
 }

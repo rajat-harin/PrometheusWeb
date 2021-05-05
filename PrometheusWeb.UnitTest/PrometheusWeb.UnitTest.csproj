@@ -103,7 +103,7 @@
       <Name>PrometheusWeb.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\PrometheusWeb.Services\PrometheusWeb.Services.csproj">
-      <Project>{0C482FB6-3353-4EF7-BE21-7DCA4A226469}</Project>
+      <Project>{0c482fb6-3353-4ef7-be21-7dca4a226469}</Project>
       <Name>PrometheusWeb.Services</Name>
     </ProjectReference>
   </ItemGroup>

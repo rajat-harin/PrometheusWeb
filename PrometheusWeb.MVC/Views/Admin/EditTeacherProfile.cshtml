@@ -1,20 +1,24 @@
-﻿@model PrometheusWeb.Data.UserModels.StudentUserModel
+﻿@model PrometheusWeb.Data.UserModels.TeacherUserModel
 @{
-    ViewBag.Title = "EditStudent";
+    ViewBag.Title = "EditTeacherProfile";
 }
+
+<h2>AddOrEditTeacherProfile</h2>
 
 <div style="padding-left:700px; ">
     <h2>Add Student</h2>
 </div>
-@using (Html.BeginForm("EditStudent", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("EditTeacherProfile", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
     <div style="padding-left:665px; ">
-        <h4>Edit student account.</h4>
+        <h4>Create a new course.</h4>
     </div>
     <hr />
     @Html.ValidationSummary("", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.StudentID)
+    @Html.HiddenFor(model => model.TeacherID)
+    @Html.HiddenFor(model => model.UserID)
+    @Html.HiddenFor(model => model.IsAdmin)
     <div class="form-group" style="padding-left:540px">
         @Html.LabelFor(m => m.FName, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
@@ -27,13 +31,6 @@
         <div class="col-md-10">
             @Html.EditorFor(m => m.LName)
             @Html.ValidationMessageFor(m => m.LName)
-        </div>
-    </div>
-    <div class="form-group" style="padding-left:540px">
-        @Html.LabelFor(m => m.UserID, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.EditorFor(m => m.UserID)
-            @Html.ValidationMessageFor(m => m.UserID)
         </div>
     </div>
     <div class="form-group" style="padding-left:540px">

@@ -1,22 +1,22 @@
 ﻿
-@{
-    ViewBag.Title = "Index";
-}
-<<<<<<< HEAD
-<link rel="stylesheet" href="~/Content/StyleSheet/StyleSheetResource.css" type="text/css"/>
-<h2>Index</h2>
-=======
 
->>>>>>> 79d8cdf3ee20f9287ed7a5d83ce397aaa879c061
 
-<div class="container">
+<style>
+    .btn:hover {
+        background-color: lightgreen;
+        right: 0px;
+    }
+</style>
+<div class="btn-group-vertical" style="width:100%; padding:300px; background-color:#d9dad9";>
+
+
     <h2>Index</h2>
-    <button class="btn btn-primary">@Html.ActionLink("Student", "Index", "Student")</button>
+    <button class="btn" style="font-weight:900">@Html.ActionLink("Student", "Index", "Student")</button>
     <br>
-    <button class="btn btn-primary">@Html.ActionLink("My Courses", "MyCourses", "Student")</button>
+    <button class="btn" style="font-weight:900">@Html.ActionLink("My Courses", "MyCourses", "Student")</button>
     <br>
-    <button class="btn btn-primary">@Html.ActionLink("View Courses", "ViewCourses", "Student")</button>
+    <button class="btn" style="font-weight:900">@Html.ActionLink("View Courses", "ViewCourses", "Student")</button>
     <br>
-    <button class="btn btn-primary">@Html.ActionLink("View Homework", "GetHomeworks", "Student")</button>
+    <button class="btn" style="font-weight:900">@Html.ActionLink("View Homework", "GetHomeworks", "Student")</button>
     <br>
 </div>

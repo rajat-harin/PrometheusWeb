@@ -3,16 +3,79 @@
 @{
     ViewBag.Title = "ViewCourses";
 }
+<style>
+    table {
+        width: 150px;
+        table-layout: auto;
+        width: 180px;
+    }
 
+    th {
+        background-color: #4CAF50;
+        font-weight: bold;
+        color: black;
+        border: groove;
+    }
+
+    tr:nth-child(even) {
+        background-color: #d9dad9;
+        color: black;
+    }
+
+    tr:nth-child(odd) {
+        color: black;
+    }
+
+    tr:hover {
+        background-color: #a0c3e2;
+    }
+
+    caption {
+        caption-side: bottom;
+    }
+</style>
 <h2>ViewCourses</h2>
 <p>
     <a href="@Url.Action("MyCourses","Teacher")" class="btn btn-primary">Show My Courses</a>
+    <a href="@Url.Action("ViewHomeworks","Homework")" class="btn btn-primary">Show My Courses</a>
+
 </p>
 @*<p>
         @Html.ActionLink("Create New", "Create")
     </p>*@
 @using (Html.BeginForm())
 {
+    <style>
+        table {
+            width: 150px;
+            table-layout: auto;
+            width: 180px;
+        }
+
+        th {
+            background-color: #4CAF50;
+            font-weight: bold;
+            color: black;
+            border: groove;
+        }
+
+        tr:nth-child(even) {
+            background-color: #d9dad9;
+            color: black;
+        }
+
+        tr:nth-child(odd) {
+            color: black;
+        }
+
+        tr:hover {
+            background-color: #a0c3e2;
+        }
+
+        caption {
+            caption-side: bottom;
+        }
+    </style>
 
     <table class="table table-striped">
         <tr>
