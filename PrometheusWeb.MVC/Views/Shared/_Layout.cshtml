@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Theme Made By www.w3schools.com -->
+   
     <title>@ViewBag.Title.</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,7 +14,7 @@
         body {
             font: 400 15px Lato, sans-serif;
             line-height: 1.8;
-            color: #818181;
+            color: #d9dad9;
         }
 
         h2 {
@@ -34,8 +34,12 @@
         }
 
         .jumbotron {
-            background-color: #f4511e;
-            color: #fff;
+           
+            
+            /*background-image: url('../../Content/Images/homework.jpeg');*/
+            background-color: #8eb5f5;
+            color: black;
+            font-weight: 900;
             padding: 100px 25px;
             font-family: Montserrat, sans-serif;
         }
@@ -49,12 +53,12 @@
         }
 
         .logo-small {
-            color: #f4511e;
+            color: #8eb5f5;
             font-size: 50px;
         }
 
         .logo {
-            color: #f4511e;
+            color: #8eb5f5;
             font-size: 200px;
         }
 
@@ -72,15 +76,15 @@
 
         .carousel-control.right, .carousel-control.left {
             background-image: none;
-            color: #f4511e;
+            color: #8eb5f5;
         }
 
         .carousel-indicators li {
-            border-color: #f4511e;
+            border-color: #8eb5f5;
         }
 
             .carousel-indicators li.active {
-                background-color: #f4511e;
+                background-color: #8eb5f5;
             }
 
         .item h4 {
@@ -96,7 +100,7 @@
         }
 
         .panel {
-            border: 1px solid #f4511e;
+            border: 1px solid #8eb5f5;
             border-radius: 0 !important;
             transition: box-shadow 0.5s;
         }
@@ -106,14 +110,14 @@
             }
 
         .panel-footer .btn:hover {
-            border: 1px solid #f4511e;
+            border: 1px solid #8eb5f5;
             background-color: #fff !important;
-            color: #f4511e;
+            color: #8eb5f5;
         }
 
         .panel-heading {
             color: #fff !important;
-            background-color: #f4511e !important;
+            background-color: #8eb5f5 !important;
             padding: 25px;
             border-bottom: 1px solid transparent;
             border-top-left-radius: 0px;
@@ -137,19 +141,19 @@
 
             .panel-footer .btn {
                 margin: 15px 0;
-                background-color: #f4511e;
+                background-color: #8eb5f5;
                 color: #fff;
             }
 
         .navbar {
             margin-bottom: 0;
-            background-color: #f4511e;
+            background-color: #027dc5;
             z-index: 9999;
             border: 0;
-            font-size: 12px !important;
+            font-size: 14px !important;
             line-height: 1.42857143 !important;
             letter-spacing: 4px;
-            border-radius: 0;
+            border-radius: 2;
             font-family: Montserrat, sans-serif;
         }
 
@@ -158,7 +162,7 @@
             }
 
         .navbar-nav li a:hover, .navbar-nav li.active a {
-            color: #f4511e !important;
+            color: #8eb5f5 !important;
             background-color: #fff !important;
         }
 
@@ -170,7 +174,7 @@
         footer .glyphicon {
             font-size: 20px;
             margin-bottom: 20px;
-            color: #f4511e;
+            color: #8eb5f5;
         }
 
         .slideanim {
@@ -226,6 +230,13 @@
                 font-size: 150px;
             }
         }
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
@@ -238,11 +249,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#myPage">Logo</a>
+                <a class="navbar-brand" href="#myPage" style="font-family:'Lucida Handwriting'; font-size:x-large; font-weight:900;">Prometheus</a>
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                <ul class="nav navbar-nav navbar-right" style="font-weight:bolder">
+                    <li style="color:black;">@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                     <li>@Html.ActionLink("Courses", "ViewCourses", "Courses")</li>
@@ -253,11 +264,11 @@
         </div>
     </nav>
 
-    <div class="jumbotron text-center">
-        <h1>Prometheus</h1>
-        <p>Prometheus is a Homework Planner</p>
+    @*<div class="jumbotron text-center">
+        <h1 style="background-color:aliceblue;background-size:auto">Prometheus</h1>
+        
 
-    </div>
+    </div>*@
 
     <div>
         @RenderBody()
