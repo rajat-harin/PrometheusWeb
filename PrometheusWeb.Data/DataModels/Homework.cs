@@ -12,6 +12,7 @@ namespace PrometheusWeb.Data.DataModels
         public Homework()
         {
             Assignments = new HashSet<Assignment>();
+            HomeworkPlans = new HashSet<HomeworkPlan>();
         }
 
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -29,5 +30,8 @@ namespace PrometheusWeb.Data.DataModels
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Assignment> Assignments { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<HomeworkPlan> HomeworkPlans { get; set; }
     }
 }

@@ -13,6 +13,7 @@ namespace PrometheusWeb.Data.DataModels
         public Student()
         {
             Enrollments = new HashSet<Enrollment>();
+            HomeworkPlans = new HashSet<HomeworkPlan>();
         }
 
         public int StudentID { get; set; }
@@ -37,11 +38,12 @@ namespace PrometheusWeb.Data.DataModels
         [StringLength(13)]
         public string MobileNo { get; set; }
 
-   
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Enrollment> Enrollments { get; set; }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<HomeworkPlan> HomeworkPlans { get; set; }
+
         public virtual User User { get; set; }
-       
     }
 }

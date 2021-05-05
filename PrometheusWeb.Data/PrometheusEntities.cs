@@ -17,6 +17,7 @@ namespace PrometheusWeb.Data
         public virtual DbSet<Course> Courses { get; set; }
         public virtual DbSet<Enrollment> Enrollments { get; set; }
         public virtual DbSet<Homework> Homework { get; set; }
+        public virtual DbSet<HomeworkPlan> HomeworkPlans { get; set; }
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<Teacher> Teachers { get; set; }
         public virtual DbSet<Teach> Teaches { get; set; }
@@ -43,6 +44,11 @@ namespace PrometheusWeb.Data
 
             modelBuilder.Entity<Homework>()
                 .HasMany(e => e.Assignments)
+                .WithOptional(e => e.Homework)
+                .WillCascadeOnDelete();
+
+            modelBuilder.Entity<Homework>()
+                .HasMany(e => e.HomeworkPlans)
                 .WithOptional(e => e.Homework)
                 .WillCascadeOnDelete();
 
