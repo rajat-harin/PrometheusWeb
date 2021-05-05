@@ -1,18 +1,18 @@
-﻿@model IEnumerable<PrometheusWeb.Data.UserModels.StudentUserModel>
+﻿@model IEnumerable<PrometheusWeb.Data.UserModels.TeacherUserModel>
 
 @{
-    ViewBag.Title = "ViewStudents";
+    ViewBag.Title = "ViewTeachers";
 }
 
-<h2>ViewStudents</h2>
+<h2>ViewTeachers</h2>
 
 <p>
-    @Html.ActionLink("Create New", "AddStudent")
+    @Html.ActionLink("Create New", "AddTeacher")
 </p>
-<table class="table table-striped">
+<table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.StudentID)
+            @Html.DisplayNameFor(model => model.TeacherID)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.FName)
@@ -35,6 +35,9 @@
         <th>
             @Html.DisplayNameFor(model => model.MobileNo)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsAdmin)
+        </th>
         <th></th>
     </tr>
 
@@ -42,7 +45,7 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.StudentID)
+                @Html.DisplayFor(modelItem => item.TeacherID)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FName)
@@ -66,8 +69,11 @@
                 @Html.DisplayFor(modelItem => item.MobileNo)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.IsAdmin)
+            </td>
+            <td>
                 @*<a href="@Url.Action("Delete", "Admin", new { id = item.StudentID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Delete</a>*@
-                <a onclick="Delete(@item.StudentID)" class="btn btn-default"><i class="fa fa-trash"></i>  Delete</a>
+                <a onclick="Delete(@item.TeacherID)" class="btn btn-default"><i class="fa fa-trash"></i>  Delete</a>
             </td>
         </tr>
     }
@@ -84,7 +90,7 @@
 
         function Delete(id) {
             alertify.confirm('Student delete','Are You Sure to Delete this Record ?',function(){
-                window.location.href  = '@Url.Action("DeleteStudent","Admin")/'+id;
+                window.location.href  = '@Url.Action("DeleteTeacher","Admin")/'+id;
             },null );
         }
     </script>

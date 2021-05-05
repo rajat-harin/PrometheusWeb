@@ -86,7 +86,7 @@
     <Compile Include="DataModels\Course.cs" />
     <Compile Include="DataModels\Enrollment.cs" />
     <Compile Include="DataModels\Homework.cs" />
-    <Compile Include="IPrometheusEntities.cs" />
+    <Compile Include="DataModels\HomeworkPlan.cs" />
     <Compile Include="PrometheusEntities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataModels\Student.cs" />
@@ -97,9 +97,11 @@
     <Compile Include="UserModels\AssignmentUserModel.cs" />
     <Compile Include="UserModels\CourseUserModel.cs" />
     <Compile Include="UserModels\EnrollmentUserModel.cs" />
+    <Compile Include="UserModels\HomeworkPlanUserModel.cs" />
     <Compile Include="UserModels\HomeworkUserModel.cs" />
     <Compile Include="UserModels\StudentUserModel.cs" />
     <Compile Include="UserModels\TeacherCourseUserModel.cs" />
+    <Compile Include="UserModels\TeacherUserModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
