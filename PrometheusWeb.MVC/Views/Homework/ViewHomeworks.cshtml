@@ -1,0 +1,73 @@
+﻿@model IEnumerable<PrometheusWeb.Data.UserModels.HomeworkUserModel>
+
+@{
+    ViewBag.Title = "ViewHomeworks";
+}
+
+<h2>ViewHomeworks</h2>
+
+<p>
+    @Html.ActionLink("Create New", "AddOrEditHomeworks")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.HomeWorkID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Deadline)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReqTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LongDescription)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.HomeWorkID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Deadline)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReqTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LongDescription)
+            </td>
+            <td>
+                <a href="@Url.Action("AddOrEditHomeworks", "Homework", new { id = item.HomeWorkID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Edit</a>
+                <a onclick="Delete(@item.HomeWorkID)" class="btn btn-default"><i class="fa fa-trash"></i>  Delete</a>
+
+            </td>
+        </tr>
+    }
+
+</table>
+@section scripts{
+    <script>
+        $(function () {
+            var successMessage = '@TempData["SuccessMessage"]'
+            if (successMessage != '')
+                alertify.success(successMessage);
+        });
+
+        function Delete(id) {
+            alertify.confirm('Homeworks register','Are You Sure to Delete this Record ?',function(){
+                window.location.href  = '@Url.Action("Delete","Homework")/'+id;
+            },null );
+        }
+    </script>
+}

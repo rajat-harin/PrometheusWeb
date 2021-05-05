@@ -16,7 +16,6 @@ namespace PrometheusWeb.MVC.Controllers
 {
     public class CoursesController : Controller
     {
-
         //Hosted web API REST Service base url  
         string Baseurl = "https://localhost:44375/";
         // GET: Course
