@@ -116,7 +116,7 @@ namespace PrometheusWeb.MVC.Controllers
 
         public ActionResult Delete(int id)
         {
-            HttpResponseMessage response = GlobalVariables.WebApiClient.DeleteAsync("api/Courses" + id.ToString()).Result;
+            HttpResponseMessage response = GlobalVariables.WebApiClient.DeleteAsync("api/Courses/" + id.ToString()).Result;
             return RedirectToAction("ViewCourses");
         }
 
