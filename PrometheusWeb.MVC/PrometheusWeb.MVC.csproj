@@ -299,6 +299,7 @@
     <Content Include="Views\Teacher\SaveCourses.cshtml" />
     <Content Include="Views\Teacher\ViewCourses.cshtml" />
     <Content Include="Views\Student\GetHomeworks.cshtml" />
+    <Content Include="Views\Student\EnrollInCourse.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
