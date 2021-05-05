@@ -2,19 +2,25 @@
 @{
     ViewBag.Title = "Index";
 }
+<style>
+    .btn:hover {
+        background-color: lightgreen;
+        right: 0px;
+    }
+</style>
 
 <h2>Index</h2>
 
-<div class="container">
-    <h2>Index</h2>
-    <button class="btn btn-primary">@Html.ActionLink("Admin", "Index", "Admin")</button>
+<div class="btn-group-vertical" style="width:100%; padding:300px; background-color:#d9dad9" ;>
+
+    <button class="btn" style="font-weight:900">@Html.ActionLink("Admin", "Index", "Admin")</button>
     <br>
-    <button class="btn btn-primary">@Html.ActionLink("Add Teacher", "AddTeacher", "Admin")</button>
+    <button class="btn" style="font-weight:900">@Html.ActionLink("Add Teacher", "AddTeacher", "Admin")</button>
     <br>
-    <button class="btn btn-primary">@Html.ActionLink("Add Student", "AddStudent", "Admin")</button>
+    <button class="btn" style="font-weight:900">@Html.ActionLink("Add Student", "AddStudent", "Admin")</button>
     <br>
-    <button class="btn btn-primary">@Html.ActionLink("View Students", "ViewStudents", "Admin")</button>
+    <button class="btn" style="font-weight:900">@Html.ActionLink("View Students", "ViewStudents", "Admin")</button>
     <br>
-    <button class="btn btn-primary">@Html.ActionLink("View Teachers", "ViewTeachers", "Admin")</button>
+    <button class="btn" style="font-weight:900">@Html.ActionLink("View Teachers", "ViewTeachers", "Admin")</button>
     <br>
 </div>
