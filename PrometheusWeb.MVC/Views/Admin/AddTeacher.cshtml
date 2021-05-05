@@ -1,20 +1,19 @@
-﻿@model PrometheusWeb.Data.UserModels.StudentUserModel
+﻿@model PrometheusWeb.Data.UserModels.AdminUserModel
 @{
-    ViewBag.Title = "EditStudent";
+    ViewBag.Title = "AddTeacher";
 }
-
 <div style="padding-left:700px; ">
-    <h2>Add Student</h2>
+    <h2>Add Teacher</h2>
 </div>
-@using (Html.BeginForm("EditStudent", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("AddTeacher", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
     <div style="padding-left:665px; ">
-        <h4>Edit student account.</h4>
+        <h4>Create a new teacher account.</h4>
     </div>
     <hr />
     @Html.ValidationSummary("", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.StudentID)
+    @Html.HiddenFor(model => model.TeacherID)
     <div class="form-group" style="padding-left:540px">
         @Html.LabelFor(m => m.FName, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
@@ -62,6 +61,34 @@
         <div class="col-md-10">
             @Html.EditorFor(m => m.MobileNo)
             @Html.ValidationMessageFor(m => m.MobileNo)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.IsAdmin, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.CheckBoxFor(m => m.IsAdmin)
+            @Html.ValidationMessageFor(m => m.IsAdmin)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.Password)
+            @Html.ValidationMessageFor(m => m.Password)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.SecurityQuestion, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.SecurityQuestion)
+            @Html.ValidationMessageFor(m => m.SecurityQuestion)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.SecurityAnswer, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.SecurityAnswer)
+            @Html.ValidationMessageFor(m => m.SecurityAnswer)
         </div>
     </div>
     <div class="form-group" style="padding-left:750px">

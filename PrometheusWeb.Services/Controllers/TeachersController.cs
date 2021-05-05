@@ -44,14 +44,37 @@ namespace PrometheusWeb.Services.Controllers
             {
                 return NotFound();
             }
-
+            TeacherUserModel teachertUser = new TeacherUserModel
+            {
+                TeacherID = teacher.TeacherID,
+                FName = teacher.FName,
+                LName = teacher.LName,
+                UserID = teacher.UserID,
+                DOB = teacher.DOB,
+                Address = teacher.Address,
+                City = teacher.City,
+                MobileNo = teacher.MobileNo,
+                IsAdmin = teacher.IsAdmin
+            };
             return Ok(teacher);
         }
 
         // PUT: api/Teachers/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutTeacher(int id, Teacher teacher)
+        public IHttpActionResult PutTeacher(int id, TeacherUserModel teacherModel)
         {
+            Teacher teacher = new Teacher
+            {
+                TeacherID = teacherModel.TeacherID,
+                FName = teacherModel.FName,
+                LName = teacherModel.LName,
+                UserID = teacherModel.UserID,
+                DOB = teacherModel.DOB,
+                Address = teacherModel.Address,
+                City = teacherModel.City,
+                MobileNo = teacherModel.MobileNo,
+                IsAdmin = teacherModel.IsAdmin
+            };
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -85,8 +108,20 @@ namespace PrometheusWeb.Services.Controllers
 
         // POST: api/Teachers
         [ResponseType(typeof(Teacher))]
-        public IHttpActionResult PostTeacher(Teacher teacher)
+        public IHttpActionResult PostTeacher(TeacherUserModel teacherModel)
         {
+            Teacher teacher = new Teacher
+            {
+                TeacherID = teacherModel.TeacherID,
+                FName = teacherModel.FName,
+                LName = teacherModel.LName,
+                UserID = teacherModel.UserID,
+                DOB = teacherModel.DOB,
+                Address = teacherModel.Address,
+                City = teacherModel.City,
+                MobileNo = teacherModel.MobileNo,
+                IsAdmin = teacherModel.IsAdmin
+            };
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
