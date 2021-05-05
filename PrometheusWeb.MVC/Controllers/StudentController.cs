@@ -190,7 +190,7 @@ namespace PrometheusWeb.MVC.Controllers
 
             
         }
-
+        // GET: Student/EnrollInCourse
         public async Task<ActionResult> EnrollInCourse(int id = 1)  //@TODO: change default to 0 after auth
         {
             int StudentID = 1;
@@ -342,13 +342,13 @@ namespace PrometheusWeb.MVC.Controllers
                                 PriorityLevel = count--,
                                 StudentID = id,
                             }).ToList();
-                            HttpResponseMessage ResForDeletion = await client.GetAsync("api/HomeworkPlansByStudentID/"+id);
+                            HttpResponseMessage ResForDeletion = await client.DeleteAsync("api/HomeworkPlans/?StudentID=" + id);
                             if(ResForDeletion.IsSuccessStatusCode)
                             {
                                 HttpResponseMessage ResForAdd = await client.PostAsJsonAsync("api/HomeworkPlans/Many", homeworkPlans);
                                 if(ResForAdd.IsSuccessStatusCode)
                                 {
-                                    RedirectToAction("GetHomeworkPlan", id = 1 );
+                                    return RedirectToAction("GetHomeworkPlan", id = 1 );
                                 }
                                 else
                                 {
@@ -366,6 +366,59 @@ namespace PrometheusWeb.MVC.Controllers
                         return new HttpStatusCodeResult(500);
                     }
 
+                }
+
+                return new HttpStatusCodeResult(404);
+            }
+
+        }
+
+        public async Task<ActionResult> UpdatePlan(int id = 1)  //@TODO: change default to 0 after auth
+        {
+            HomeworkPlanUserModel homeworkPlan = new HomeworkPlanUserModel();
+            using (var client = new HttpClient())
+            {
+                //Passing service base url  
+                client.BaseAddress = new Uri(BaseURL);
+
+                client.DefaultRequestHeaders.Clear();
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage Res = await client.GetAsync("api/HomeworkPlans/"+id);
+                if (Res.IsSuccessStatusCode)
+                {
+                    //Storing the response details recieved from web api   
+                    var Response = Res.Content.ReadAsStringAsync().Result;
+
+                    //Deserializing the response recieved from web api and storing into the list  
+                    homeworkPlan = JsonConvert.DeserializeObject<HomeworkPlanUserModel>(Response);
+                    //returning the employee list to view  
+                    return View(homeworkPlan);
+                }
+
+                return new HttpStatusCodeResult(404);
+            }
+
+        }
+        [HttpPost]
+        public async Task<ActionResult> UpdatePlan(HomeworkPlanUserModel homeworkPlan)  //@TODO: change default to 0 after auth
+        {
+            using (var client = new HttpClient())
+            {
+                //Passing service base url  
+                client.BaseAddress = new Uri(BaseURL);
+
+                client.DefaultRequestHeaders.Clear();
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage Res = await client.PutAsJsonAsync("api/HomeworkPlans",homeworkPlan);
+                if (Res.IsSuccessStatusCode)
+                {
+                    
+                   return RedirectToAction("GetHomeworkPlan", 1);
+                   
                 }
 
                 return new HttpStatusCodeResult(404);
