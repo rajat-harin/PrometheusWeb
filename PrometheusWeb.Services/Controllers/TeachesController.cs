@@ -17,7 +17,6 @@ namespace PrometheusWeb.Services.Controllers
 {
     public class TeachesController : ApiController
     {
-        private PrometheusEntities db = new PrometheusEntities();
         private ITeachesService _teachesService = null;
 
         public TeachesController(ITeachesService teachesService)
@@ -32,10 +31,10 @@ namespace PrometheusWeb.Services.Controllers
         }
 
         // GET: api/Teaches/5
-        [ResponseType(typeof(Teach))]
+        [ResponseType(typeof(TeacherCourseUserModel))]
         public IHttpActionResult GetTeacherCourses(int id)
         {
-            Teach teachObj = db.Teaches.Find(id);
+            TeacherCourseUserModel teachObj = _teachesService.GetTeacherCourses(id);
             if (teachObj == null)
             {
                 return NotFound();
@@ -45,87 +44,72 @@ namespace PrometheusWeb.Services.Controllers
 
         // PUT: api/Teaches/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutTeacherCourses(int id, Teach teach)
+        public IHttpActionResult PutTeacherCourses(int id, TeacherCourseUserModel teachModel)
         {
+            bool result;
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            if (id != teach.TeacherCourseID)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(teach).State = EntityState.Modified;
-
             try
             {
-                db.SaveChanges();
+                result = _teachesService.UpdateTeacherCourses(id, teachModel);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception)
             {
-                if (!TeacherCourseExists(id))
+                if (!_teachesService.IsTeachesExists(id))
                 {
                     return NotFound();
                 }
                 else
                 {
-                    throw;
+                    return StatusCode(HttpStatusCode.InternalServerError);
                 }
             }
 
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Courses
+        // POST: api/Teaches
         [ResponseType(typeof(Teach))]
-        public IHttpActionResult PostTeacherCourse(TeacherCourseUserModel courseModel)
+        public IHttpActionResult PostTeacherCourse(TeacherCourseUserModel teachModel)
         {
-            Teach teach = new Teach
-            {
-                CourseID = courseModel.CourseID,
-                TeacherID = courseModel.TeacherID
-            };
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            db.Teaches.Add(teach);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = teach.CourseID }, teach);
+            var result = _teachesService.AddTeacherCourse(teachModel);
+            if (result)
+                return CreatedAtRoute("DefaultApi", new { id = teachModel.CourseID }, teachModel);
+            else
+                return StatusCode(HttpStatusCode.InternalServerError);
         }
 
         // DELETE: api/Teaches/5
         [ResponseType(typeof(Teach))]
         public IHttpActionResult DeleteTeacherCourse(int id)
         {
-            Teach teach = db.Teaches.Find(id);
-            if (teach == null)
+            try
             {
-                return NotFound();
+                TeacherCourseUserModel teach = _teachesService.DeleteTeacherCourse(id);
+                if (teach != null)
+                {
+                    return Ok(teach);
+                }
+                else
+                {
+                    return StatusCode(HttpStatusCode.NotFound);
+                }
             }
-
-            db.Teaches.Remove(teach);
-            db.SaveChanges();
-
-            return Ok(teach);
+            catch (Exception)
+            {
+                return StatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
             base.Dispose(disposing);
-        }
-
-        private bool TeacherCourseExists(int id)
-        {
-            return db.Teaches.Count(e => e.TeacherCourseID == id) > 0;
         }
     }
 }
