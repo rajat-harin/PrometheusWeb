@@ -122,20 +122,19 @@
     <Compile Include="Controllers\CoursesController.cs" />
     <Compile Include="Controllers\EnrollmentsController.cs" />
     <Compile Include="Controllers\HomeworkController.cs" />
-
     <Compile Include="Controllers\TeachersController.cs" />
     <Compile Include="Controllers\HomeworkPlansController.cs" />
     <Compile Include="Services\HomeworkPlanService.cs" />
-    <Compile Include="Services\IHomeworkPlanService.cs" />
+    <Compile Include="Services\Contracts\IHomeworkPlanService.cs" />
     <Compile Include="Services\HomeworkService.cs" />
-    <Compile Include="Services\IHomeworkService.cs" />
-    <Compile Include="Services\ITeachesService.cs" />
+    <Compile Include="Services\Contracts\IHomeworkService.cs" />
+    <Compile Include="Services\Contracts\ITeachesService.cs" />
     <Compile Include="Services\AssignmentService.cs" />
-    <Compile Include="Services\IAssignmentService.cs" />
+    <Compile Include="Services\Contracts\IAssignmentService.cs" />
     <Compile Include="Services\EnrollmentService.cs" />
-    <Compile Include="Services\IEnrollmentService.cs" />
+    <Compile Include="Services\Contracts\IEnrollmentService.cs" />
     <Compile Include="Controllers\TeachesController.cs" />
-    <Compile Include="Services\ICourseService.cs" />
+    <Compile Include="Services\Contracts\ICourseService.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
