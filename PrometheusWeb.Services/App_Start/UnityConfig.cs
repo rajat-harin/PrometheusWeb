@@ -52,6 +52,8 @@ namespace PrometheusWeb.Services
             container.RegisterType<ITeachesService, TeachesService>();
             container.RegisterType<IHomeworkPlanService, HomeworkPlanService>();
             container.RegisterType<IStudentService, StudentService>();
+            container.RegisterType<ITeacherService, TeacherService>();
+            container.RegisterType<IUserService, UserService>();
         }
     }
 }

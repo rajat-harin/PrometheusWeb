@@ -19,17 +19,16 @@ namespace PrometheusWeb.MVC.Controllers
         string Baseurl = "https://localhost:44375/";
 
         // GET: Admin
-        public ActionResult Index()
+        public ActionResult Index(string search)
         {
             return View();
         }
-
 
         // GET: Admin/ViewStudents
         public async Task<ActionResult> ViewStudents()
         {
             List<StudentUserModel> students = new List<StudentUserModel>();
-
+            
             using (var client = new HttpClient())
             {
                 //Passing service base url  
@@ -64,6 +63,8 @@ namespace PrometheusWeb.MVC.Controllers
         {
             if (id == 0)
             {
+                var list = new List<string>() { "What is your Pet Name?", "What is your Nick Name", "What is your School Name?" };
+                ViewBag.list = list;
                 return View(new AdminUserModel());
             }
             else
@@ -83,6 +84,8 @@ namespace PrometheusWeb.MVC.Controllers
             if (user.StudentID == 0)
             {
                 user.Role = "student";
+                var list = new List<string>() { "What is your Pet Name?", "What is your Nick Name", "What is your School Name?" };
+                ViewBag.list = list;
                 //Sending request to find web api REST service resource Post:Users using HttpClient
                 HttpResponseMessage responseUser = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Users/", user).Result;
                 //Sending request to find web api REST service resource Post: using HttpClient
@@ -102,7 +105,7 @@ namespace PrometheusWeb.MVC.Controllers
         public ActionResult DeleteStudent(int id)
         {
             HttpResponseMessage response = GlobalVariables.WebApiClient.DeleteAsync("api/Students/" + id.ToString()).Result;
-
+            HttpResponseMessage responseUser = GlobalVariables.WebApiClient.DeleteAsync("api/Users/" + id.ToString()).Result;
             return RedirectToAction("ViewStudents");
         }
 
@@ -145,6 +148,8 @@ namespace PrometheusWeb.MVC.Controllers
         {
             if (id == 0)
             {
+                var list = new List<string>() { "What is your Pet Name?", "What is your Nick Name", "What is your School Name?" };
+                ViewBag.list = list;
                 return View(new AdminUserModel());
             }
             else
@@ -168,6 +173,8 @@ namespace PrometheusWeb.MVC.Controllers
                 {
                     user.Role = "teacher";
                 }
+                var list = new List<string>() { "What is your Pet Name?", "What is your Nick Name", "What is your School Name?" };
+                ViewBag.list = list;
                 HttpResponseMessage responseUser = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Users/", user).Result;
                 HttpResponseMessage responseStudent = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Teachers/", user).Result;
                 
@@ -185,12 +192,12 @@ namespace PrometheusWeb.MVC.Controllers
         public ActionResult DeleteTeacher(int id)
         {
             HttpResponseMessage response = GlobalVariables.WebApiClient.DeleteAsync("api/Teachers/" + id.ToString()).Result;
-
+            HttpResponseMessage responseUser = GlobalVariables.WebApiClient.DeleteAsync("api/Users/" + id.ToString()).Result;
             return RedirectToAction("ViewTeachers");
         }
 
-        /*
-        public ActionResult EditTeacherProfile(int id = 0)
+        // POST: Admin/EditTeacherProfile
+        public ActionResult EditTeacher(int id = 0)
         {
             if (id != 0)
             { 
@@ -199,8 +206,9 @@ namespace PrometheusWeb.MVC.Controllers
             }
             return RedirectToAction("ViewTeachers");
         }
+
         [HttpPost]
-        public ActionResult EditTeacherProfile(TeacherUserModel teacher)
+        public ActionResult EditTeacher(TeacherUserModel teacher)
         {
             if (teacher.TeacherID != 0)
             {
@@ -210,7 +218,8 @@ namespace PrometheusWeb.MVC.Controllers
             return RedirectToAction("ViewTeachers");
         }
 
-        public ActionResult EditStudentProfile(int id = 0)
+        // POST: Admin/EditStudentProfile
+        public ActionResult EditStudent(int id = 0)
         {
             if (id != 0)
             {
@@ -219,8 +228,9 @@ namespace PrometheusWeb.MVC.Controllers
             }
             return RedirectToAction("ViewStudents");
         }
+
         [HttpPost]
-        public ActionResult EditStudentProfile(StudentUserModel student)
+        public ActionResult EditStudent(StudentUserModel student)
         {
             if (student.StudentID != 0)
             {
@@ -229,6 +239,40 @@ namespace PrometheusWeb.MVC.Controllers
             }
             return RedirectToAction("ViewStudents");
         }
-        */
+
+        // POST: Admin/ChangePasswordTeacher
+        public ActionResult ChangePasswordTeacher(int id = 0)
+        {
+            if (id != 0)
+            {
+                HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("api/Teachers/" + id.ToString()).Result;
+                return View(response.Content.ReadAsAsync<TeacherUserModel>().Result);
+            }
+            return RedirectToAction("ViewTeachers");
+        }
+
+        [HttpPost]
+        public ActionResult ChangePasswordTeacher(TeacherUserModel teacher)
+        {
+            if (teacher.TeacherID != 0)
+            {
+                HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Teachers/" + teacher.TeacherID, teacher).Result;
+                TempData["SuccessMessage"] = "Teacher Updated Successfully";
+            }
+            return RedirectToAction("ViewTeachers");
+        }
+
+        public async Task<ActionResult> SearchStudent(string search)
+        {
+            List<Student> userList = new List<Student>();
+            HttpResponseMessage ResFromCourses = await GlobalVariables.WebApiClient.GetAsync("api/Students/");
+            return View(userList.Where(x => x.FName.StartsWith(search) || search == null).ToList());
+        }
+
+        public ActionResult SearchTeacher(string search)
+        {
+            List<Teacher> userList = new List<Teacher>();
+            return View(userList.Where(x => x.FName.StartsWith(search) || search == null).ToList());
+        }
     }
 }
