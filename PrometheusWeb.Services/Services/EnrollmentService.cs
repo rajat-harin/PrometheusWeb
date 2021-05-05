@@ -60,8 +60,6 @@ namespace PrometheusWeb.Services.Services
         {
             try
             {
-
-            
             Enrollment enrollment = new Enrollment
             {
 

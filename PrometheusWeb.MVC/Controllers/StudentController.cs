@@ -5,6 +5,7 @@ using PrometheusWeb.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -116,7 +117,6 @@ namespace PrometheusWeb.MVC.Controllers
         }
 
         // GET: Student/GetHomeworks
-
         public async Task<ActionResult> GetHomeworks(int id = 1)
         {
             //string url = "api/h";
@@ -189,6 +189,44 @@ namespace PrometheusWeb.MVC.Controllers
             }
 
             
+        }
+
+        public async Task<ActionResult> EnrollInCourse(int id = 1)  //@TODO: change default to 0 after auth
+        {
+            int StudentID = 1;
+            //TODO: Get Student ID from Auth
+
+            EnrollmentUserModel enrollments = new EnrollmentUserModel {
+                CourseID = id,
+                StudentID = StudentID
+            };
+
+            using (var client = new HttpClient())
+            {
+                //Passing service base url  
+                client.BaseAddress = new Uri(BaseURL);
+
+                client.DefaultRequestHeaders.Clear();
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                //Sending request to find web api REST service resource Get:Enrollemnts using HttpClient  
+                HttpResponseMessage ResFromEnrollment = await client.PostAsJsonAsync("api/Enrollments/", enrollments);
+
+                //Checking the response is successful or not which is sent using HttpClient  
+                if (ResFromEnrollment.IsSuccessStatusCode)
+                {
+                    ViewBag.Message = "Enrolled for the Course!";
+                    
+                }
+                else
+                {
+                    //returning the employee list to view  
+                    ViewBag.Message = "There was error enrolling in Course!";
+                }
+                
+                return View(ViewBag);
+            }
         }
 
     }

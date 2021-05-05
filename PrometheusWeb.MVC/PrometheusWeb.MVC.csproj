@@ -318,6 +318,7 @@
     <Content Include="Views\Teacher\ViewCourses.cshtml" />
     <Content Include="Views\Admin\EditStudent.cshtml" />
     <Content Include="Views\Student\GetHomeworks.cshtml" />
+    <Content Include="Views\Student\EnrollInCourse.cshtml" />
     <Content Include="Views\Admin\ViewStudents.cshtml" />
   </ItemGroup>
   <ItemGroup>
