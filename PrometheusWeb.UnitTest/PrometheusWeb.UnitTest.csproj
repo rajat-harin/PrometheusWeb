@@ -102,10 +102,6 @@
       <Project>{C0BD8152-7652-443B-AF37-D24885AC120F}</Project>
       <Name>PrometheusWeb.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PrometheusWeb.Services\PrometheusWeb.Services.csproj">
-      <Project>{0C482FB6-3353-4EF7-BE21-7DCA4A226469}</Project>
-      <Name>PrometheusWeb.Services</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
