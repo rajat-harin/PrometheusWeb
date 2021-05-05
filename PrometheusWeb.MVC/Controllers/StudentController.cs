@@ -5,6 +5,7 @@ using PrometheusWeb.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -16,12 +17,9 @@ namespace PrometheusWeb.MVC.Controllers
     public class StudentController : Controller
     {
         //Hosted web API REST Service base url  
-        string BaseURL = "https://localhost:44375/";
+        const string BaseURL = "https://localhost:44375/";
         // GET: Student
-        public StudentController()
-        {
-            ApiHelper.InitializeClient();
-        }
+        
         public async Task<ActionResult> Index()
         {
 
@@ -42,36 +40,21 @@ namespace PrometheusWeb.MVC.Controllers
                 //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                //Sending request to find web api REST service resource Get:Courses & Get:Enrollemnts using HttpClient  
-                HttpResponseMessage ResFromCourses = await client.GetAsync("api/Courses/");
+                //Sending request to find web api REST service resource Get:Enrollemnts using HttpClient  
                 HttpResponseMessage ResFromEnrollment = await client.GetAsync("api/Enrollments/");
 
                 //Checking the response is successful or not which is sent using HttpClient  
-                if (ResFromCourses.IsSuccessStatusCode && ResFromEnrollment.IsSuccessStatusCode)
+                if (ResFromEnrollment.IsSuccessStatusCode)
                 {
                     //Storing the response details recieved from web api   
-                    var courseResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
-                    var enrollmentResponse = ResFromEnrollment.Content.ReadAsStringAsync().Result;
-
-                    //Deserializing the response recieved from web api and storing into the list  
-                    courses = JsonConvert.DeserializeObject<List<CourseUserModel>>(courseResponse);
-                    enrollments = JsonConvert.DeserializeObject<List<EnrollmentUserModel>>(enrollmentResponse);
-
                     try
                     {
-                        var result = enrollments.Where(item => item.StudentID == id).Join(
-                    courses,
-                    enrollment => enrollment.CourseID,
-                    course => course.CourseID,
-                    (enrollment, course) => new EnrolledCourse
-                    {
-                        EnrollmentID = enrollment.EnrollmentID,
-                        CourseID = (int)enrollment.CourseID,
-                        Name = course.Name,
-                        StartDate = course.StartDate,
-                        EndDate = course.EndDate
-                    }
-                    ).ToList();
+                        var enrollmentResponse = ResFromEnrollment.Content.ReadAsStringAsync().Result;
+
+                        //Deserializing the response recieved from web api and storing into the list  
+                        enrollments = JsonConvert.DeserializeObject<List<EnrollmentUserModel>>(enrollmentResponse);
+                                          
+                        var result = enrollments.Where(item => item.StudentID == id).ToList();
                         if (result.Any())
                         {
                             return View(result);
@@ -134,13 +117,116 @@ namespace PrometheusWeb.MVC.Controllers
         }
 
         // GET: Student/GetHomeworks
-
-        public async Task<ActionResult> GetHomeworks(int id)
+        public async Task<ActionResult> GetHomeworks(int id = 1)
         {
             //string url = "api/h";
-            List<AssignedHomework> assignments = new List<AssignedHomework>();
+            List<AssignedHomework> assignedHomeWord = new List<AssignedHomework>();
+            List<EnrollmentUserModel> enrollments = new List<EnrollmentUserModel>();
+            List<AssignmentUserModel> assignments = new List<AssignmentUserModel>();
+            List<HomeworkUserModel> homeworks = new List<HomeworkUserModel>();
+
+            using (var client = new HttpClient())
+            {
+                //Passing service base url  
+                client.BaseAddress = new Uri(BaseURL);
+
+                client.DefaultRequestHeaders.Clear();
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                //Sending request to find web api REST service resource Get:Courses & Get:Enrollemnts using HttpClient  
+                HttpResponseMessage ResFromEnrollment = await client.GetAsync("api/Enrollments/");
+                HttpResponseMessage ResFromAssignment = await client.GetAsync("api/Assignments/");
+                HttpResponseMessage ResFromHomework = await client.GetAsync("api/Homework/");
+                //Checking the response is successful or not which is sent using HttpClient  
+                if (ResFromAssignment.IsSuccessStatusCode && ResFromEnrollment.IsSuccessStatusCode && ResFromHomework.IsSuccessStatusCode)
+                {
+                    //Storing the response details recieved from web api   
+                   
+                    var enrollmentResponse = ResFromEnrollment.Content.ReadAsStringAsync().Result;
+                    var AssignmentResponse = ResFromAssignment.Content.ReadAsStringAsync().Result;
+                    var HomeworkResponse = ResFromHomework.Content.ReadAsStringAsync().Result;
+                    //Deserializing the response recieved from web api and storing into the list  
+                    assignments = JsonConvert.DeserializeObject<List<AssignmentUserModel>>(AssignmentResponse);
+                    enrollments = JsonConvert.DeserializeObject<List<EnrollmentUserModel>>(enrollmentResponse).Where(item => item.StudentID == id).ToList();
+                    homeworks = JsonConvert.DeserializeObject<List<HomeworkUserModel>>(HomeworkResponse);
+
+                    try
+                    {
+                        var result = from course in enrollments
+                                     join assignment in assignments
+                                     on course.CourseID equals assignment.CourseID
+                                     join homework in homeworks
+                                     on assignment.HomeWorkID equals homework.HomeWorkID
+                                     select new AssignedHomework
+                                     {
+                                         AssignmentID = assignment.AssignmentID,
+                                         Description = homework.Description,
+                                         Deadline = (System.DateTime)homework.Deadline,
+                                         ReqTime = (System.DateTime)homework.ReqTime,
+                                         LongDescription = homework.LongDescription,
+                                         CourseName = course.Course.Name,
+                                         HomeworkID = homework.HomeWorkID
+                                     };
+                        //returning the employee list to view  if list is not empty
+                        if (result.Any())
+                        {
+                            return View(result);
+                        }
+                        else
+                        {
+                            return new HttpStatusCodeResult(404);
+                        }
+                    }
+                    catch
+                    {
+                        return new HttpStatusCodeResult(500);
+                    }
+
+                }
+                
+                return new HttpStatusCodeResult(404);
+            }
+
             
-            return View(assignments);
+        }
+
+        public async Task<ActionResult> EnrollInCourse(int id = 1)  //@TODO: change default to 0 after auth
+        {
+            int StudentID = 1;
+            //TODO: Get Student ID from Auth
+
+            EnrollmentUserModel enrollments = new EnrollmentUserModel {
+                CourseID = id,
+                StudentID = StudentID
+            };
+
+            using (var client = new HttpClient())
+            {
+                //Passing service base url  
+                client.BaseAddress = new Uri(BaseURL);
+
+                client.DefaultRequestHeaders.Clear();
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                //Sending request to find web api REST service resource Get:Enrollemnts using HttpClient  
+                HttpResponseMessage ResFromEnrollment = await client.PostAsJsonAsync("api/Enrollments/", enrollments);
+
+                //Checking the response is successful or not which is sent using HttpClient  
+                if (ResFromEnrollment.IsSuccessStatusCode)
+                {
+                    ViewBag.Message = "Enrolled for the Course!";
+                    
+                }
+                else
+                {
+                    //returning the employee list to view  
+                    ViewBag.Message = "There was error enrolling in Course!";
+                }
+                
+                return View(ViewBag);
+            }
         }
 
     }

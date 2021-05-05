@@ -99,7 +99,7 @@ namespace PrometheusWeb.Services.Services.Tests
             int id = 2;
 
             //Act
-            var result = enrollmentService.EnrollmentExists(id);
+            var result = enrollmentService.IsEnrollmentExists(id);
 
             //Assert
             Assert.IsTrue(result);

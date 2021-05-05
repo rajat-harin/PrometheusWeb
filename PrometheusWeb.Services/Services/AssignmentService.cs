@@ -14,10 +14,13 @@ namespace PrometheusWeb.Services.Services
     {
         private PrometheusEntities db;
 
+        //Constructor instatiating db Context
         public AssignmentService()
         {
             db = new PrometheusEntities();
         }
+
+        //Method to return All Assignments
         public IQueryable<AssignmentUserModel> GetAssignments()
         {
             return db.Assignments.Select(item => new AssignmentUserModel
@@ -28,6 +31,7 @@ namespace PrometheusWeb.Services.Services
                 TeacherID = item.TeacherID
             });
         }
+        //Method to return Assignment based on given id
         public AssignmentUserModel GetAssignment(int id)
         {
             Assignment assignment = db.Assignments.Find(id);
@@ -44,6 +48,8 @@ namespace PrometheusWeb.Services.Services
             };
             return userModel;
         }
+
+        //METHOD: Insert Assignments to db
         public bool AddAssignment(AssignmentUserModel userModel)
         {
             Assignment assignment = new Assignment
@@ -67,6 +73,8 @@ namespace PrometheusWeb.Services.Services
 
             return true;
         }
+
+        //METHOD: update Assignments based on id and detailed Assignment User Model to db
         public bool UpdateAssignment(int id, AssignmentUserModel userModel)
         {
             Assignment assignment = new Assignment
@@ -101,6 +109,8 @@ namespace PrometheusWeb.Services.Services
 
             return true;
         }
+
+        //METHOD: Delete Assignment from db
         public AssignmentUserModel DeleteAssignment(int id)
         {
             Assignment assignment = db.Assignments.Find(id);
@@ -125,6 +135,8 @@ namespace PrometheusWeb.Services.Services
                 TeacherID = assignment.TeacherID
             };
         }
+
+        //METHOD: Returns bool value based on if Assignment with given id exists in db
         public bool IsAssignmentExists(int id)
         {
             return db.Assignments.Count(e => e.AssignmentID == id) > 0;

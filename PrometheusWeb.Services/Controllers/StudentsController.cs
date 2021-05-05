@@ -19,10 +19,19 @@ namespace PrometheusWeb.Services.Controllers
         private PrometheusEntities db = new PrometheusEntities();
 
         // GET: api/Students
-        public IQueryable<Student> GetStudents()
+        public IQueryable<StudentUserModel> GetStudents()
         {
-            IQueryable<Student> students = db.Students;
-            return students;
+            return db.Students.Select(item => new StudentUserModel
+            {
+                StudentID = item.StudentID,
+                FName = item.FName,
+                LName = item.LName,
+                UserID = item.UserID,
+                DOB = item.DOB,
+                Address = item.Address,
+                City = item.City,
+                MobileNo = item.MobileNo
+            });
         }
 
         // GET: api/Students/5

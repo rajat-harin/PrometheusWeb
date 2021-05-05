@@ -1,0 +1,101 @@
+﻿@model PrometheusWeb.Data.UserModels.AdminUserModel
+@{
+    ViewBag.Title = "AddStudent";
+}
+<div style="padding-left:700px; ">
+    <h2>Add Student</h2>
+</div>
+@using (Html.BeginForm("AddStudent", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <div style="padding-left:665px; ">
+        <h4>Create a new student account.</h4>
+    </div>
+    <hr />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.StudentID)
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.FName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.FName)
+            @Html.ValidationMessageFor(m => m.FName)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.LName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.LName)
+            @Html.ValidationMessageFor(m => m.LName)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.UserID, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.UserID)
+            @Html.ValidationMessageFor(m => m.UserID)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.DOB, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.DOB)
+            @Html.ValidationMessageFor(m => m.DOB)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.Address, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.Address)
+            @Html.ValidationMessageFor(m => m.Address)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.City, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.City)
+            @Html.ValidationMessageFor(m => m.City)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.MobileNo, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.MobileNo)
+            @Html.ValidationMessageFor(m => m.MobileNo)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.Password)
+            @Html.ValidationMessageFor(m => m.Password)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.Role, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.Role)
+            @Html.ValidationMessageFor(m => m.Role)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.SecurityQuestion, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.SecurityQuestion)
+            @Html.ValidationMessageFor(m => m.SecurityQuestion)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.SecurityAnswer, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.SecurityAnswer)
+            @Html.ValidationMessageFor(m => m.SecurityAnswer)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:750px">
+        <input type="submit" value="Submit" class="btn button" />
+        <input type="reset" value="Reset" class="btn button" />
+    </div>
+}
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval");
+}

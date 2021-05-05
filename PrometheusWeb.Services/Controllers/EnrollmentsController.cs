@@ -11,29 +11,38 @@ using System.Web.Http.Description;
 using PrometheusWeb.Data;
 using PrometheusWeb.Data.DataModels;
 using PrometheusWeb.Data.UserModels;
+using PrometheusWeb.Services.Services;
 
 namespace PrometheusWeb.Services.Controllers
 {
     public class EnrollmentsController : ApiController
     {
-        private PrometheusEntities db = new PrometheusEntities();
+        private IEnrollmentService _enrollmentService = null;
+
+        public EnrollmentsController(IEnrollmentService enrollmentService)
+        {
+            _enrollmentService = enrollmentService;
+        }
 
         // GET: api/Enrollments
         public IQueryable<EnrollmentUserModel> GetEnrollments()
         {
-            return db.Enrollments.Select(item => new EnrollmentUserModel
+            try
             {
-                EnrollmentID = item.EnrollmentID,
-                CourseID = item.CourseID,
-                StudentID = item.StudentID
-            });
+                IQueryable<EnrollmentUserModel> enrollments = _enrollmentService.GetEnrollments();
+                return enrollments;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         // GET: api/Enrollments/5
         [ResponseType(typeof(Enrollment))]
         public IHttpActionResult GetEnrollment(int id)
         {
-            Enrollment enrollment = db.Enrollments.Find(id);
+            EnrollmentUserModel enrollment = _enrollmentService.GetEnrollment(id);
             if (enrollment == null)
             {
                 return NotFound();
@@ -44,33 +53,26 @@ namespace PrometheusWeb.Services.Controllers
 
         // PUT: api/Enrollments/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutEnrollment(int id, Enrollment enrollment)
+        public IHttpActionResult PutEnrollment(int id, EnrollmentUserModel enrollment)
         {
+            bool result;
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            if (id != enrollment.EnrollmentID)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(enrollment).State = EntityState.Modified;
-
             try
             {
-                db.SaveChanges();
+                result = _enrollmentService.UpdateEnrollment(id, enrollment);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception)
             {
-                if (!EnrollmentExists(id))
+                if (!_enrollmentService.IsEnrollmentExists(id))
                 {
                     return NotFound();
                 }
                 else
                 {
-                    return StatusCode(HttpStatusCode.NoContent);
+                    return StatusCode(HttpStatusCode.InternalServerError);
                 }
             }
 
@@ -79,47 +81,46 @@ namespace PrometheusWeb.Services.Controllers
 
         // POST: api/Enrollments
         [ResponseType(typeof(Enrollment))]
-        public IHttpActionResult PostEnrollment(Enrollment enrollment)
+        public IHttpActionResult PostEnrollment(EnrollmentUserModel enrollment)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Enrollments.Add(enrollment);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = enrollment.EnrollmentID }, enrollment);
+            var result = _enrollmentService.AddEnrollment(enrollment);
+            if (result)
+                return CreatedAtRoute("DefaultApi", new { id = enrollment.EnrollmentID }, enrollment);
+            else
+                return StatusCode(HttpStatusCode.InternalServerError);
         }
 
         // DELETE: api/Enrollments/5
         [ResponseType(typeof(Enrollment))]
         public IHttpActionResult DeleteEnrollment(int id)
         {
-            Enrollment enrollment = db.Enrollments.Find(id);
-            if (enrollment == null)
+            try
             {
-                return NotFound();
+                EnrollmentUserModel enrollment = _enrollmentService.DeleteEnrollment(id);
+                if (enrollment != null)
+                {
+                    return Ok(enrollment);
+                }
+                else
+                {
+                    return StatusCode(HttpStatusCode.NotFound);
+                }
             }
-
-            db.Enrollments.Remove(enrollment);
-            db.SaveChanges();
-
-            return Ok(enrollment);
+            catch (Exception)
+            {
+                return StatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            
             base.Dispose(disposing);
-        }
-
-        private bool EnrollmentExists(int id)
-        {
-            return db.Enrollments.Count(e => e.EnrollmentID == id) > 0;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PrometheusWeb.Data.UserModels.AdminUserModel>
+﻿@model IEnumerable<PrometheusWeb.Data.UserModels.StudentUserModel>
 
 @{
     ViewBag.Title = "ViewStudents";
@@ -7,9 +7,9 @@
 <h2>ViewStudents</h2>
 
 <p>
-    @Html.ActionLink("Create New", "AddOrEditStudent")
+    @Html.ActionLink("Create New", "AddStudent")
 </p>
-<table class="table">
+<table class="table table-striped">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.StudentID)
@@ -24,28 +24,16 @@
             @Html.DisplayNameFor(model => model.UserID)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DOB)
+            @Html.DisplayNameFor(model => model.Address)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Address)
+            @Html.DisplayNameFor(model => model.DOB)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.City)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.MobileNo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Password)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Role)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SecurityQuestion)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SecurityAnswer)
         </th>
         <th></th>
     </tr>
@@ -66,10 +54,10 @@
                 @Html.DisplayFor(modelItem => item.UserID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DOB)
+                @Html.DisplayFor(modelItem => item.Address)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Address)
+                @Html.DisplayFor(modelItem => item.DOB)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.City)
@@ -78,20 +66,8 @@
                 @Html.DisplayFor(modelItem => item.MobileNo)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Role)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SecurityQuestion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SecurityAnswer)
-            </td>
-            <td>
-                <a href="@Url.Action("AddOrEditStudent", "Admin", new { id = item.UserID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Edit</a>
-                <a onclick="Delete(@item.UserID)" class="btn btn-default"><i class="fa fa-trash"></i>  Delete</a>
+                @*<a href="@Url.Action("Delete", "Admin", new { id = item.StudentID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Delete</a>*@
+                <a onclick="Delete(@item.StudentID)" class="btn btn-default"><i class="fa fa-trash"></i>  Delete</a>
             </td>
         </tr>
     }
@@ -107,7 +83,7 @@
         });
 
         function Delete(id) {
-            alertify.confirm('Student register','Are You Sure to Delete this Record ?',function(){
+            alertify.confirm('Student delete','Are You Sure to Delete this Record ?',function(){
                 window.location.href  = '@Url.Action("Delete","Admin")/'+id;
             },null );
         }

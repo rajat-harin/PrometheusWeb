@@ -63,11 +63,13 @@
         <td>
             @Html.DisplayFor(modelItem => item.EndDate)
         </td>
-        @*<td>
-            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-        </td>*@
+
+
+        <td>
+            @Html.ActionLink("Enroll", "EnrollInCourse", new {  id=item.CourseID }) |
+            
+        </td>
+
     </tr>
 }
 
