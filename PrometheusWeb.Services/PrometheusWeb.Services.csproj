@@ -122,6 +122,7 @@
     <Compile Include="Controllers\CoursesController.cs" />
     <Compile Include="Controllers\EnrollmentsController.cs" />
     <Compile Include="Controllers\HomeworkController.cs" />
+    <Compile Include="Controllers\TeachersController.cs" />
     <Compile Include="Services\HomeworkService.cs" />
     <Compile Include="Services\IHomeworkService.cs" />
     <Compile Include="Services\ITeachesService.cs" />
