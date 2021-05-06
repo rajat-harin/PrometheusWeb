@@ -22,7 +22,7 @@ namespace PrometheusWeb.MVC.Controllers
         
         public async Task<ActionResult> Index()
         {
-
+            ViewBag.Title = "Student Index Page";
             return View();
         }
         // GET: Student/MyCourses
@@ -200,6 +200,16 @@ namespace PrometheusWeb.MVC.Controllers
                 {
                     TempData["ErrorMessage"] = "Registration for this course is over!";
                     ViewBag.Message = "Registration for this course is over!";
+                    return View();
+                }
+            }
+            if (course.EndDate.HasValue)
+            {
+                TimeSpan diff = DateTime.Now - (DateTime)course.EndDate;
+                if (diff.Days > 0)
+                {
+                    TempData["ErrorMessage"] = "This Course Is Over. We Will Notify You when this course is back";
+                    ViewBag.Message = "This Course Is Over. We Will Notify You when this course is back!";
                     return View();
                 }
             }
