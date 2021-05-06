@@ -154,6 +154,7 @@ namespace PrometheusWeb.Services.Services
         {
             HomeworkPlan homeworkPlan = new HomeworkPlan
             {
+                HomeworkPlanID = (int)homeworkPlanModel.HomeworkPlanID,
                 HomeworkID = homeworkPlanModel.HomeworkID,
                 StudentID = homeworkPlanModel.StudentID,
                 PriorityLevel = homeworkPlanModel.PriorityLevel,

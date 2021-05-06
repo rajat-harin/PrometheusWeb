@@ -1,26 +1,116 @@
 ﻿
-@{
-    ViewBag.Title = "Index";
-}
+
 <style>
     .btn:hover {
         background-color: lightgreen;
         right: 0px;
     }
+
+    p {
+        color: gray;
+        font-weight: bold;
+    }
+
+    
+    .column {
+        float: left;
+        width: 19%;
+        padding: 0 10px;
+    }
+
+    /* Remove extra left and right margins, due to padding in columns */
+    .row {
+        margin: 0 -5px;
+    }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+    /* Style the counter cards */
+    .card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+        padding: 20px;
+        padding-left:10px;
+        text-align: center;
+        background-color: #f1f1f1;
+    }
 </style>
 
-<h2>Index</h2>
 
-<div class="btn-group-vertical" style="width:100%; padding:300px; background-color:#d9dad9" ;>
 
-    <button class="btn" style="font-weight:900">@Html.ActionLink("Admin", "Index", "Admin")</button>
+
+<!--<div class="btn-group-vertical" style="width:100%; padding:200px; background-color:#d9dad9" ;>
+    <h2 style="padding-left:42%">Admin Menu</h2>-->
+    @*<button class="btn" style="font-weight:900">@Html.ActionLink("Admin", "Index", "Admin")</button>*@
+    <!--<br>
+    <button class="btn" style="font-weight:900">@Html.ActionLink("Add Teacher", "AddTeacher", "Admin")
+            <p>To add new Teacher</p>
+    </button>
     <br>
-    <button class="btn" style="font-weight:900">@Html.ActionLink("Add Teacher", "AddTeacher", "Admin")</button>
+    <button class="btn" style="font-weight:900">@Html.ActionLink("Add Student", "AddStudent", "Admin")
+        <p>To add new Student</p>
+    </button>
     <br>
-    <button class="btn" style="font-weight:900">@Html.ActionLink("Add Student", "AddStudent", "Admin")</button>
+    <button class="btn" style="font-weight:900">@Html.ActionLink("View Students", "ViewStudents", "Admin")
+        <p>To view existing students OR Delete students</p>
+    </button>
     <br>
-    <button class="btn" style="font-weight:900">@Html.ActionLink("View Students", "ViewStudents", "Admin")</button>
+    <button class="btn" style="font-weight:900">@Html.ActionLink("View Teachers", "ViewTeachers", "Admin")
+        <p>To view existing Students OR Delete Teachers</p>
+    </button>
     <br>
-    <button class="btn" style="font-weight:900">@Html.ActionLink("View Teachers", "ViewTeachers", "Admin")</button>
-    <br>
+</div>-->
+
+<div class="container" style="padding-top:16%; padding-left:14%">
+    <h2 style="padding-left:29%">Admin Menu</h2>
+
+    <div class="row">
+        <div class="column">
+            <div class="card" style="width: 16rem; height:20rem">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h4 class="card-title" style="color:black; font-weight:bold">Add Teacher</h4>
+                    <h6 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">To add new Teacher</h6>
+                    <br/>
+                    <button class="btn" style="font-weight:900">@Html.ActionLink("Add Teacher", "AddTeacher", "Admin")</button>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="card" style="width: 16rem;height:20rem">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h4 class="card-title" style="color:black; font-weight:bold">Add Student</h4>
+                    <h6 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">To add new Student</h6>
+                    <br />
+                    <button class="btn" style="font-weight:900">@Html.ActionLink("Add Student", "AddStudent", "Admin")</button>
+</div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="card" style="width: 16rem;height:20rem">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h4 class="card-title" style="color:black; font-weight:bold">View Students</h4>
+                    <h6 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">To view existing students OR Delete students</h6>
+                    <button class="btn" style="font-weight:900">@Html.ActionLink("View Students", "ViewStudents", "Admin")</button>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="card" style="width: 16rem;height:20rem">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h4 class="card-title" style="color:black; font-weight:bold">View Teachers</h4>
+                    <h6 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">To view existing teachers OR Delete teachers</h6>
+                    
+                    <button class="btn" style="font-weight:900">@Html.ActionLink("View Teachers", "ViewTeachers", "Admin")</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
