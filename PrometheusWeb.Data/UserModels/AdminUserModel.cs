@@ -42,14 +42,19 @@ namespace PrometheusWeb.Data.UserModels
         [Required]
         [Phone]
         [StringLength(10, ErrorMessage = "The Phone Number should be 10 digits only.", MinimumLength = 10 )]
+        [RegularExpression(@"^[0-9]{10}$",
+         ErrorMessage = "Characters are not allowed.")]
         [Display(Name = "Phone Number")]
         public string MobileNo { get; set; }
         
         [Display(Name = "Is Admin?")]
         public bool IsAdmin { get; set; }
 
+        //
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [RegularExpression(@"^.*(?=.{6,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!*@#$%^&+=]).*$",
+         ErrorMessage = "Follow Password Guidelines")]
         [Display(Name = "Password")]
         public string Password { get; set; }
 
