@@ -128,7 +128,7 @@
             </td>
             <td>
                 @*<a href="@Url.Action("Delete", "Admin", new { id = item.StudentID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Delete</a>*@
-                <a onclick="Delete(@item.StudentID)" class="btn btn-default"><i class="fa fa-trash"></i>  Delete</a>
+                <a onclick="Delete(@item.StudentID)" class="btn btn-danger"><i class="fa fa-trash"></i>  Delete</a>
             </td>
         </tr>
     }
