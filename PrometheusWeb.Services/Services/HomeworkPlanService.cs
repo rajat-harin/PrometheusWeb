@@ -18,56 +18,6 @@ namespace PrometheusWeb.Services.Services
         {
             db = new PrometheusEntities();
         }
-        public bool AddHomeworkPlan(HomeworkPlanUserModel homeworkPlanModel)
-        {
-            try
-            {
-                HomeworkPlan homeworkPlan = new HomeworkPlan
-                {
-                    HomeworkID = homeworkPlanModel.HomeworkID,
-                    StudentID = homeworkPlanModel.StudentID,
-                    PriorityLevel = homeworkPlanModel.PriorityLevel,
-                    isCompleted = homeworkPlanModel.isCompleted
-                };
-                db.HomeworkPlans.Add(homeworkPlan);
-                db.SaveChanges();
-                return true;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
-        }
-
-        public HomeworkPlanUserModel DeleteHomeworkPlan(int id)
-        {
-            HomeworkPlan homeworkPlan = db.HomeworkPlans.Find(id);
-            if (homeworkPlan == null)
-            {
-                return null;
-            }
-
-            db.HomeworkPlans.Remove(homeworkPlan);
-            db.SaveChanges();
-
-            return new HomeworkPlanUserModel
-            {
-                HomeworkID = homeworkPlan.HomeworkID,
-                StudentID = homeworkPlan.StudentID,
-                PriorityLevel = homeworkPlan.PriorityLevel,
-                isCompleted = homeworkPlan.isCompleted,
-                Homework = new HomeworkUserModel
-                {
-                    HomeWorkID = homeworkPlan.Homework.HomeWorkID,
-                    Description = homeworkPlan.Homework.Description,
-                    Deadline = homeworkPlan.Homework.Deadline,
-                    ReqTime = homeworkPlan.Homework.ReqTime,
-                    LongDescription = homeworkPlan.Homework.LongDescription
-                }
-            };
-        }
-
         public HomeworkPlanUserModel GetHomeworkPlan(int id)
         {
             try
@@ -79,6 +29,7 @@ namespace PrometheusWeb.Services.Services
                 }
                 return new HomeworkPlanUserModel
                 {
+                    HomeworkPlanID = homeworkPlan.HomeworkPlanID,
                     HomeworkID = homeworkPlan.HomeworkID,
                     StudentID = homeworkPlan.StudentID,
                     PriorityLevel = homeworkPlan.PriorityLevel,
@@ -103,6 +54,7 @@ namespace PrometheusWeb.Services.Services
         {
             return db.HomeworkPlans.Select(item => new HomeworkPlanUserModel
             {
+                HomeworkPlanID = item.HomeworkPlanID,
                 HomeworkID = item.HomeworkID,
                 StudentID = item.StudentID,
                 PriorityLevel = item.PriorityLevel,
@@ -120,14 +72,84 @@ namespace PrometheusWeb.Services.Services
 
         public IQueryable<HomeworkPlanUserModel> GetHomeworkPlans(int StudentID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                IQueryable<HomeworkPlanUserModel> homeworkPlanUserModels = db.HomeworkPlans.Where(item => item.StudentID == StudentID).Select(homeworkPlan =>
+                new HomeworkPlanUserModel
+                {
+                    HomeworkPlanID = homeworkPlan.HomeworkPlanID,
+                    HomeworkID = homeworkPlan.HomeworkID,
+                    StudentID = homeworkPlan.StudentID,
+                    PriorityLevel = homeworkPlan.PriorityLevel,
+                    isCompleted = homeworkPlan.isCompleted,
+                    Homework = new HomeworkUserModel
+                    {
+                        HomeWorkID = homeworkPlan.Homework.HomeWorkID,
+                        Description = homeworkPlan.Homework.Description,
+                        Deadline = homeworkPlan.Homework.Deadline,
+                        ReqTime = homeworkPlan.Homework.ReqTime,
+                        LongDescription = homeworkPlan.Homework.LongDescription
+                    }
+                });
+                if (homeworkPlanUserModels.Any())
+                {
+                    return homeworkPlanUserModels;
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public bool IsHomeworkPlanExists(int id)
+        public bool AddHomeworkPlan(HomeworkPlanUserModel homeworkPlanModel)
         {
-            return db.HomeworkPlans.Count(e => e.HomeworkPlanID == id) > 0;
-        }
+            try
+            {
+                HomeworkPlan homeworkPlan = new HomeworkPlan
+                {
+                    HomeworkID = homeworkPlanModel.HomeworkID,
+                    StudentID = homeworkPlanModel.StudentID,
+                    PriorityLevel = homeworkPlanModel.PriorityLevel,
+                    isCompleted = homeworkPlanModel.isCompleted
+                };
+                db.HomeworkPlans.Add(homeworkPlan);
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
 
+        }
+        public bool AddHomeworkPlans(IQueryable<HomeworkPlanUserModel> homeworkPlanModels)
+        {
+            try
+            {
+                homeworkPlanModels.ToList().ForEach(homeworkPlanModel => {
+                    db.HomeworkPlans.Add(new HomeworkPlan
+                    {
+                        HomeworkID = homeworkPlanModel.HomeworkID,
+                        StudentID = homeworkPlanModel.StudentID,
+                        PriorityLevel = homeworkPlanModel.PriorityLevel,
+                        isCompleted = homeworkPlanModel.isCompleted
+                    });
+                });                
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception Ex)
+            {
+                throw;
+            }
+            
+        }
         public bool UpdateHomeworkPlan(int id, HomeworkPlanUserModel homeworkPlanModel)
         {
             HomeworkPlan homeworkPlan = new HomeworkPlan
@@ -163,5 +185,80 @@ namespace PrometheusWeb.Services.Services
 
             return true;
         }
+        public bool UpdateHomeworkPlans(IQueryable<HomeworkPlanUserModel> homeworkPlanModels)
+        {
+            homeworkPlanModels.ForEachAsync(homeworkPlanModel => {
+                db.Entry(new HomeworkPlan
+                {
+                    HomeworkID = homeworkPlanModel.HomeworkID,
+                    StudentID = homeworkPlanModel.StudentID,
+                    PriorityLevel = homeworkPlanModel.PriorityLevel,
+                    isCompleted = homeworkPlanModel.isCompleted
+                }).State = EntityState.Modified;
+            });           
+            
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+            return true;
+        }
+        public HomeworkPlanUserModel DeleteHomeworkPlan(int id)
+        {
+            HomeworkPlan homeworkPlan = db.HomeworkPlans.Find(id);
+            if (homeworkPlan == null)
+            {
+                return null;
+            }
+
+            db.HomeworkPlans.Remove(homeworkPlan);
+            db.SaveChanges();
+
+            return new HomeworkPlanUserModel
+            {
+                HomeworkID = homeworkPlan.HomeworkID,
+                StudentID = homeworkPlan.StudentID,
+                PriorityLevel = homeworkPlan.PriorityLevel,
+                isCompleted = homeworkPlan.isCompleted,
+                Homework = new HomeworkUserModel
+                {
+                    HomeWorkID = homeworkPlan.Homework.HomeWorkID,
+                    Description = homeworkPlan.Homework.Description,
+                    Deadline = homeworkPlan.Homework.Deadline,
+                    ReqTime = homeworkPlan.Homework.ReqTime,
+                    LongDescription = homeworkPlan.Homework.LongDescription
+                }
+            };
+        }
+        public bool DeleteHomeworkPlans(int StudentID)
+        {
+            try
+            {
+                db.HomeworkPlans.Where(item => item.StudentID == StudentID).ToList().ForEach(homeworkPlan =>
+                {
+                    if (homeworkPlan != null)
+                    {
+                        db.HomeworkPlans.Remove(homeworkPlan);
+                    }
+                });
+                db.SaveChanges();
+                return true;
+            }
+            catch(Exception)
+            {
+                return false;
+            }
+            
+        }
+        public bool IsHomeworkPlanExists(int id)
+        {
+            return db.HomeworkPlans.Count(e => e.HomeworkPlanID == id) > 0;
+        }
+
+        
     }
 }

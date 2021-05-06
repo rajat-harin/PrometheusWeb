@@ -89,6 +89,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Services\CourseServiceTests.cs" />
     <Compile Include="Services\EnrollmentServiceTests.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -101,6 +102,10 @@
     <ProjectReference Include="..\PrometheusWeb.Data\PrometheusWeb.Data.csproj">
       <Project>{C0BD8152-7652-443B-AF37-D24885AC120F}</Project>
       <Name>PrometheusWeb.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PrometheusWeb.Services\PrometheusWeb.Services.csproj">
+      <Project>{0c482fb6-3353-4ef7-be21-7dca4a226469}</Project>
+      <Name>PrometheusWeb.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

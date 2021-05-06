@@ -122,20 +122,22 @@
     <Compile Include="Controllers\CoursesController.cs" />
     <Compile Include="Controllers\EnrollmentsController.cs" />
     <Compile Include="Controllers\HomeworkController.cs" />
-
+    <Compile Include="Services\Contracts\IUserService.cs" />
+    <Compile Include="Services\Contracts\ITeacherService.cs" />
+    <Compile Include="Services\Contracts\IStudentService.cs" />
     <Compile Include="Controllers\TeachersController.cs" />
     <Compile Include="Controllers\HomeworkPlansController.cs" />
     <Compile Include="Services\HomeworkPlanService.cs" />
-    <Compile Include="Services\IHomeworkPlanService.cs" />
+    <Compile Include="Services\Contracts\IHomeworkPlanService.cs" />
     <Compile Include="Services\HomeworkService.cs" />
-    <Compile Include="Services\IHomeworkService.cs" />
-    <Compile Include="Services\ITeachesService.cs" />
+    <Compile Include="Services\Contracts\IHomeworkService.cs" />
+    <Compile Include="Services\Contracts\ITeachesService.cs" />
     <Compile Include="Services\AssignmentService.cs" />
-    <Compile Include="Services\IAssignmentService.cs" />
+    <Compile Include="Services\Contracts\IAssignmentService.cs" />
     <Compile Include="Services\EnrollmentService.cs" />
-    <Compile Include="Services\IEnrollmentService.cs" />
+    <Compile Include="Services\Contracts\IEnrollmentService.cs" />
     <Compile Include="Controllers\TeachesController.cs" />
-    <Compile Include="Services\ICourseService.cs" />
+    <Compile Include="Services\Contracts\ICourseService.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
@@ -143,7 +145,10 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CourseService.cs" />
+    <Compile Include="Services\StudentService.cs" />
+    <Compile Include="Services\TeacherService.cs" />
     <Compile Include="Services\TeachesService.cs" />
+    <Compile Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -166,6 +171,10 @@
     <ProjectReference Include="..\PrometheusWeb.Data\PrometheusWeb.Data.csproj">
       <Project>{c0bd8152-7652-443b-af37-d24885ac120f}</Project>
       <Name>PrometheusWeb.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PrometheusWeb.Exceptions\PrometheusWeb.Exceptions.csproj">
+      <Project>{9D825B69-D69F-491C-9388-9E58B542D0D3}</Project>
+      <Name>PrometheusWeb.Exceptions</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

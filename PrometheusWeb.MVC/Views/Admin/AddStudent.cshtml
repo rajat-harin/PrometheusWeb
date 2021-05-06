@@ -147,7 +147,7 @@
         <h4>Create a new student account.</h4>
     </div>
     <hr />
-    @Html.ValidationSummary("", new { @class = "text-danger" })
+    @*@Html.ValidationSummary("", new { @class = "text-danger" })*@
     @Html.HiddenFor(model => model.StudentID)
     <div class="form-group" style="padding-left:540px">
         @Html.LabelFor(m => m.FName, new { @class = "col-md-2 control-label" })
@@ -173,7 +173,7 @@
     <div class="form-group" style="padding-left:540px">
         @Html.LabelFor(m => m.DOB, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.DOB)
+            @Html.EditorFor(m => m.DOB, new { htmlAttributes = new { @class = "datepicker" } })
             @Html.ValidationMessageFor(m => m.DOB)
         </div>
     </div>
@@ -201,14 +201,15 @@
     <div class="form-group" style="padding-left:540px">
         @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.EditorFor(m => m.Password)
+            @Html.PasswordFor(m => m.Password)
             @Html.ValidationMessageFor(m => m.Password)
         </div>
     </div>
     <div class="form-group" style="padding-left:540px">
         @Html.LabelFor(m => m.SecurityQuestion, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.EditorFor(m => m.SecurityQuestion)
+            @*@Html.EditorFor(m => m.SecurityQuestion)*@ 
+            @Html.DropDownListFor(m => m.SecurityQuestion, new SelectList(ViewBag.list), "Select Your Security Question")
             @Html.ValidationMessageFor(m => m.SecurityQuestion)
         </div>
     </div>
@@ -220,10 +221,26 @@
         </div>
     </div>
     <div class="form-group" style="padding-left:750px">
+<<<<<<< HEAD
         <input type="submit" value="Submit" class="btn btn-primary"/>
+=======
+        <input type="submit" value="Submit" class="btn btn-primary btn-lg" />
+>>>>>>> eb833a9e80dd459fcf459719d4c39aa118709dea
         <input type="reset" value="Reset" class="btn btn-primary btn-danger" />
     </div>
 }
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
 @section scripts{
     @Scripts.Render("~/bundles/jqueryval");
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script>
+        $(function () {
+            $(".datepicker").datepicker({
+                dateFormat: "yy-mm-dd",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "1990:2021"
+            });
+        });
+    </script>
 }

@@ -1,6 +1,7 @@
 ﻿using PrometheusWeb.Data;
 using PrometheusWeb.Data.DataModels;
 using PrometheusWeb.Data.UserModels;
+using PrometheusWeb.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -72,6 +73,17 @@ namespace PrometheusWeb.Services.Services
             db.SaveChanges();
 
             return true;
+            }
+            catch(DbUpdateException ex)
+            {
+                if(ex.InnerException.InnerException.Message.Contains("UK_EnrollmentOnSIdAndCId"))
+                {
+                    throw new PrometheusWebException("Already Enrolled!");
+                }
+                else
+                {
+                    throw;
+                }
             }
             catch(Exception)
             {

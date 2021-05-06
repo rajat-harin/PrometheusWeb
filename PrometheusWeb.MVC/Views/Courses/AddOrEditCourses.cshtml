@@ -147,7 +147,7 @@
         <h4>Create a new course.</h4>
     </div>
     <hr />
-    @Html.ValidationSummary("", new { @class = "text-danger" })
+    @*@Html.ValidationSummary("", new { @class = "text-danger" })*@
     @Html.HiddenFor(model => model.CourseID)
     <div class="form-group" style="padding-left:540px">
         @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" })

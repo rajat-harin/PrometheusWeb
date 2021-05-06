@@ -6,7 +6,7 @@
     body {
         background-color: #d9dad9;
         font-family: 'Roboto', sans-serif;
-        color:black;
+        color: black;
     }
 
     .login-box {
@@ -89,9 +89,8 @@
 
     label {
         margin-bottom: 0px;
-        color:black;
-        font-weight:700;
-
+        color: black;
+        font-weight: 700;
     }
 
     .form-control-label {
@@ -149,7 +148,7 @@
     </div>
     <hr />
 
-    @Html.ValidationSummary("", new { @class = "text-danger" })
+    @*@Html.ValidationSummary("", new { @class = "text-danger" })*@
     @Html.HiddenFor(model => model.TeacherID)
     <div class="form-group" style="padding-left:540px">
         @Html.LabelFor(m => m.FName, new { @class = "col-md-2 control-label" })
@@ -176,7 +175,7 @@
     <div class="form-group" style="padding-left:540px">
         @Html.LabelFor(m => m.DOB, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.DOB)
+            @Html.EditorFor(m => m.DOB, new { htmlAttributes = new { @class = "datepicker" } })
             @Html.ValidationMessageFor(m => m.DOB)
         </div>
     </div>
@@ -218,7 +217,8 @@
     <div class="form-group" style="padding-left:540px">
         @Html.LabelFor(m => m.SecurityQuestion, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.EditorFor(m => m.SecurityQuestion)
+            @*@Html.EditorFor(m => m.SecurityQuestion)*@
+            @Html.DropDownListFor(m => m.SecurityQuestion, new SelectList(ViewBag.list), "Select Your Security Question")
             @Html.ValidationMessageFor(m => m.SecurityQuestion)
         </div>
     </div>
@@ -230,11 +230,27 @@
         </div>
     </div>
     <div class="form-group" style="padding-left:750px">
+<<<<<<< HEAD
         <input type="submit" value="Submit" class="btn btn-primary btn"/>
+=======
+        <input type="submit" value="Submit" class="btn btn-primary btn-lg" />
+>>>>>>> eb833a9e80dd459fcf459719d4c39aa118709dea
         <input type="reset" value="Reset" class="btn btn-primary btn-danger" />
     </div>
 
 }
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
 @section scripts{
     @Scripts.Render("~/bundles/jqueryval");
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script>
+        $(function () {
+            $(".datepicker").datepicker({
+                dateFormat: "yy-mm-dd",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "1990:2021"
+            });
+        });
+    </script>
 }

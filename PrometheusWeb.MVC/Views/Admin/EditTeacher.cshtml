@@ -1,0 +1,70 @@
+﻿@model PrometheusWeb.Data.UserModels.TeacherUserModel
+@{
+    ViewBag.Title = "EditTeacher";
+}
+
+<h2>AddOrEditTeacherProfile</h2>
+
+<div style="padding-left:700px; ">
+    <h2>Add Student</h2>
+</div>
+@using (Html.BeginForm("EditTeacher", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <div style="padding-left:665px; ">
+        <h4>Create a new course.</h4>
+    </div>
+    <hr />
+    @Html.HiddenFor(model => model.TeacherID)
+    @Html.HiddenFor(model => model.UserID)
+    @Html.HiddenFor(model => model.IsAdmin)
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.FName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.FName)
+            @Html.ValidationMessageFor(m => m.FName)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.LName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.LName)
+            @Html.ValidationMessageFor(m => m.LName)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.DOB, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.DOB)
+            @Html.ValidationMessageFor(m => m.DOB)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.Address, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.Address)
+            @Html.ValidationMessageFor(m => m.Address)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.City, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.City)
+            @Html.ValidationMessageFor(m => m.City)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.MobileNo, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.MobileNo)
+            @Html.ValidationMessageFor(m => m.MobileNo)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:750px">
+        <input type="submit" value="Submit" class="btn button" />
+        <input type="reset" value="Reset" class="btn button" />
+    </div>
+}
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval");
+}
