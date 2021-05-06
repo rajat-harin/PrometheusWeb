@@ -34,14 +34,15 @@
         caption-side: bottom;
     }
 </style>
-<div class="container">
-    <h2>GetHomeworkPlan</h2>
-    <br />
+<body style="background:#d9dad9;"></body>
+<br/>
+<br />
+<div class="container" style="background:#f8f8f6; " >
+   
     <p>
-        <button class="btn btn-warning">@Html.ActionLink("Generate New Plan", "GeneratePlan")</button>
+        <button class="btn btn-toolbar">@Html.ActionLink("Generate New Plan", "GeneratePlan")</button>
     </p>
-    <br />
-    <hr />
+    
     @if (Model != null)
     {
         <table class="table">
@@ -81,7 +82,7 @@
                         @Html.DisplayFor(modelItem => item.isCompleted)
                     </td>
                     <td>
-                        <button class="btn btn-primary">@Html.ActionLink("Update Plan", "UpdatePlan", new { id = item.HomeworkPlanID }) </button>
+                        <button class="btn btn-block">@Html.ActionLink("Update Plan", "UpdatePlan", new { id = item.HomeworkPlanID }) </button>
                     </td>
                 </tr>
             }
