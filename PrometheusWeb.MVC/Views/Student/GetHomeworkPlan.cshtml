@@ -34,59 +34,63 @@
         caption-side: bottom;
     }
 </style>
-<h2>GetHomeworkPlan</h2>
-
-<p>
-    <button class="btn btn-lg btn-warning">@Html.ActionLink("Generate New Plan", "GeneratePlan")</button>
-</p>
-@if (Model != null)
-{
-    <table class="table">
-        <tr>
-
-
-            <th>
-                @Html.DisplayNameFor(model => model.HomeworkID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Homework.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PriorityLevel)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.isCompleted)
-            </th>
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model)
-        {
+<div class="container">
+    <h2>GetHomeworkPlan</h2>
+    <br />
+    <p>
+        <button class="btn btn-warning">@Html.ActionLink("Generate New Plan", "GeneratePlan")</button>
+    </p>
+    <br />
+    <hr />
+    @if (Model != null)
+    {
+        <table class="table">
             <tr>
 
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.HomeworkID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Homework.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PriorityLevel)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.isCompleted)
-                </td>
-                <td>
-                    <button class="btn btn-primary">@Html.ActionLink("Update Plan", "UpdatePlan", new { id = item.HomeworkPlanID }) </button>
-                </td>
+                <th>
+                    @Html.DisplayNameFor(model => model.HomeworkID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Homework.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PriorityLevel)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.isCompleted)
+                </th>
+                <th></th>
             </tr>
-        }
 
-    </table>
-}
-            else
+            @foreach (var item in Model)
             {
-    <h3>@ViewBag.Message</h3>
+                <tr>
+
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.HomeworkID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Homework.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PriorityLevel)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.isCompleted)
+                    </td>
+                    <td>
+                        <button class="btn btn-primary">@Html.ActionLink("Update Plan", "UpdatePlan", new { id = item.HomeworkPlanID }) </button>
+                    </td>
+                </tr>
             }
 
+        </table>
+    }
+    else
+    {
+        <h3>@ViewBag.Message</h3>
+    }
+
+</div>
