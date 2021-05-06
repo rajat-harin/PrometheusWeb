@@ -103,11 +103,47 @@ namespace PrometheusWeb.MVC.Controllers
         {
             if (course.CourseID == 0)
             {
+                if (course.StartDate.HasValue)
+                {
+                    TimeSpan diff = (DateTime)course.EndDate - (DateTime)course.StartDate;
+                    if (diff.Days == 0)
+                    {
+                        TempData["ErrorMessage"] = "Course StartDate cannot be same with EndDate";
+                        return View();
+                    }
+                }
+                if (course.EndDate.HasValue)
+                {
+                    TimeSpan diff = (DateTime)course.EndDate - (DateTime)course.StartDate;
+                    if (diff.Days < 0)
+                    {
+                        TempData["ErrorMessage"] = "Course EndDate cannot be before StartDate";
+                        return View();
+                    }
+                }
                 HttpResponseMessage response = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Courses/", course).Result;
                 TempData["SuccessMessage"] = "Course Added Successfully";
             }
             else
             {
+                if (course.StartDate.HasValue)
+                {
+                    TimeSpan diff = (DateTime)course.EndDate - (DateTime)course.StartDate;
+                    if (diff.Days == 0)
+                    {
+                        TempData["ErrorMessage"] = "Course StartDate cannot be same with EndDate";
+                        return View();
+                    }
+                }
+                if (course.EndDate.HasValue)
+                {
+                    TimeSpan diff = (DateTime)course.EndDate - (DateTime)course.StartDate;
+                    if (diff.Days < 0)
+                    {
+                        TempData["ErrorMessage"] = "Course EndDate cannot before/same as StartDate";
+                        return View();
+                    }
+                }
                 HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Courses/" + course.CourseID, course).Result;
                 TempData["SuccessMessage"] = "Course Updated Successfully";
             }
@@ -118,7 +154,42 @@ namespace PrometheusWeb.MVC.Controllers
         public ActionResult Delete(int id)
         {
             HttpResponseMessage response = GlobalVariables.WebApiClient.DeleteAsync("api/Courses/" + id.ToString()).Result;
+            TempData["SuccessMessage"] = "Course Deleted Successfully";
             return RedirectToAction("ViewCourses");
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> SearchCourse(string search)
+        {
+            List<CourseUserModel> courses = new List<CourseUserModel>();
+
+            using (var client = new HttpClient())
+            {
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+                client.DefaultRequestHeaders.Clear();
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                //Sending request to find web api REST service resource Get:Students using HttpClient  
+                HttpResponseMessage ResFromCourses = await client.GetAsync("api/Courses/");
+
+
+                //Checking the response is successful or not which is sent using HttpClient  
+                if (ResFromCourses.IsSuccessStatusCode)
+                {
+                    //Storing the response details recieved from web api   
+                    var courseResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
+
+
+                    //Deserializing the response recieved from web api and storing into the list  
+                    courses = JsonConvert.DeserializeObject<List<CourseUserModel>>(courseResponse);
+
+                }
+                //returning the employee list to view  
+                return View(courses.Where(x => x.Name.StartsWith(search) | search == null).ToList());
+            }
         }
 
     }

@@ -6,9 +6,7 @@
 
     <h2>GetHomeworks</h2>
 
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
+    
     <style>
         table {
             width: 150px;
@@ -40,6 +38,11 @@
             caption-side: bottom;
         }
     </style>
+<body style=" background-color:#d9dad9;"></body>
+<div class="container" style="background-color: #f8f8f6;">
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
     <table class="table">
         <tr>
             <th>
@@ -72,41 +75,43 @@
             <th></th>
         </tr>
 
-        @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.AssignmentID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HomeworkID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Deadline)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReqTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LongDescription)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CourseName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TeacherID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CourseID)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AssignmentID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HomeworkID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Deadline)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReqTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LongDescription)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CourseName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TeacherID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CourseID)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
         }
 
     </table>
+</div>

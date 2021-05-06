@@ -86,6 +86,16 @@ namespace PrometheusWeb.MVC.Controllers
                 user.Role = "student";
                 var list = new List<string>() { "What is your Pet Name?", "What is your Nick Name", "What is your School Name?" };
                 ViewBag.list = list;
+                if (user.DOB.HasValue)
+                {
+                    TimeSpan diff = DateTime.Now - (DateTime)user.DOB;
+                    if (diff.Days == 0)
+                    {
+                        TempData["ErrorMessage"] = "DOB cannot be same with CurrentDate";
+                        ViewBag.Message = "DOB cannot be same with CurrentDate";
+                        return View();
+                    }
+                }
                 //Sending request to find web api REST service resource Post:Users using HttpClient
                 HttpResponseMessage responseUser = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Users/", user).Result;
                 //Sending request to find web api REST service resource Post: using HttpClient
@@ -106,6 +116,7 @@ namespace PrometheusWeb.MVC.Controllers
         {
             HttpResponseMessage response = GlobalVariables.WebApiClient.DeleteAsync("api/Students/" + id.ToString()).Result;
             HttpResponseMessage responseUser = GlobalVariables.WebApiClient.DeleteAsync("api/Users/" + id.ToString()).Result;
+            TempData["SuccessMessage"] = "Student Deleted Successfully";
             return RedirectToAction("ViewStudents");
         }
 
@@ -175,6 +186,16 @@ namespace PrometheusWeb.MVC.Controllers
                 }
                 var list = new List<string>() { "What is your Pet Name?", "What is your Nick Name", "What is your School Name?" };
                 ViewBag.list = list;
+                if (user.DOB.HasValue)
+                {
+                    TimeSpan diff = DateTime.Now - (DateTime)user.DOB;
+                    if (diff.Days == 0)
+                    {
+                        TempData["ErrorMessage"] = "DOB cannot be same with CurrentDate";
+                        ViewBag.Message = "DOB cannot be same with CurrentDate";
+                        return View();
+                    }
+                }
                 HttpResponseMessage responseUser = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Users/", user).Result;
                 HttpResponseMessage responseStudent = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Teachers/", user).Result;
                 
@@ -193,6 +214,7 @@ namespace PrometheusWeb.MVC.Controllers
         {
             HttpResponseMessage response = GlobalVariables.WebApiClient.DeleteAsync("api/Teachers/" + id.ToString()).Result;
             HttpResponseMessage responseUser = GlobalVariables.WebApiClient.DeleteAsync("api/Users/" + id.ToString()).Result;
+            TempData["SuccessMessage"] = "Teacher Deleted Successfully";
             return RedirectToAction("ViewTeachers");
         }
 
@@ -240,39 +262,72 @@ namespace PrometheusWeb.MVC.Controllers
             return RedirectToAction("ViewStudents");
         }
 
-        // POST: Admin/ChangePasswordTeacher
-        public ActionResult ChangePasswordTeacher(int id = 0)
-        {
-            if (id != 0)
-            {
-                HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("api/Teachers/" + id.ToString()).Result;
-                return View(response.Content.ReadAsAsync<TeacherUserModel>().Result);
-            }
-            return RedirectToAction("ViewTeachers");
-        }
-
-        [HttpPost]
-        public ActionResult ChangePasswordTeacher(TeacherUserModel teacher)
-        {
-            if (teacher.TeacherID != 0)
-            {
-                HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Teachers/" + teacher.TeacherID, teacher).Result;
-                TempData["SuccessMessage"] = "Teacher Updated Successfully";
-            }
-            return RedirectToAction("ViewTeachers");
-        }
-
+        [HttpGet]
         public async Task<ActionResult> SearchStudent(string search)
         {
-            List<Student> userList = new List<Student>();
-            HttpResponseMessage ResFromCourses = await GlobalVariables.WebApiClient.GetAsync("api/Students/");
-            return View(userList.Where(x => x.FName.StartsWith(search) || search == null).ToList());
+            List<StudentUserModel> students = new List<StudentUserModel>();
+
+            using (var client = new HttpClient())
+            {
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+                client.DefaultRequestHeaders.Clear();
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                //Sending request to find web api REST service resource Get:Students using HttpClient  
+                HttpResponseMessage ResFromCourses = await client.GetAsync("api/Students/");
+
+
+                //Checking the response is successful or not which is sent using HttpClient  
+                if (ResFromCourses.IsSuccessStatusCode)
+                {
+                    //Storing the response details recieved from web api   
+                    var studentResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
+
+
+                    //Deserializing the response recieved from web api and storing into the list  
+                    students = JsonConvert.DeserializeObject<List<StudentUserModel>>(studentResponse);
+
+                }
+                //returning the employee list to view  
+                return View(students.Where(x => x.FName.StartsWith(search) | search == null).ToList());
+            }
         }
 
-        public ActionResult SearchTeacher(string search)
+        [HttpGet]
+        public async Task<ActionResult> SearchTeacher(string search)
         {
-            List<Teacher> userList = new List<Teacher>();
-            return View(userList.Where(x => x.FName.StartsWith(search) || search == null).ToList());
+            List<TeacherUserModel> teachers = new List<TeacherUserModel>();
+
+            using (var client = new HttpClient())
+            {
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+                client.DefaultRequestHeaders.Clear();
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                //Sending request to find web api REST service resource Get:Students using HttpClient  
+                HttpResponseMessage ResFromCourses = await client.GetAsync("api/Teachers/");
+
+
+                //Checking the response is successful or not which is sent using HttpClient  
+                if (ResFromCourses.IsSuccessStatusCode)
+                {
+                    //Storing the response details recieved from web api   
+                    var teacherResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
+
+
+                    //Deserializing the response recieved from web api and storing into the list  
+                    teachers = JsonConvert.DeserializeObject<List<TeacherUserModel>>(teacherResponse);
+
+                }
+                //returning the employee list to view  
+                return View(teachers.Where(x => x.FName.StartsWith(search) | search == null).ToList());
+            }
         }
     }
 }

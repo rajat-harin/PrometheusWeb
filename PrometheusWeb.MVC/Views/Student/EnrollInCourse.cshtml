@@ -4,5 +4,14 @@
 }
 
 <h2>EnrollInCourse</h2>
-<h1>@ViewBag.Message</h1>
 
+@section scripts{
+    <script>
+        $(function () {
+            var successMessage = '@TempData["SuccessMessage"]'
+            if (successMessage != '')
+                alertify.success(successMessage);
+        });
+
+    </script>
+}

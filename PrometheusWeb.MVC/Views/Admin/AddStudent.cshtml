@@ -208,7 +208,7 @@
     <div class="form-group" style="padding-left:540px">
         @Html.LabelFor(m => m.SecurityQuestion, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @*@Html.EditorFor(m => m.SecurityQuestion)*@ 
+            @*@Html.EditorFor(m => m.SecurityQuestion)*@
             @Html.DropDownListFor(m => m.SecurityQuestion, new SelectList(ViewBag.list), "Select Your Security Question")
             @Html.ValidationMessageFor(m => m.SecurityQuestion)
         </div>
@@ -239,6 +239,18 @@
                 changeYear: true,
                 yearRange: "1990:2021"
             });
+        });
+    </script>
+    <script>
+        $(function () {
+            var successMessage = '@TempData["SuccessMessage"]'
+            if (successMessage != '')
+                alertify.success(successMessage);
+        });
+        $(function () {
+            var errorMessage = '@TempData["ErrorMessage"]'
+            if (errorMessage != '')
+                alertify.error(errorMessage);
         });
     </script>
 }

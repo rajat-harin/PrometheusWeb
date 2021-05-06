@@ -251,4 +251,16 @@
             });
         });
     </script>
+    <script>
+        $(function () {
+            var successMessage = '@TempData["SuccessMessage"]'
+            if (successMessage != '')
+                alertify.success(successMessage);
+        });
+        $(function () {
+            var errorMessage = '@TempData["ErrorMessage"]'
+            if (errorMessage != '')
+                alertify.error(errorMessage);
+        });
+    </script>
 }

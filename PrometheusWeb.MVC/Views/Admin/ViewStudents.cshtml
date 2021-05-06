@@ -2,13 +2,8 @@
 
 @{
     ViewBag.Title = "ViewStudents";
-    IEnumerable<PrometheusWeb.Data.UserModels.StudentUserModel> filteredList = Model;
 }
-<p>
-    
-        <input type="text" id="search" name="search" placeholder="Enter Student Name" />
-        
-</p>
+
 <style>
     table {
         width: 150px;
@@ -42,9 +37,7 @@
 </style>
 <h2>ViewStudents</h2>
 
-<p>
-    @Html.ActionLink("Create New", "AddStudent")
-</p>
+
 <style>
     table {
         width: 150px;
@@ -76,139 +69,85 @@
         caption-side: bottom;
     }
 </style>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.StudentID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UserID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Address)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DOB)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.City)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MobileNo)
-        </th>
-        <th></th>
-    </tr>
 
-    @foreach (var item in Model)
-    {
+<body style="background:#d9dad9;"></body>
+<div class="container" style="background:#f8f8f6;">
+    <p>
+        @Html.ActionLink("Create New", "AddStudent")
+        @using (Html.BeginForm("SearchStudent", "Admin", FormMethod.Get))
+        {
+            <input type="text" name="search" placeholder="Enter Student Name" style="color:black; font-weight:600;" />
+            <input type="submit" name="submit" value="Search" style="background-color:greenyellow; color:black; font-weight:600;" />
+        }
+    </p>
+    <table class="table">
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StudentID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DOB)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MobileNo)
-            </td>
-            <td>
-                <a href="@Url.Action("EditStudent", "Admin", new { id = item.StudentID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Edit</a>
-                @*<a href="@Url.Action("Delete", "Admin", new { id = item.StudentID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Delete</a>*@
-                <a onclick="Delete(@item.StudentID)" class="btn btn-danger"><i class="fa fa-trash"></i>  Delete</a>
-            </td>
+            <th>
+                @Html.DisplayNameFor(model => model.StudentID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DOB)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MobileNo)
+            </th>
+            <th></th>
         </tr>
-    }
 
-</table>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StudentID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DOB)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MobileNo)
+                </td>
+                <td>
+                    <a href="@Url.Action("EditStudent", "Admin", new { id = item.StudentID})" class="btn btn-primary"><i class="fa fa-pencil"></i>  Edit</a>
+                    @*<a href="@Url.Action("Delete", "Admin", new { id = item.StudentID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Delete</a>*@
+                    <a onclick="Delete(@item.StudentID)" class="btn btn-danger"><i class="fa fa-trash"></i>  Delete</a>
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
 <br />
 <br />
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.StudentID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UserID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Address)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DOB)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.City)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MobileNo)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StudentID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DOB)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MobileNo)
-            </td>
-            <td>
-                <a href="@Url.Action("EditStudent", "Admin", new { id = item.StudentID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Edit</a>
-                @*<a href="@Url.Action("Delete", "Admin", new { id = item.StudentID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Delete</a>*@
-                <a onclick="Delete(@item.StudentID)" class="btn btn-default"><i class="fa fa-trash"></i>  Delete</a>
-            </td>
-        </tr>
-    }
-
-</table>
-
 @section scripts{
     <script>
         $(function () {
@@ -217,17 +156,16 @@
                 alertify.success(successMessage);
         });
 
+        $(function () {
+            var errorMessage = '@TempData["ErrorMessage"]'
+            if (errorMessage != '')
+                alertify.error(errorMessage);
+        });
+
         function Delete(id) {
             alertify.confirm('Student delete','Are You Sure to Delete this Record ?',function(){
                 window.location.href  = '@Url.Action("DeleteStudent","Admin")/'+id;
             },null );
-        }
-        function FilterList() {
-            
-             @{ 
-                 searchText = document.getElementById("search").value;
-                 filteredList = Model.Select(item => item.FName.Contains(searchText));
-             }
         }
     </script>
 }
