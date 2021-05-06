@@ -103,7 +103,7 @@
                 @Html.DisplayFor(modelItem => item.IsAdmin)
             </td>
             <td>
-                @*<a href="@Url.Action("EditTeacherProfile", "Admin", new { id = item.TeacherID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Edit</a>*@
+                <a href="@Url.Action("EditTeacher", "Admin", new { id = item.TeacherID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Edit</a>
                 @*<a href="@Url.Action("Delete", "Admin", new { id = item.StudentID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Delete</a>*@
                 <a onclick="Delete(@item.TeacherID)" class="btn btn-default"><i class="fa fa-trash"></i>  Delete</a>
             </td>

@@ -11,51 +11,33 @@ using System.Web.Http.Description;
 using PrometheusWeb.Data;
 using PrometheusWeb.Data.DataModels;
 using PrometheusWeb.Data.UserModels;
+using PrometheusWeb.Services.Services;
 
 namespace PrometheusWeb.Services.Controllers
 {
     public class TeachersController : ApiController
     {
-        private PrometheusEntities db = new PrometheusEntities();
+        private ITeacherService _teacherService = null;
+        public TeachersController(ITeacherService teacherService)
+        {
+            _teacherService = teacherService;
+        }
 
         // GET: api/Teachers
         public IQueryable<TeacherUserModel> GetTeachers()
         {
-            return db.Teachers.Select(item => new TeacherUserModel
-            {
-                TeacherID = item.TeacherID,
-                FName = item.FName,
-                LName = item.LName,
-                UserID = item.UserID,
-                DOB = item.DOB,
-                Address = item.Address,
-                City = item.City,
-                MobileNo = item.MobileNo,
-                IsAdmin = item.IsAdmin
-            });
+            return _teacherService.GetTeachers();
         }
 
         // GET: api/Teachers/5
         [ResponseType(typeof(Teacher))]
         public IHttpActionResult GetTeacher(int id)
         {
-            Teacher teacher = db.Teachers.Find(id);
+            TeacherUserModel teacher = _teacherService.GetTeacher(id);
             if (teacher == null)
             {
                 return NotFound();
             }
-            TeacherUserModel teachertUser = new TeacherUserModel
-            {
-                TeacherID = teacher.TeacherID,
-                FName = teacher.FName,
-                LName = teacher.LName,
-                UserID = teacher.UserID,
-                DOB = teacher.DOB,
-                Address = teacher.Address,
-                City = teacher.City,
-                MobileNo = teacher.MobileNo,
-                IsAdmin = teacher.IsAdmin
-            };
             return Ok(teacher);
         }
 
@@ -63,43 +45,24 @@ namespace PrometheusWeb.Services.Controllers
         [ResponseType(typeof(void))]
         public IHttpActionResult PutTeacher(int id, TeacherUserModel teacherModel)
         {
-            Teacher teacher = new Teacher
-            {
-                TeacherID = teacherModel.TeacherID,
-                FName = teacherModel.FName,
-                LName = teacherModel.LName,
-                UserID = teacherModel.UserID,
-                DOB = teacherModel.DOB,
-                Address = teacherModel.Address,
-                City = teacherModel.City,
-                MobileNo = teacherModel.MobileNo,
-                IsAdmin = teacherModel.IsAdmin
-            };
+            bool result;
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            if (id != teacher.TeacherID)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(teacher).State = EntityState.Modified;
-
             try
             {
-                db.SaveChanges();
+                result = _teacherService.UpdateTeacher(id, teacherModel);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception)
             {
-                if (!TeacherExists(id))
+                if (!_teacherService.IsTeacherExists(id))
                 {
                     return NotFound();
                 }
                 else
                 {
-                    throw;
+                    return StatusCode(HttpStatusCode.InternalServerError);
                 }
             }
 
@@ -110,57 +73,26 @@ namespace PrometheusWeb.Services.Controllers
         [ResponseType(typeof(Teacher))]
         public IHttpActionResult PostTeacher(TeacherUserModel teacherModel)
         {
-            Teacher teacher = new Teacher
-            {
-                TeacherID = teacherModel.TeacherID,
-                FName = teacherModel.FName,
-                LName = teacherModel.LName,
-                UserID = teacherModel.UserID,
-                DOB = teacherModel.DOB,
-                Address = teacherModel.Address,
-                City = teacherModel.City,
-                MobileNo = teacherModel.MobileNo,
-                IsAdmin = teacherModel.IsAdmin
-            };
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Teachers.Add(teacher);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = teacher.TeacherID }, teacher);
+            var result = _teacherService.AddTeacher(teacherModel);
+            if (result)
+                return CreatedAtRoute("DefaultApi", new { id = teacherModel.TeacherID }, teacherModel);
+            else
+                return StatusCode(HttpStatusCode.InternalServerError);
         }
 
         // DELETE: api/Teachers/5
         [ResponseType(typeof(Teacher))]
         public IHttpActionResult DeleteTeacher(int id)
         {
-            Teacher teacher = db.Teachers.Find(id);
-            if (teacher == null)
-            {
-                return NotFound();
-            }
-
-            db.Teachers.Remove(teacher);
-            db.SaveChanges();
+            TeacherUserModel teacher = _teacherService.DeleteTeacher(id);
 
             return Ok(teacher);
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
             base.Dispose(disposing);
         }
 
-        private bool TeacherExists(int id)
-        {
-            return db.Teachers.Count(e => e.TeacherID == id) > 0;
-        }
     }
 }

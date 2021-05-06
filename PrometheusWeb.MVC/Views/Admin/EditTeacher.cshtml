@@ -1,6 +1,6 @@
 ﻿@model PrometheusWeb.Data.UserModels.TeacherUserModel
 @{
-    ViewBag.Title = "EditTeacherProfile";
+    ViewBag.Title = "EditTeacher";
 }
 
 <h2>AddOrEditTeacherProfile</h2>
@@ -8,14 +8,13 @@
 <div style="padding-left:700px; ">
     <h2>Add Student</h2>
 </div>
-@using (Html.BeginForm("EditTeacherProfile", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("EditTeacher", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
     <div style="padding-left:665px; ">
         <h4>Create a new course.</h4>
     </div>
     <hr />
-    @Html.ValidationSummary("", new { @class = "text-danger" })
     @Html.HiddenFor(model => model.TeacherID)
     @Html.HiddenFor(model => model.UserID)
     @Html.HiddenFor(model => model.IsAdmin)

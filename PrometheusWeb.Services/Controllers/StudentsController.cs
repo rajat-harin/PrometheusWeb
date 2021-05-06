@@ -17,8 +17,7 @@ namespace PrometheusWeb.Services.Controllers
 {
     public class StudentsController : ApiController
     {
-        private PrometheusEntities db = new PrometheusEntities(); // Remove after DI
-        private IStudentService _studentService;
+        private IStudentService _studentService = null;
         public StudentsController(IStudentService studentService)
         {
             _studentService = studentService;
@@ -34,22 +33,11 @@ namespace PrometheusWeb.Services.Controllers
         [ResponseType(typeof(Student))]
         public IHttpActionResult GetStudent(int id)
         {
-            Student student = db.Students.Find(id);
+            StudentUserModel student = _studentService.GetStudent(id);
             if (student == null)
             {
                 return NotFound();
             }
-            StudentUserModel studentUser = new StudentUserModel
-            {
-                StudentID = student.StudentID,
-                FName = student.FName,
-                LName = student.LName,
-                UserID = student.UserID,
-                DOB = student.DOB,
-                Address = student.Address,
-                City = student.City,
-                MobileNo = student.MobileNo
-            };
             return Ok(student);
         }
 
@@ -57,42 +45,24 @@ namespace PrometheusWeb.Services.Controllers
         [ResponseType(typeof(void))]
         public IHttpActionResult PutStudent(int id, StudentUserModel studentModel)
         {
-            Student student = new Student
-            {
-                StudentID = studentModel.StudentID,
-                FName = studentModel.FName,
-                LName = studentModel.LName,
-                UserID = studentModel.UserID,
-                DOB = studentModel.DOB,
-                Address = studentModel.Address,
-                City = studentModel.City,
-                MobileNo = studentModel.MobileNo
-            };
+            bool result;
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            if (id != student.StudentID)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(student).State = EntityState.Modified;
-
             try
             {
-                db.SaveChanges();
+                result = _studentService.UpdateStudent(id, studentModel);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception)
             {
-                if (!StudentExists(id))
+                if (!_studentService.IsStudentExists(id))
                 {
                     return NotFound();
                 }
                 else
                 {
-                    throw;
+                    return StatusCode(HttpStatusCode.InternalServerError);
                 }
             }
 
@@ -103,56 +73,26 @@ namespace PrometheusWeb.Services.Controllers
         [ResponseType(typeof(Student))]
         public IHttpActionResult PostStudent(StudentUserModel studentModel)
         {
-            Student student = new Student
-            {
-                StudentID = studentModel.StudentID,
-                FName = studentModel.FName,
-                LName = studentModel.LName,
-                UserID = studentModel.UserID,
-                DOB = studentModel.DOB,
-                Address = studentModel.Address,
-                City = studentModel.City,
-                MobileNo = studentModel.MobileNo
-            };
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Students.Add(student);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = student.StudentID }, student);
+            var result = _studentService.AddStudent(studentModel);
+            if (result)
+                return CreatedAtRoute("DefaultApi", new { id = studentModel.StudentID }, studentModel);
+            else
+                return StatusCode(HttpStatusCode.InternalServerError);
         }
 
         // DELETE: api/Students/5
         [ResponseType(typeof(Student))]
         public IHttpActionResult DeleteStudent(int id)
         {
-            Student student = db.Students.Find(id);
-            if (student == null)
-            {
-                return NotFound();
-            }
+            StudentUserModel course = _studentService.DeleteStudent(id);
 
-            db.Students.Remove(student);
-            db.SaveChanges();
-
-            return Ok(student);
+            return Ok(course);
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
             base.Dispose(disposing);
         }
 
-        private bool StudentExists(int id)
-        {
-            return db.Students.Count(e => e.StudentID == id) > 0;
-        }
     }
 }

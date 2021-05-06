@@ -3,6 +3,13 @@
 @{
     ViewBag.Title = "ViewStudents";
 }
+@*<p>
+    @using (Html.BeginForm("ViewStudents", "Admin", FormMethod.Get))
+    {
+        <input type="text" name="search" placeholder="Enter Student Name" />
+        <input type="submit" name="submit" value="Search" />
+    }
+</p>*@
 <style>
     table {
         width: 150px;
@@ -127,6 +134,7 @@
                 @Html.DisplayFor(modelItem => item.MobileNo)
             </td>
             <td>
+                <a href="@Url.Action("EditStudent", "Admin", new { id = item.StudentID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Edit</a>
                 @*<a href="@Url.Action("Delete", "Admin", new { id = item.StudentID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Delete</a>*@
                 <a onclick="Delete(@item.StudentID)" class="btn btn-default"><i class="fa fa-trash"></i>  Delete</a>
             </td>
