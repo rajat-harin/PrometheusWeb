@@ -45,8 +45,11 @@
 
 <p>
     @Html.ActionLink("Create New", "AddStudent")
-    @*<input type="text" name="search" placeholder="Enter Student Name" />
-    <input type="submit" name="submit" value="Search" />*@
+    @using (Html.BeginForm("SearchStudent", "Admin", FormMethod.Get))
+    {
+        <input type="text" name="search" placeholder="Enter Student Name" />
+        <input type="submit" name="submit" value="Search" />
+    }
 </p>
 <style>
     table {
@@ -151,6 +154,12 @@
             var successMessage = '@TempData["SuccessMessage"]'
             if (successMessage != '')
                 alertify.success(successMessage);
+        });
+
+        $(function () {
+            var errorMessage = '@TempData["ErrorMessage"]'
+            if (errorMessage != '')
+                alertify.error(errorMessage);
         });
 
         function Delete(id) {

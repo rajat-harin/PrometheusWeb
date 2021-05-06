@@ -34,7 +34,7 @@
     <div class="form-group" style="padding-left:540px">
         @Html.LabelFor(m => m.DOB, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.EditorFor(m => m.DOB)
+            @Html.EditorFor(m => m.DOB, new { htmlAttributes = new { @class = "datepicker" } })
             @Html.ValidationMessageFor(m => m.DOB)
         </div>
     </div>
@@ -64,6 +64,30 @@
         <input type="reset" value="Reset" class="btn button" />
     </div>
 }
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
 @section scripts{
     @Scripts.Render("~/bundles/jqueryval");
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script>
+        $(function () {
+            $(".datepicker").datepicker({
+                dateFormat: "yy-mm-dd",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "1990:2021"
+            });
+        });
+    </script>
+    <script>
+        $(function () {
+            var successMessage = '@TempData["SuccessMessage"]'
+            if (successMessage != '')
+                alertify.success(successMessage);
+        });
+        $(function () {
+            var errorMessage = '@TempData["ErrorMessage"]'
+            if (errorMessage != '')
+                alertify.error(errorMessage);
+        });
+    </script>
 }

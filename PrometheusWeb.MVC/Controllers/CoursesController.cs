@@ -103,11 +103,47 @@ namespace PrometheusWeb.MVC.Controllers
         {
             if (course.CourseID == 0)
             {
+                if (course.StartDate.HasValue)
+                {
+                    TimeSpan diff = (DateTime)course.EndDate - (DateTime)course.StartDate;
+                    if (diff.Days == 0)
+                    {
+                        TempData["ErrorMessage"] = "Course StartDate cannot be same with EndDate";
+                        return View();
+                    }
+                }
+                if (course.EndDate.HasValue)
+                {
+                    TimeSpan diff = (DateTime)course.EndDate - (DateTime)course.StartDate;
+                    if (diff.Days < 0)
+                    {
+                        TempData["ErrorMessage"] = "Course EndDate cannot before StartDate";
+                        return View();
+                    }
+                }
                 HttpResponseMessage response = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Courses/", course).Result;
                 TempData["SuccessMessage"] = "Course Added Successfully";
             }
             else
             {
+                if (course.StartDate.HasValue)
+                {
+                    TimeSpan diff = (DateTime)course.EndDate - (DateTime)course.StartDate;
+                    if (diff.Days == 0)
+                    {
+                        TempData["ErrorMessage"] = "Course StartDate cannot be same with EndDate";
+                        return View();
+                    }
+                }
+                if (course.EndDate.HasValue)
+                {
+                    TimeSpan diff = (DateTime)course.EndDate - (DateTime)course.StartDate;
+                    if (diff.Days < 0)
+                    {
+                        TempData["ErrorMessage"] = "Course EndDate cannot before/same as StartDate";
+                        return View();
+                    }
+                }
                 HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Courses/" + course.CourseID, course).Result;
                 TempData["SuccessMessage"] = "Course Updated Successfully";
             }

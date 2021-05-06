@@ -198,7 +198,7 @@ namespace PrometheusWeb.MVC.Controllers
                 TimeSpan diff = DateTime.Now - (DateTime)course.StartDate;
                 if (diff.Days > 7)
                 {
-                    TempData["ErrorMessage"] = "Course Already Exists";
+                    TempData["ErrorMessage"] = "Registration for this course is over!";
                     ViewBag.Message = "Registration for this course is over!";
                     return View();
                 }
@@ -434,7 +434,7 @@ namespace PrometheusWeb.MVC.Controllers
                 HttpResponseMessage Res = await client.PutAsJsonAsync("api/HomeworkPlans",homeworkPlan);
                 if (Res.IsSuccessStatusCode)
                 {
-                    
+                    TempData["SuccessMessage"] = "Plan Updated Successfully";
                    return RedirectToAction("GetHomeworkPlan", 1);
                    
                 }

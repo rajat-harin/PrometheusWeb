@@ -1,23 +1,23 @@
-﻿@model IEnumerable<PrometheusWeb.Data.UserModels.StudentUserModel>
+﻿@model IEnumerable<PrometheusWeb.Data.UserModels.TeacherUserModel>
 
 @{
-    ViewBag.Title = "SearchStudent";
+    ViewBag.Title = "SearchTeacher";
 }
 
-<h2>Search Student</h2>
+<h2>Search Teacher</h2>
 
 <p>
     @*@Html.ActionLink("Create New", "Create")*@
-    @using(Html.BeginForm("SearchStudent", "Admin", FormMethod.Get))
+    @using (Html.BeginForm("SearchTeacher", "Admin", FormMethod.Get))
     {
-        <input type="text" name="search" placeholder="Enter Student Name"/>
+        <input type="text" name="search" placeholder="Enter Student Name" />
         <input type="submit" name="submit" value="Search" />
     }
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.StudentID)
+            @Html.DisplayNameFor(model => model.TeacherID)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.FName)
@@ -40,13 +40,16 @@
         <th>
             @Html.DisplayNameFor(model => model.MobileNo)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsAdmin)
+        </th>
         <th></th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.StudentID)
+            @Html.DisplayFor(modelItem => item.TeacherID)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.FName)
@@ -70,9 +73,12 @@
             @Html.DisplayFor(modelItem => item.MobileNo)
         </td>
         <td>
-            <a href="@Url.Action("EditStudent", "Admin", new { id = item.StudentID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Edit</a>
+            @Html.DisplayFor(modelItem => item.IsAdmin)
+        </td>
+        <td>
+            <a href="@Url.Action("EditTeacher", "Admin", new { id = item.TeacherID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Edit</a>
             @*<a href="@Url.Action("Delete", "Admin", new { id = item.StudentID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Delete</a>*@
-            <a onclick="Delete(@item.StudentID)" class="btn btn-default"><i class="fa fa-trash"></i>  Delete</a>
+            <a onclick="Delete(@item.TeacherID)" class="btn btn-default"><i class="fa fa-trash"></i>  Delete</a>
         </td>
     </tr>
 }

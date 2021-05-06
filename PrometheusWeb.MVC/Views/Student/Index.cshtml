@@ -23,3 +23,13 @@
     <button class="btn" style="font-weight:900">@Html.ActionLink("View Homework", "GetHomeworkPlan", "Student")</button>
     <br>
 </div>
+@section scripts{
+    <script>
+        $(function () {
+            var successMessage = '@TempData["SuccessMessage"]'
+            if (successMessage != '')
+                alertify.success(successMessage);
+        });
+
+    </script>
+}

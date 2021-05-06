@@ -6,42 +6,53 @@
 
 <h2>UpdatePlan</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("UpdatePlan", "Student", FormMethod.Post, Model))
 {
     @Html.AntiForgeryToken()
-    
-<div class="form-horizontal">
-    <h4>HomeworkPlanUserModel</h4>
-    <hr />
 
-    @Html.HiddenFor(model => model.HomeworkID)
-    @Html.HiddenFor(model => model.HomeworkPlanID)
-    @Html.HiddenFor(model => model.StudentID)
+    <div class="form-horizontal">
+        <h4>HomeworkPlanUserModel</h4>
+        <hr />
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.PriorityLevel, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.PriorityLevel, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.PriorityLevel, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.HomeworkID)
+        @Html.HiddenFor(model => model.HomeworkPlanID)
+        @Html.HiddenFor(model => model.StudentID)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PriorityLevel, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PriorityLevel, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PriorityLevel, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.isCompleted, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.isCompleted, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.isCompleted, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
         </div>
     </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.isCompleted, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.isCompleted, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.isCompleted, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Save" class="btn btn-default" />
-        </div>
-    </div>
-</div>
 }
 
 <div>
     @Html.ActionLink("Back to List", "GetHomeworkPlan")
 </div>
+
+@section scripts{
+    <script>
+        $(function () {
+            var successMessage = '@TempData["SuccessMessage"]'
+            if (successMessage != '')
+                alertify.success(successMessage);
+        });
+
+    </script>
+}

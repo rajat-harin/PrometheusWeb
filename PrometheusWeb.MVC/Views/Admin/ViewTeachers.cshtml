@@ -39,6 +39,11 @@
 
 <p>
     @Html.ActionLink("Create New", "AddTeacher")
+    @using (Html.BeginForm("SearchTeacher", "Admin", FormMethod.Get))
+    {
+        <input type="text" name="search" placeholder="Enter Student Name" />
+        <input type="submit" name="submit" value="Search" />
+    }
 </p>
 <table class="table">
     <tr>
