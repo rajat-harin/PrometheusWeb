@@ -154,8 +154,8 @@ namespace PrometheusWeb.MVC.Controllers
                 TimeSpan diff = DateTime.Now - (DateTime)courseModel.StartDate;
                 if (diff.Days > 7)
                 {
-                    TempData["ErrorMessage"] = "Registration for this course is over!";
-                    ViewBag.Message = "Registration for this course is over!";
+                    TempData["ErrorMessage"] = "The Course cannot be Selected!";
+                    ViewBag.Message = "The Course cannot be Selected!";
                     return View();
                 }
             }
@@ -185,15 +185,15 @@ namespace PrometheusWeb.MVC.Controllers
                 //Checking the response is successful or not which is sent using HttpClient  
                 if (ResFromTeaches.IsSuccessStatusCode)
                 {
-                    TempData["SuccessMessage"] = "Enrolled Successfully";
+                    TempData["SuccessMessage"] = "Selected Successfully";
                 }
                 else if (ResFromTeaches.StatusCode == HttpStatusCode.Conflict)
                 {
-                    TempData["ErrorMessage"] = "Already Enrolled!";
+                    TempData["ErrorMessage"] = "Already Selected!";
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "There was error enrolling in Course!";
+                    TempData["ErrorMessage"] = "There was error Selecting Course!";
                 }
             }
             return RedirectToAction("MyCourses");
