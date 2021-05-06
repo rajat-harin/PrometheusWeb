@@ -431,7 +431,7 @@ namespace PrometheusWeb.MVC.Controllers
                 //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage Res = await client.PutAsJsonAsync("api/HomeworkPlans",homeworkPlan);
+                HttpResponseMessage Res = await client.PutAsJsonAsync("api/HomeworkPlans/"+homeworkPlan.HomeworkPlanID,homeworkPlan);
                 if (Res.IsSuccessStatusCode)
                 {
                     
