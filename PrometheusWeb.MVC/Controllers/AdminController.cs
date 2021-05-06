@@ -262,10 +262,9 @@ namespace PrometheusWeb.MVC.Controllers
             return RedirectToAction("ViewTeachers");
         }
 
-        public async Task<ActionResult> SearchStudent(string search)
+        public ActionResult SearchStudent(string search)
         {
             List<Student> userList = new List<Student>();
-            HttpResponseMessage ResFromCourses = await GlobalVariables.WebApiClient.GetAsync("api/Students/");
             return View(userList.Where(x => x.FName.StartsWith(search) || search == null).ToList());
         }
 

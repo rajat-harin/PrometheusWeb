@@ -4,12 +4,12 @@
     ViewBag.Title = "ViewStudents";
 }
 @*<p>
-    @using (Html.BeginForm("ViewStudents", "Admin", FormMethod.Get))
-    {
-        <input type="text" name="search" placeholder="Enter Student Name" />
-        <input type="submit" name="submit" value="Search" />
-    }
-</p>*@
+        @using (Html.BeginForm("ViewStudents", "Admin", FormMethod.Get))
+        {
+            <input type="text" name="search" placeholder="Enter Student Name" />
+            <input type="submit" name="submit" value="Search" />
+        }
+    </p>*@
 <style>
     table {
         width: 150px;
@@ -45,6 +45,8 @@
 
 <p>
     @Html.ActionLink("Create New", "AddStudent")
+    @*<input type="text" name="search" placeholder="Enter Student Name" />
+    <input type="submit" name="submit" value="Search" />*@
 </p>
 <style>
     table {
