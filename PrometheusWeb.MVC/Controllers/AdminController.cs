@@ -116,6 +116,7 @@ namespace PrometheusWeb.MVC.Controllers
         {
             HttpResponseMessage response = GlobalVariables.WebApiClient.DeleteAsync("api/Students/" + id.ToString()).Result;
             HttpResponseMessage responseUser = GlobalVariables.WebApiClient.DeleteAsync("api/Users/" + id.ToString()).Result;
+            TempData["SuccessMessage"] = "Student Deleted Successfully";
             return RedirectToAction("ViewStudents");
         }
 
@@ -213,6 +214,7 @@ namespace PrometheusWeb.MVC.Controllers
         {
             HttpResponseMessage response = GlobalVariables.WebApiClient.DeleteAsync("api/Teachers/" + id.ToString()).Result;
             HttpResponseMessage responseUser = GlobalVariables.WebApiClient.DeleteAsync("api/Users/" + id.ToString()).Result;
+            TempData["SuccessMessage"] = "Teacher Deleted Successfully";
             return RedirectToAction("ViewTeachers");
         }
 

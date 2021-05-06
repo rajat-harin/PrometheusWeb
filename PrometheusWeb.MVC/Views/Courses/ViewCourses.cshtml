@@ -8,6 +8,11 @@
 
 <p>
     @Html.ActionLink("Create New", "AddOrEditCourses")
+    @using (Html.BeginForm("SearchCourse", "Courses", FormMethod.Get))
+    {
+        <input type="text" name="search" placeholder="Enter Course Name" />
+        <input type="submit" name="submit" value="Search" />
+    }
 </p>
 <style>
     table {
