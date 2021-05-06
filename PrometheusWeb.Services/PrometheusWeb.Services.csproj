@@ -172,6 +172,10 @@
       <Project>{c0bd8152-7652-443b-af37-d24885ac120f}</Project>
       <Name>PrometheusWeb.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PrometheusWeb.Exceptions\PrometheusWeb.Exceptions.csproj">
+      <Project>{9D825B69-D69F-491C-9388-9E58B542D0D3}</Project>
+      <Name>PrometheusWeb.Exceptions</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

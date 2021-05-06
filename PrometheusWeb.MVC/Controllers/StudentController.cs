@@ -191,13 +191,23 @@ namespace PrometheusWeb.MVC.Controllers
             
         }
         // GET: Student/EnrollInCourse
-        public async Task<ActionResult> EnrollInCourse(int id = 1)  //@TODO: change default to 0 after auth
+        public async Task<ActionResult> EnrollInCourse(CourseUserModel course)  //@TODO: change default to 0 after auth
         {
+            if (course.StartDate.HasValue)
+            {
+                TimeSpan diff = DateTime.Now - (DateTime)course.StartDate;
+                if (diff.Days > 7)
+                {
+                    TempData["ErrorMessage"] = "Course Already Exists";
+                    ViewBag.Message = "Registration for this course is over!";
+                    return View();
+                }
+            }
             int StudentID = 1;
             //TODO: Get Student ID from Auth
 
             EnrollmentUserModel enrollments = new EnrollmentUserModel {
-                CourseID = id,
+                CourseID = course.CourseID,
                 StudentID = StudentID
             };
 
@@ -216,16 +226,24 @@ namespace PrometheusWeb.MVC.Controllers
                 //Checking the response is successful or not which is sent using HttpClient  
                 if (ResFromEnrollment.IsSuccessStatusCode)
                 {
-                    ViewBag.Message = "Enrolled for the Course!";
-                    
+                    TempData["SuccessMessage"] = "Enrolled Successfully";
+                    ViewBag.Message = "Enrolled Successfully!";
+
                 }
+                else if (ResFromEnrollment.StatusCode == HttpStatusCode.Conflict)
+                {
+                    TempData["ErrorMessage"] = "Already Enrolled!";
+                    ViewBag.Message = "Already Enrolled!";
+                }
+
                 else
                 {
-                    //returning the employee list to view  
+
+                    TempData["SuccessMessage"] = "There was error enrolling in Course!";
                     ViewBag.Message = "There was error enrolling in Course!";
                 }
                 
-                return View(ViewBag);
+                return View();
             }
         }
 

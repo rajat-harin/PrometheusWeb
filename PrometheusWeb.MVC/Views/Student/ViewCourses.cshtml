@@ -33,9 +33,6 @@
 
 <h2>ViewCourses</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <div>
 <table class="table">
     <caption style="; font-family:Arial, Helvetica, sans-serif; font-weight:400; font-size:medium">List of all the available courses</caption>
@@ -72,7 +69,7 @@
 
 
         <td>
-            @Html.ActionLink("Enroll", "EnrollInCourse", new {  id=item.CourseID }) |
+            @Html.ActionLink("Enroll", "EnrollInCourse", item ) |
             
         </td>
 

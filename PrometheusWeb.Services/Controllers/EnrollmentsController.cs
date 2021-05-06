@@ -11,6 +11,7 @@ using System.Web.Http.Description;
 using PrometheusWeb.Data;
 using PrometheusWeb.Data.DataModels;
 using PrometheusWeb.Data.UserModels;
+using PrometheusWeb.Exceptions;
 using PrometheusWeb.Services.Services;
 
 namespace PrometheusWeb.Services.Controllers
@@ -87,12 +88,24 @@ namespace PrometheusWeb.Services.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            var result = _enrollmentService.AddEnrollment(enrollment);
-            if (result)
-                return CreatedAtRoute("DefaultApi", new { id = enrollment.EnrollmentID }, enrollment);
-            else
+            try
+            {
+                var result = _enrollmentService.AddEnrollment(enrollment);
+                if (result)
+                    return CreatedAtRoute("DefaultApi", new { id = enrollment.EnrollmentID }, enrollment);
+                else
+                    return StatusCode(HttpStatusCode.InternalServerError);
+            }
+            catch (PrometheusWebException)
+            {
+                return StatusCode(HttpStatusCode.Conflict);
+            }
+            catch
+            {
                 return StatusCode(HttpStatusCode.InternalServerError);
+            }
+            
+            
         }
 
         // DELETE: api/Enrollments/5
