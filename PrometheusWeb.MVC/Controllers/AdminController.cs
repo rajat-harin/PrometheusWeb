@@ -95,6 +95,12 @@ namespace PrometheusWeb.MVC.Controllers
                         ViewBag.Message = "DOB cannot be same with CurrentDate";
                         return View();
                     }
+                    if (user.DOB > DateTime.Now)
+                    {
+                        TempData["ErrorMessage"] = "DOB cannot be CurrentDate or after CurrentDate";
+                        ViewBag.Message = "DOB cannot be same with CurrentDate";
+                        return View();
+                    }
                 }
                 //Sending request to find web api REST service resource Post:Users using HttpClient
                 HttpResponseMessage responseUser = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Users/", user).Result;
@@ -192,6 +198,12 @@ namespace PrometheusWeb.MVC.Controllers
                     if (diff.Days == 0)
                     {
                         TempData["ErrorMessage"] = "DOB cannot be same with CurrentDate";
+                        ViewBag.Message = "DOB cannot be same with CurrentDate";
+                        return View();
+                    }
+                    if (user.DOB > DateTime.Now)
+                    {
+                        TempData["ErrorMessage"] = "DOB cannot be CurrentDate or after CurrentDate";
                         ViewBag.Message = "DOB cannot be same with CurrentDate";
                         return View();
                     }

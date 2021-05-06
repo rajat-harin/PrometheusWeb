@@ -40,6 +40,7 @@ namespace PrometheusWeb.Data.UserModels
         public string City { get; set; }
 
         [Required]
+        [Phone]
         [StringLength(10, ErrorMessage = "The Phone Number should be 10 digits only.", MinimumLength = 10 )]
         [Display(Name = "Phone Number")]
         public string MobileNo { get; set; }
