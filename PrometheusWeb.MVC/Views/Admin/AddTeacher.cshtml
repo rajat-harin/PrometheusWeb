@@ -40,11 +40,22 @@
         margin-top: 25px;
         text-align: left;
     }
-
+    input[type=datetime] {
+        width: 225px;
+        background-color: #f8f8f6;
+        border: none;
+        border-top: 0px;
+        border-radius: 0px;
+        font-weight: bold;
+        outline: 0;
+        padding-left: 0px;
+        margin-bottom: 20px;
+        color: black;
+    }
     input[type=text] {
         background-color: #f8f8f6;
         border: none;
-        border-bottom: 2px solid #0DB8DE;
+        width: 225px;
         border-top: 0px;
         border-radius: 0px;
         font-weight: bold;
@@ -53,11 +64,22 @@
         padding-left: 0px;
         color: black;
     }
-
+    input[type=tel] {
+        width: 225px;
+        background-color: #f8f8f6;
+        border: none;
+        border-top: 0px;
+        border-radius: 0px;
+        font-weight: bold;
+        outline: 0;
+        padding-left: 0px;
+        margin-bottom: 20px;
+        color: black;
+    }
     input[type=password] {
         background-color: #f8f8f6;
         border: none;
-        border-bottom: 2px solid #0DB8DE;
+        width: 225px;
         border-top: 0px;
         border-radius: 0px;
         font-weight: bold;
@@ -137,104 +159,106 @@
         padding: 0px;
     }
 </style>
-<div style="padding-left:700px; ">
-    <h2>Add Teacher</h2>
-</div>
-@using (Html.BeginForm("AddTeacher", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-{
-    @Html.AntiForgeryToken()
-    <div style="padding-left:665px; ">
-        <h4>Create a new teacher account.</h4>
-    </div>
-    <hr />
 
-    @*@Html.ValidationSummary("", new { @class = "text-danger" })*@
-    @Html.HiddenFor(model => model.TeacherID)
-    <div class="form-group" style="padding-left:540px">
-        @Html.LabelFor(m => m.FName, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.EditorFor(m => m.FName)
-            @Html.ValidationMessageFor(m => m.FName)
-        </div>
+    <div style="padding-left:700px; ">
+        <h2>Add Teacher</h2>
     </div>
+    @using (Html.BeginForm("AddTeacher", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <div style="padding-left:665px; ">
+            <h4>Create a new teacher account.</h4>
+        </div>
+        <hr />
 
-    <div class="form-group" style="padding-left:540px">
-        @Html.LabelFor(m => m.LName, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.EditorFor(m => m.LName)
-            @Html.ValidationMessageFor(m => m.LName)
+        @*@Html.ValidationSummary("", new { @class = "text-danger" })*@
+        @Html.HiddenFor(model => model.TeacherID)
+        <div class="form-group" style="padding-left:540px">
+            @Html.LabelFor(m => m.FName, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.FName)
+                @Html.ValidationMessageFor(m => m.FName)
+            </div>
         </div>
-    </div>
-    <div class="form-group" style="padding-left:540px">
-        @Html.LabelFor(m => m.UserID, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.EditorFor(m => m.UserID)
-            @Html.ValidationMessageFor(m => m.UserID)
-        </div>
-    </div>
-    <div class="form-group" style="padding-left:540px">
-        @Html.LabelFor(m => m.DOB, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.EditorFor(m => m.DOB, new { htmlAttributes = new { @class = "datepicker" } })
-            @Html.ValidationMessageFor(m => m.DOB)
-        </div>
-    </div>
-    <div class="form-group" style="padding-left:540px">
-        @Html.LabelFor(m => m.Address, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.EditorFor(m => m.Address)
-            @Html.ValidationMessageFor(m => m.Address)
-        </div>
-    </div>
-    <div class="form-group" style="padding-left:540px">
-        @Html.LabelFor(m => m.City, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.EditorFor(m => m.City)
-            @Html.ValidationMessageFor(m => m.City)
-        </div>
-    </div>
-    <div class="form-group" style="padding-left:540px">
-        @Html.LabelFor(m => m.MobileNo, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.EditorFor(m => m.MobileNo)
-            @Html.ValidationMessageFor(m => m.MobileNo)
-        </div>
-    </div>
-    <div class="form-group" style="padding-left:540px">
-        @Html.LabelFor(m => m.IsAdmin, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.CheckBoxFor(m => m.IsAdmin)
-            @Html.ValidationMessageFor(m => m.IsAdmin)
-        </div>
-    </div>
-    <div class="form-group" style="padding-left:540px">
-        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.PasswordFor(m => m.Password)
-            @Html.ValidationMessageFor(m => m.Password)
-        </div>
-    </div>
-    <div class="form-group" style="padding-left:540px">
-        @Html.LabelFor(m => m.SecurityQuestion, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @*@Html.EditorFor(m => m.SecurityQuestion)*@
-            @Html.DropDownListFor(m => m.SecurityQuestion, new SelectList(ViewBag.list), "Select Your Security Question")
-            @Html.ValidationMessageFor(m => m.SecurityQuestion)
-        </div>
-    </div>
-    <div class="form-group" style="padding-left:540px">
-        @Html.LabelFor(m => m.SecurityAnswer, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.EditorFor(m => m.SecurityAnswer)
-            @Html.ValidationMessageFor(m => m.SecurityAnswer)
-        </div>
-    </div>
-    <div class="form-group" style="padding-left:750px">
 
-        <input type="submit" value="Submit" class="btn btn-primary btn"/>
+        <div class="form-group" style="padding-left:540px">
+            @Html.LabelFor(m => m.LName, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.LName)
+                @Html.ValidationMessageFor(m => m.LName)
+            </div>
+        </div>
+        <div class="form-group" style="padding-left:540px">
+            @Html.LabelFor(m => m.UserID, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.UserID)
+                @Html.ValidationMessageFor(m => m.UserID)
+            </div>
+        </div>
+        <div class="form-group" style="padding-left:540px">
+            @Html.LabelFor(m => m.DOB, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.DOB, new { htmlAttributes = new { @class = "datepicker" } })
+                @Html.ValidationMessageFor(m => m.DOB)
+            </div>
+        </div>
+        <div class="form-group" style="padding-left:540px">
+            @Html.LabelFor(m => m.Address, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.Address)
+                @Html.ValidationMessageFor(m => m.Address)
+            </div>
+        </div>
+        <div class="form-group" style="padding-left:540px">
+            @Html.LabelFor(m => m.City, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.City)
+                @Html.ValidationMessageFor(m => m.City)
+            </div>
+        </div>
+        <div class="form-group" style="padding-left:540px">
+            @Html.LabelFor(m => m.MobileNo, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.MobileNo)
+                @Html.ValidationMessageFor(m => m.MobileNo)
+            </div>
+        </div>
+        <div class="form-group" style="padding-left:540px">
+            @Html.LabelFor(m => m.IsAdmin, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.CheckBoxFor(m => m.IsAdmin)
+                @Html.ValidationMessageFor(m => m.IsAdmin)
+            </div>
+        </div>
+        <div class="form-group" style="padding-left:540px">
+            @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.PasswordFor(m => m.Password)
+                @Html.ValidationMessageFor(m => m.Password)
+            </div>
+        </div>
+        <div class="form-group" style="padding-left:540px">
+            @Html.LabelFor(m => m.SecurityQuestion, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(m => m.SecurityQuestion)*@
+                @Html.DropDownListFor(m => m.SecurityQuestion, new SelectList(ViewBag.list), "Select Your Security Question")
+                @Html.ValidationMessageFor(m => m.SecurityQuestion)
+            </div>
+        </div>
+        <div class="form-group" style="padding-left:540px">
+            @Html.LabelFor(m => m.SecurityAnswer, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.SecurityAnswer)
+                @Html.ValidationMessageFor(m => m.SecurityAnswer)
+            </div>
+        </div>
+        <div class="form-group" style="padding-left:750px">
 
-        <input type="reset" value="Reset" class="btn btn-primary btn-danger" />
-    </div>
+            <input type="submit" value="Submit" class="btn btn-primary btn" />
+
+            <input type="reset" value="Reset" class="btn btn-primary btn-danger" />
+        </div>
+
 
 }
 <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
