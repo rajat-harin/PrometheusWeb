@@ -1,4 +1,4 @@
-﻿@model PrometheusWeb.MVC.Models.ViewModels.TeacherCourses
+﻿@model PrometheusWeb.Data.UserModels.CourseUserModel
 @{
     ViewBag.Title = "SaveCourses";
 }
@@ -27,44 +27,42 @@
         padding: 16px;
         text-align: center;
         background-color: #f1f1f1;
-        
     }
+
     card text-center {
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
         background-color: #f1f1f1;
     }
 </style>
-<div class="container" style="padding-left:27%; padding-top:7%">
-    <h2>Save Course for Teacher</h2>
-    <div class="row">
-
-        <div class="column">
-            <div class="card text-center" style="width: 30rem;">
-                <img src="..." class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h2 class="card-title" style="color:black; font-weight:bold">
-                        @Html.DisplayFor(model => model.Name, new { disabled = "disabled", @readonly = "readonly" })
-
-                    </h2>
-
-
-                    <h4 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">
-                        CourseID: # @Html.DisplayFor(model => model.CourseID, new { disabled = "disabled", @readonly = "readonly" })
-
-                    </h4>
-                    <h4 class="card-text" style="color:black; font-weight:bold">
-                        Start Date:  @Html.DisplayFor(model => model.StartDate, new { disabled = "disabled", @readonly = "readonly" })
-                    </h4>
-                    <h4 class="card-text" style="color:black; font-weight:bold">
-                        End Date: @Html.DisplayFor(model => model.EndDate, new { disabled = "disabled", @readonly = "readonly" })
-                    </h4>
-                    <div class="form-group">
-                        <input type="submit" value="Enroll Course" class="btn btn-primary" />
+@using (Html.BeginForm())
+{
+    <div class="container" style="padding-left:27%; padding-top:7%">
+        <h2>Save Course for Teacher</h2>
+        <div class="row">
+            <div class="column">
+                <div class="card text-center" style="width: 30rem;">
+                    <img src="..." class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h2 class="card-title" style="color:black; font-weight:bold">
+                            @Html.DisplayFor(model => model.Name, new { disabled = "disabled", @readonly = "readonly" })
+                        </h2>
+                        <h4 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">
+                            CourseID: # @Html.DisplayFor(model => model.CourseID, new { disabled = "disabled", @readonly = "readonly" })
+                        </h4>
+                        <h4 class="card-text" style="color:black; font-weight:bold">
+                            Start Date:  @Html.DisplayFor(model => model.StartDate, new { disabled = "disabled", @readonly = "readonly" })
+                        </h4>
+                        <h4 class="card-text" style="color:black; font-weight:bold">
+                            End Date: @Html.DisplayFor(model => model.EndDate, new { disabled = "disabled", @readonly = "readonly" })
+                        </h4>
+                        <div class="form-group">
+                            <input type="submit" value="Enroll Course" class="btn btn-primary" />
+                        </div>
                     </div>
                 </div>
+
             </div>
 
         </div>
-
     </div>
-</div>
+}
