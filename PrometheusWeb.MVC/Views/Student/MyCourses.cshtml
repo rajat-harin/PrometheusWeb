@@ -32,30 +32,36 @@
 </style>
 <div class="container">
     <h2>My Enrolled Courses</h2>
+   
 
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
+        <p>
+            @Html.ActionLink("Create New", "Create")
+        </p>
 
-    <div class="row">
+        <div class="row">
 
-        @foreach (var item in Model)
-        {
-        
-            <div class="column">
-                <div class="card" style="width: 18rem;">
-                    <img src="..." class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title" style="color:black; font-weight:bold">@Html.DisplayFor(modelItem => item.Course.Name)</h5>
-                        <h6 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">EnrollmentID: #@Html.DisplayFor(modelItem => item.EnrollmentID)</h6>
-
-                        <h6 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">CourseID: #@Html.DisplayFor(modelItem => item.CourseID)</h6>
-                        <p class="card-text" style="color:black; font-weight:bold">Start Date: @Html.DisplayFor(modelItem => item.Course.StartDate)</p>
-                        <p class="card-text" style="color:black; font-weight:bold">End Date: @Html.DisplayFor(modelItem => item.Course.EndDate)</p>
-                    </div>
-                </div>
+            @foreach (var item in Model)
+            {
                 
-            </div>
-        
-        }
-</div>
+                   
+               
+                <div class="column">
+                    <div class="card" style="width: 20rem;">
+                        
+                            <img src="~/Content/Images/design.jpg" class="card-img-top" alt="..." style="width:16rem; height: 16rem;">
+                        
+                        
+                        <div class="card-body">
+                            <h5 class="card-title" style="color:black; font-weight:bold">@Html.DisplayFor(modelItem => item.Course.Name)</h5>
+                            <h6 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">EnrollmentID: #@Html.DisplayFor(modelItem => item.EnrollmentID)</h6>
+
+                            <h6 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">CourseID: #@Html.DisplayFor(modelItem => item.CourseID)</h6>
+                            <p class="card-text" style="color:black; font-weight:bold">Start Date: @Html.DisplayFor(modelItem => item.Course.StartDate)</p>
+                            <p class="card-text" style="color:black; font-weight:bold">End Date: @Html.DisplayFor(modelItem => item.Course.EndDate)</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            }
+        </div>
