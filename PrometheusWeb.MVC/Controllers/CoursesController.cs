@@ -107,7 +107,7 @@ namespace PrometheusWeb.MVC.Controllers
         [HttpPost]
         public ActionResult UpdateCourse(CourseUserModel course)
         {
-            if (course.CourseID == 0)
+            if (course.CourseID != 0)
             {
                 if (course.StartDate.HasValue)
                 {
