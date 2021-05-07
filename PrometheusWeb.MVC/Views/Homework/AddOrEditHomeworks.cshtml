@@ -41,10 +41,23 @@
         text-align: left;
     }
 
+    input[type=datetime] {
+        width: 225px;
+        background-color: #f8f8f6;
+        border: none;
+        border-top: 0px;
+        border-radius: 0px;
+        font-weight: bold;
+        outline: 0;
+        padding-left: 0px;
+        margin-bottom: 20px;
+        color: black;
+    }
+
     input[type=text] {
         background-color: #f8f8f6;
         border: none;
-        border-bottom: 2px solid #0DB8DE;
+        width: 225px;
         border-top: 0px;
         border-radius: 0px;
         font-weight: bold;
@@ -54,10 +67,23 @@
         color: black;
     }
 
+    input[type=tel] {
+        width: 225px;
+        background-color: #f8f8f6;
+        border: none;
+        border-top: 0px;
+        border-radius: 0px;
+        font-weight: bold;
+        outline: 0;
+        padding-left: 0px;
+        margin-bottom: 20px;
+        color: black;
+    }
+
     input[type=password] {
         background-color: #f8f8f6;
         border: none;
-        border-bottom: 2px solid #0DB8DE;
+        width: 225px;
         border-top: 0px;
         border-radius: 0px;
         font-weight: bold;
@@ -143,44 +169,46 @@
 @using (Html.BeginForm("AddOrEditHomeworks", "Homework", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
-    <div style="padding-left:665px; ">
-        <h4>Create a new Homework.</h4>
-    </div>
-    <hr />
-    @Html.ValidationSummary("", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.HomeWorkID)
-    <div class="form-group" style="padding-left:540px">
-        @Html.LabelFor(m => m.Description, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.EditorFor(m => m.Description)
-            @Html.ValidationMessageFor(m => m.Description)
+    
+        <div style="padding-left:665px; ">
+            <h2>Create a new Homework.</h2>
         </div>
-    </div>
-    <div class="form-group" style="padding-left:540px">
-        @Html.LabelFor(m => m.LongDescription, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.EditorFor(m => m.LongDescription)
-            @Html.ValidationMessageFor(m => m.LongDescription)
+        <hr />
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.HomeWorkID)
+        <div class="form-group" style="padding-left:540px">
+            @Html.LabelFor(m => m.Description, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.Description)
+                @Html.ValidationMessageFor(m => m.Description)
+            </div>
         </div>
-    </div>
-    <div class="form-group" style="padding-left:540px">
-        @Html.LabelFor(m => m.Deadline, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.EditorFor(m => m.Deadline)
-            @Html.ValidationMessageFor(m => m.Deadline)
+        <div class="form-group" style="padding-left:540px">
+            @Html.LabelFor(m => m.LongDescription, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.LongDescription)
+                @Html.ValidationMessageFor(m => m.LongDescription)
+            </div>
         </div>
-    </div>
-    <div class="form-group" style="padding-left:540px">
-        @Html.LabelFor(m => m.ReqTime, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.EditorFor(m => m.ReqTime)
-            @Html.ValidationMessageFor(m => m.ReqTime)
+        <div class="form-group" style="padding-left:540px">
+            @Html.LabelFor(m => m.Deadline, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.Deadline)
+                @Html.ValidationMessageFor(m => m.Deadline)
+            </div>
         </div>
-    </div>
-    <div class="form-group" style="padding-left:750px">
-        <input type="submit" value="Submit" class="btn button" />
-        <input type="reset" value="Reset" class="btn button" />
-    </div>
+        <div class="form-group" style="padding-left:540px">
+            @Html.LabelFor(m => m.ReqTime, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.ReqTime)
+                @Html.ValidationMessageFor(m => m.ReqTime)
+            </div>
+        </div>
+        <div class="form-group" style="padding-left:750px">
+            <input type="submit" value="Submit" class="btn-primary" />
+            <input type="reset" value="Reset" class="btn-danger" />
+        </div>
+    
 }
 <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
 @section scripts{
@@ -205,5 +233,5 @@
                 alertify.success(successMessage);
         });
     </script>
-    }
+}
 

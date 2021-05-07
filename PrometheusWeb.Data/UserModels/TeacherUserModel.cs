@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -12,10 +13,12 @@ namespace PrometheusWeb.Data.UserModels
     {
         public int TeacherID { get; set; }
 
-        
+        [Required]
+        [Display(Name = "First Name")]
         public string FName { get; set; }
 
-        
+        [Required]
+        [Display(Name = "Last Name")]
         public string LName { get; set; }
 
         

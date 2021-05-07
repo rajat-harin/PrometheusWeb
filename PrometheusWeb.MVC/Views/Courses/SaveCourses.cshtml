@@ -22,17 +22,20 @@
         }
 
     /* Style the counter cards */
+    /* Style the counter cards */
     .card {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+        border: groove;
+        border-color: #027dc5;
+        border-radius: 10%;
+        box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
         padding: 16px;
         text-align: center;
-        background-color: #f1f1f1;
+        background: linear-gradient(-45deg, #36d1dc, #5b86e5);
     }
 
-    card text-center {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
-        background-color: #f1f1f1;
-    }
+        .card:hover {
+            transform: scale(1.1);
+        }
 </style>
 @using (Html.BeginForm())
 {
@@ -41,7 +44,7 @@
         <div class="row">
             <div class="column">
                 <div class="card text-center" style="width: 30rem;">
-                    <img src="..." class="card-img-top" alt="...">
+                   
                     <div class="card-body">
                         <h2 class="card-title" style="color:black; font-weight:bold">
                             @Html.DisplayFor(model => model.Name, new { disabled = "disabled", @readonly = "readonly" })

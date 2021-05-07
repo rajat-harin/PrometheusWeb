@@ -84,9 +84,9 @@
                     @Html.DisplayFor(modelItem => item.EndDate)
                 </td>
                 <td>
-                    <a href="@Url.Action("UpdateCourse", "Courses", new { id = item.CourseID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Edit</a>
+                    <a href="@Url.Action("UpdateCourse", "Courses", new { id = item.CourseID})" class="btn btn-primary"><i class="fa fa-pencil"></i>  Edit</a>
                     @*<a href="@Url.Action("Delete", "Courses", new { id = item.CourseID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Delete</a>*@
-                    <a onclick="Delete(@item.CourseID)" class="btn btn-default"><i class="fa fa-trash"></i>  Delete</a>
+                    <a onclick="Delete(@item.CourseID)" class="btn btn-danger"><i class="fa fa-trash"></i>  Delete</a>
                 </td>
             </tr>
         }
