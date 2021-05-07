@@ -26,7 +26,7 @@ namespace PrometheusWeb.Services.Controllers
         }
 
         // GET: api/Enrollments
-        [Authorize(Roles ="Student")]
+        //[Authorize(Roles ="Student")]
         public IQueryable<EnrollmentUserModel> GetEnrollments()
         {
             try
