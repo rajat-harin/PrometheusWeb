@@ -91,7 +91,7 @@ namespace PrometheusWeb.Services.Services
             }
             catch (DbUpdateException ex)
             {
-                if (ex.InnerException.InnerException.Message.Contains("PK__Users__1788CCACADA5C6FD"))
+                if (ex.InnerException.InnerException.Message.Contains("PK__Users__"))
                 {
                     throw new PrometheusWebException("UserID Already Taken!");
                 }

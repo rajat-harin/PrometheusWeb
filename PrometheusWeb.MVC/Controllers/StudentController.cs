@@ -80,8 +80,28 @@ namespace PrometheusWeb.MVC.Controllers
 
                 if (responseUser.IsSuccessStatusCode)
                 {
-                    TempData["SuccessMessage"] = "Student Added Successfully";
-                    ViewBag.Message = "Student Added Successfully";
+                   
+
+                    if (responseStudent.IsSuccessStatusCode)
+                    {
+                        TempData["SuccessMessage"] = "Student Added Successfully";
+                        ViewBag.Message = "Student Added Successfully";
+
+                        TempData["SuccessMessage"] = "Student Added Successfully";
+                        ViewBag.Message = "Student Added Successfully";
+
+                    }
+                    else if (responseStudent.StatusCode == HttpStatusCode.Conflict)
+                    {
+                        TempData["ErrorMessage"] = "Phone No Already Taken try another Phone No";
+                        ViewBag.Message = "Phone No Already Taken try another Phone No";
+                    }
+
+                    else
+                    {
+                        TempData["ErrorMessage"] = "There was error registering a Teacher!";
+                        ViewBag.Message = "There was error registering a Teacher!";
+                    }
 
                 }
                 else if (responseUser.StatusCode == HttpStatusCode.Conflict)
@@ -96,23 +116,7 @@ namespace PrometheusWeb.MVC.Controllers
                     ViewBag.Message = "There was error registering a Student!";
                 }
 
-                if (responseStudent.IsSuccessStatusCode)
-                {
-                    TempData["SuccessMessage"] = "Student Added Successfully";
-                    ViewBag.Message = "Student Added Successfully";
-
-                }
-                else if (responseStudent.StatusCode == HttpStatusCode.Conflict)
-                {
-                    TempData["ErrorMessage"] = "Phone No Already Taken try another Phone No";
-                    ViewBag.Message = "Phone No Already Taken try another Phone No";
-                }
-
-                else
-                {
-                    TempData["ErrorMessage"] = "There was error registering a Teacher!";
-                    ViewBag.Message = "There was error registering a Teacher!";
-                }
+                
             }
             return RedirectToAction("AddStudent");
         }
