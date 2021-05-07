@@ -234,7 +234,7 @@ namespace PrometheusWeb.MVC.Controllers
         }
 
         //View My Students
-        public async Task<ActionResult> EnrolledStudents(int courseId, int teacherId = 1)  //@TODO: change default to 0 after auth
+        public async Task<ActionResult> EnrolledStudents(int courseId=1, int teacherId = 1)  //@TODO: change default to 0 after auth
         {
             List<StudentUserModel> students = new List<StudentUserModel>();
             List<EnrollmentUserModel> enrollments = new List<EnrollmentUserModel>();
