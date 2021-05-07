@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using PrometheusWeb.Data;
 using System.Data.Entity;
+using PrometheusWeb.Exceptions;
 
 namespace PrometheusWeb.Services.Services
 {
@@ -72,19 +73,37 @@ namespace PrometheusWeb.Services.Services
 
         public bool AddUser(AdminUserModel adminModel)
         {
-            User user = new User
+            try
             {
-                UserID = adminModel.UserID,
-                Password = adminModel.Password,
-                Role = adminModel.Role,
-                SecurityQuestion = adminModel.SecurityQuestion,
-                SecurityAnswer = adminModel.SecurityAnswer
-            };
+                User user = new User
+                {
+                    UserID = adminModel.UserID,
+                    Password = adminModel.Password,
+                    Role = adminModel.Role,
+                    SecurityQuestion = adminModel.SecurityQuestion,
+                    SecurityAnswer = adminModel.SecurityAnswer
+                };
 
-            db.Users.Add(user);
-            db.SaveChanges();
+                db.Users.Add(user);
+                db.SaveChanges();
 
-            return true;
+                return true;
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException.InnerException.Message.Contains("PK__Users__"))
+                {
+                    throw new PrometheusWebException("UserID Already Taken!");
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public bool UpdateUser(string id, AdminUserModel adminModel)

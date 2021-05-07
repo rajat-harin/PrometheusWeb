@@ -82,9 +82,9 @@
                 </td>
                 <td>
                     <a href="@Url.Action("AddOrEditHomeworks", "Homework", new { id = item.HomeWorkID})" class="btn btn-primary"><i class="fa fa-pencil"></i>  Edit</a>
-                    <a href="@Url.Action("AssignHomeworks", "Homework", new { id = item.HomeWorkID})" class="btn btn-primary"><i class="fa fa-pencil"></i>  Assign Homework </a>
+
+                    <a href="@Url.Action("AssignHomework","Homework",new {HomeworkID=item.HomeWorkID})" class="btn btn-primary">Assign Homework</a>
                     <a onclick="Delete(@item.HomeWorkID)" class="btn btn-danger"><i class="fa fa-trash"></i>  Delete</a>
-                    
 
                 </td>
             </tr>

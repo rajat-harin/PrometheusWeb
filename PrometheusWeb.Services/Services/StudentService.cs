@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using PrometheusWeb.Data;
 using System.Data.Entity;
+using PrometheusWeb.Exceptions;
 
 namespace PrometheusWeb.Services.Services
 {
@@ -20,23 +21,42 @@ namespace PrometheusWeb.Services.Services
         }
         public bool AddStudent(StudentUserModel studentModel)
         {
-            Student student = new Student
+            try
             {
-                StudentID = studentModel.StudentID,
-                FName = studentModel.FName,
-                LName = studentModel.LName,
-                UserID = studentModel.UserID,
-                DOB = studentModel.DOB,
-                Address = studentModel.Address,
-                City = studentModel.City,
-                MobileNo = studentModel.MobileNo
-            };
+                Student student = new Student
+                {
+                    StudentID = studentModel.StudentID,
+                    FName = studentModel.FName,
+                    LName = studentModel.LName,
+                    UserID = studentModel.UserID,
+                    DOB = studentModel.DOB,
+                    Address = studentModel.Address,
+                    City = studentModel.City,
+                    MobileNo = studentModel.MobileNo
+                };
 
-            db.Students.Add(student);
-            db.SaveChanges();
+                db.Students.Add(student);
+                db.SaveChanges();
 
-            return true;
+                return true;
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException.InnerException.Message.Contains("UQ__Student__D6D73A8697C9A7ED"))
+                {
+                    throw new PrometheusWebException("Phone No. Already used!");
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
+
 
         public StudentUserModel DeleteStudent(int id)
         {

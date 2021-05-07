@@ -9,6 +9,5 @@ namespace PrometheusWeb.Data.UserModels
         public int? TeacherID { get; set; }
 
         public int? CourseID { get; set; }
-
     }
 }

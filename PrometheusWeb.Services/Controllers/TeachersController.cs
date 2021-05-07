@@ -11,6 +11,7 @@ using System.Web.Http.Description;
 using PrometheusWeb.Data;
 using PrometheusWeb.Data.DataModels;
 using PrometheusWeb.Data.UserModels;
+using PrometheusWeb.Exceptions;
 using PrometheusWeb.Services.Services;
 
 namespace PrometheusWeb.Services.Controllers
@@ -73,11 +74,26 @@ namespace PrometheusWeb.Services.Controllers
         [ResponseType(typeof(Teacher))]
         public IHttpActionResult PostTeacher(TeacherUserModel teacherModel)
         {
-            var result = _teacherService.AddTeacher(teacherModel);
-            if (result)
-                return CreatedAtRoute("DefaultApi", new { id = teacherModel.TeacherID }, teacherModel);
-            else
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = _teacherService.AddTeacher(teacherModel);
+                if (result)
+                    return CreatedAtRoute("DefaultApi", new { id = teacherModel.MobileNo }, teacherModel);
+                else
+                    return StatusCode(HttpStatusCode.InternalServerError);
+            }
+            catch (PrometheusWebException)
+            {
+                return StatusCode(HttpStatusCode.Conflict);
+            }
+            catch
+            {
                 return StatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         // DELETE: api/Teachers/5

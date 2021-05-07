@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using PrometheusWeb.Data.DataModels;
 using PrometheusWeb.Data.UserModels;
 using PrometheusWeb.MVC.Models.ViewModels;
 using PrometheusWeb.Utilities;
@@ -70,19 +71,54 @@ namespace PrometheusWeb.MVC.Controllers
                         return View();
                     }
                 }
+                
                 //Sending request to find web api REST service resource Post:Users using HttpClient
                 HttpResponseMessage responseUser = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Users/", user).Result;
+                
                 //Sending request to find web api REST service resource Post: using HttpClient
                 HttpResponseMessage responseStudent = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Students/", user).Result;
 
-                TempData["SuccessMessage"] = "Student Added Successfully";
+                if (responseUser.IsSuccessStatusCode)
+                {
+                   
+
+                    if (responseStudent.IsSuccessStatusCode)
+                    {
+                        TempData["SuccessMessage"] = "Student Added Successfully";
+                        ViewBag.Message = "Student Added Successfully";
+
+                        TempData["SuccessMessage"] = "Student Added Successfully";
+                        ViewBag.Message = "Student Added Successfully";
+
+                    }
+                    else if (responseStudent.StatusCode == HttpStatusCode.Conflict)
+                    {
+                        TempData["ErrorMessage"] = "Phone No Already Taken try another Phone No";
+                        ViewBag.Message = "Phone No Already Taken try another Phone No";
+                    }
+
+                    else
+                    {
+                        TempData["ErrorMessage"] = "There was error registering a Teacher!";
+                        ViewBag.Message = "There was error registering a Teacher!";
+                    }
+
+                }
+                else if (responseUser.StatusCode == HttpStatusCode.Conflict)
+                {
+                    TempData["ErrorMessage"] = "UserID Already Taken";
+                    ViewBag.Message = "UserID Already Taken";
+                }
+
+                else
+                {
+                    TempData["ErrorMessage"] = "There was error registering a Student!";
+                    ViewBag.Message = "There was error registering a Student!";
+                }
+
+                
             }
-            else
-            {
-                HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Students/" + user.StudentID, user).Result;
-                TempData["SuccessMessage"] = "Student Updated Successfully";
-            }
-            return RedirectToAction("ViewStudents");
+            return RedirectToAction("AddStudent");
         }
 
         // GET: Admin/ViewStudents
