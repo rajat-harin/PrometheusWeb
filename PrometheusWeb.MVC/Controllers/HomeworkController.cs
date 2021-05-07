@@ -206,7 +206,7 @@ namespace PrometheusWeb.MVC.Controllers
                                          ReqTime = (System.DateTime)homework.ReqTime,
                                          LongDescription = homework.LongDescription,
                                          CourseName = course.Course.Name,
-                                         HomeworkID = homework.HomeWorkID
+                                         HomeWorkID = homework.HomeWorkID
                                      };
                         //returning the employee list to view  if list is not empty
                         if (result.Any())
@@ -331,7 +331,7 @@ namespace PrometheusWeb.MVC.Controllers
                                          ReqTime = (System.DateTime)homework.ReqTime,
                                          LongDescription = homework.LongDescription,
                                          CourseName = course.Course.Name,
-                                         HomeworkID = homework.HomeWorkID
+                                         HomeWorkID = homework.HomeWorkID
                                      };
                         //returning the employee list to view  if list is not empty
                         if (result != null)
@@ -339,7 +339,7 @@ namespace PrometheusWeb.MVC.Controllers
                             int count = result.Count();
                             homeworkPlans = result.OrderBy(item => item.Deadline).Select(item => new HomeworkPlanUserModel
                             {
-                                HomeworkID = item.HomeworkID,
+                                HomeworkID = item.HomeWorkID,
                                 isCompleted = false,
                                 PriorityLevel = count--,
                                 StudentID = id,
@@ -427,6 +427,73 @@ namespace PrometheusWeb.MVC.Controllers
                 return new HttpStatusCodeResult(404);
             }
 
+        }
+
+        public async Task<ActionResult> AssignHomework(int HomeworkID)  //@TODO: change default to 0 after auth
+        {
+            int TeacherId = 1;
+            List<CourseUserModel> courses = new List<CourseUserModel>();
+            List<TeacherCourseUserModel> teachingCourses = new List<TeacherCourseUserModel>();
+            using (var client = new HttpClient())
+            {
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+                client.DefaultRequestHeaders.Clear();
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                //Sending request to find web api REST service resource Get:Courses & Get:Teacher Courses using HttpClient  
+                HttpResponseMessage ResFromCourses = await client.GetAsync("api/Courses/");
+                HttpResponseMessage ResFromTeachingCourses = await client.GetAsync("api/Teaches/");
+
+                //Checking the response is successful or not which is sent using HttpClient  
+                if (ResFromCourses.IsSuccessStatusCode && ResFromTeachingCourses.IsSuccessStatusCode)
+                {
+                    //Storing the response details recieved from web api  
+                    var courseResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
+                    var TeachingCourseResponse = ResFromTeachingCourses.Content.ReadAsStringAsync().Result;
+
+                    //Deserializing the response recieved from web api and storing into the list  
+                    courses = JsonConvert.DeserializeObject<List<CourseUserModel>>(courseResponse);
+                    teachingCourses = JsonConvert.DeserializeObject<List<TeacherCourseUserModel>>(TeachingCourseResponse);
+
+                    try
+                    {
+                        var result = teachingCourses.Where(item => item.TeacherID == TeacherId).Join(
+                        courses,
+                        teachingCourse => teachingCourse.CourseID,
+                        course => course.CourseID,
+                        (teachingCourse, course) => new TeacherCourses
+                        {
+                            TeacherID = (int)teachingCourse.TeacherID,
+                            CourseID = (int)teachingCourse.CourseID,
+                            Name = course.Name,
+                            StartDate = (DateTime)course.StartDate,
+                            EndDate = (DateTime)course.EndDate
+                        }
+                        ).ToList();
+                        var CourseList = result;
+                        ViewBag.CourseList = new SelectList(CourseList, "CourseID", "Name");
+                    }
+                    catch
+                    {
+                        return new HttpStatusCodeResult(500);
+                    }
+                }
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult AssignHomework(AssignmentUserModel assignment)
+        {
+            if (assignment.AssignmentID == 0)
+            {
+                HttpResponseMessage response = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Assignments/", assignment).Result;
+                TempData["SuccessMessage"] = "Assignment Assigned Successfully";
+            }
+            return RedirectToAction("ViewHomeworks");
         }
 
     }

@@ -1,0 +1,68 @@
+﻿@model PrometheusWeb.Data.UserModels.AssignmentUserModel
+    ViewBag.Title = "AssignHomework";
+}
+<style>
+    .column {
+        float: left;
+        width: 19%;
+        padding: 0 10px;
+    }
+
+    /* Remove extra left and right margins, due to padding in columns */
+    .row {
+        margin: 0 -5px;
+    }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+    /* Style the counter cards */
+    .card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+        padding: 16px;
+        text-align: center;
+        background-color: #f1f1f1;
+    }
+
+    card text-center {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+        background-color: #f1f1f1;
+    }
+</style>
+@using (Html.BeginForm("AssignHomework", "Homework", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <div class="container" style="padding-left:27%; padding-top:7%">
+        <h2>Assign Homework For Course</h2>
+        <div class="row">
+            <div class="column">
+                <div class="card text-center" style="width: 30rem;">
+                    <img src="..." class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <div>
+                            <h2 class="card-text" style="color:black; font-weight:bold">
+                                @Html.DisplayFor(model => model.HomeWorkID, new { disabled = "disabled", @readonly = "readonly" })
+                            </h2>
+                        </div>
+                        <div>
+                            <h4 class="card-text" style="color:black; font-weight:bold">
+                                <label class="control-label col-md-2">Select Course</label>
+                                <div class="col-md-10">
+                                    @Html.DropDownListFor(model => model.CourseID, ViewBag.CourseList as SelectList, "---Select Course--", new { @class = "form-control" })
+                                </div>
+                            </h4>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Assign Homework" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+}
