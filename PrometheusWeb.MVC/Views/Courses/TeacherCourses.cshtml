@@ -93,14 +93,6 @@
     <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
     <script>
         $(function () {
-            $(".datepicker").datepicker({
-                dateFormat: "yy-mm-dd",
-                changeMonth: true,
-                changeYear: true,
-                yearRange: "1990:2021"
-            });
-        });
-        $(function () {
             var errorMessage = '@TempData["ErrorMessage"]'
             if (errorMessage != '')
                 alertify.error(errorMessage);

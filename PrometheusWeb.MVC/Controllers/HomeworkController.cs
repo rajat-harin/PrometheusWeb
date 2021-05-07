@@ -78,10 +78,8 @@ namespace PrometheusWeb.MVC.Controllers
                     //Storing the response details recieved from web api   
                     var homeworkResponse = ResFromHomeworks.Content.ReadAsStringAsync().Result;
 
-
                     //Deserializing the response recieved from web api and storing into the list  
                     homeworks = JsonConvert.DeserializeObject<List<HomeworkUserModel>>(homeworkResponse);
-
                 }
                 //returning the employee list to view  
                 return View(homeworks);
@@ -332,8 +330,6 @@ namespace PrometheusWeb.MVC.Controllers
 
         public async Task<ActionResult> GenerateHomeworkPlan(int id = 1)  //@TODO: change default to 0 after auth
         {
-
-
             List<HomeworkPlanUserModel> homeworkPlans = new List<HomeworkPlanUserModel>();
             List<EnrollmentUserModel> enrollments = new List<EnrollmentUserModel>();
             List<AssignmentUserModel> assignments = new List<AssignmentUserModel>();
@@ -483,6 +479,13 @@ namespace PrometheusWeb.MVC.Controllers
             int TeacherId = 1;
             List<CourseUserModel> courses = new List<CourseUserModel>();
             List<TeacherCourseUserModel> teachingCourses = new List<TeacherCourseUserModel>();
+
+            AssignmentUserModel assignment = new AssignmentUserModel
+            {
+                TeacherID = TeacherId,
+                HomeWorkID = HomeworkID
+            };
+
             using (var client = new HttpClient())
             {
                 //Passing service base url  
@@ -531,7 +534,7 @@ namespace PrometheusWeb.MVC.Controllers
                     }
                 }
             }
-            return View();
+            return View(assignment);
         }
 
         [HttpPost]
@@ -544,6 +547,5 @@ namespace PrometheusWeb.MVC.Controllers
             }
             return RedirectToAction("ViewHomeworks");
         }
-
     }
 }

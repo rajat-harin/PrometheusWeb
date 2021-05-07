@@ -43,9 +43,11 @@
                     <img src="..." class="card-img-top" alt="...">
                     <div class="card-body">
                         <div>
-                            <h2 class="card-text" style="color:black; font-weight:bold">
-                                @Html.DisplayFor(model => model.HomeWorkID, new { disabled = "disabled", @readonly = "readonly" })
-                            </h2>
+                            <h4 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">
+                                HomeworkID: # @Html.DisplayFor(model => model.HomeWorkID, new { disabled = "disabled", @readonly = "readonly" })
+                            </h4>
+                        </div>
+                        <div>
                         </div>
                         <div>
                             <h4 class="card-text" style="color:black; font-weight:bold">
