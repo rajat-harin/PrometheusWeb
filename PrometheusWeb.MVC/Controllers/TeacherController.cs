@@ -4,6 +4,7 @@ using PrometheusWeb.MVC.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -117,51 +118,85 @@ namespace PrometheusWeb.MVC.Controllers
                 return View(courses);
             }
         }
-        //GET: Teacher/Save
         public async Task<ActionResult> SaveCourses(int courseId, int teacherId)
         {
             var client = new HttpClient();
             //Passing service base url  
             client.BaseAddress = new Uri(Baseurl);
 
+
+
             client.DefaultRequestHeaders.Clear();
             //Define request data format  
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
+
+
             //Sending request to find web api REST service resource Get:Courses & Get:Enrollemnts using HttpClient  
-            HttpResponseMessage ResFromCourses = await client.GetAsync("api/Courses/"+ courseId.ToString());
+            HttpResponseMessage ResFromCourses = await client.GetAsync("api/Courses/" + courseId.ToString());
             HttpResponseMessage ResFromTeaches = await client.GetAsync("api/Teaches/" + teacherId.ToString());
-            
+
             //Storing the response details recieved from web api   
-            var teacherCourseResponse = ResFromCourses.Content.ReadAsAsync<TeacherCourses>().Result;
+            var teacherCourseResponse = ResFromCourses.Content.ReadAsAsync<CourseUserModel>().Result;
+
+
 
             return View(teacherCourseResponse);
         }
 
+
         //POST : Teacher/SaveCourses
         [HttpPost]
-        public async Task<ActionResult> SaveCourses(TeacherCourses courses)
+        public async Task<ActionResult> SaveCourses(CourseUserModel courseModel)
         {
+            int TeacherID = 1;
+            if (courseModel.StartDate.HasValue)
+            {
+                TimeSpan diff = DateTime.Now - (DateTime)courseModel.StartDate;
+                if (diff.Days > 7)
+                {
+                    TempData["ErrorMessage"] = "The Course cannot be Selected!";
+                    ViewBag.Message = "The Course cannot be Selected!";
+                    return View();
+                }
+            }
+            TeacherCourseUserModel teaches = new TeacherCourseUserModel
+            {
+                CourseID = courseModel.CourseID,
+                TeacherID = TeacherID
+            };
             using (var client = new HttpClient())
             {
                 //Passing service base url  
                 client.BaseAddress = new Uri(Baseurl);
 
+
+
                 client.DefaultRequestHeaders.Clear();
                 //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
+
+
                 //Sending request to Post web api REST service resource using HttpClient  
-                HttpResponseMessage ResFromTeaches = await client.PostAsJsonAsync("api/Teaches/", courses);
+                HttpResponseMessage ResFromTeaches = await client.PostAsJsonAsync("api/Teaches/", teaches);
+
+
 
                 //Checking the response is successful or not which is sent using HttpClient  
                 if (ResFromTeaches.IsSuccessStatusCode)
                 {
-                    //Storing the response details recieved from web api   
-                    var teacherCourseResponse = ResFromTeaches.Content.ReadAsStringAsync().Result;
-                } 
+                    TempData["SuccessMessage"] = "Selected Successfully";
+                }
+                else if (ResFromTeaches.StatusCode == HttpStatusCode.Conflict)
+                {
+                    TempData["ErrorMessage"] = "Already Selected!";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "There was error Selecting Course!";
+                }
             }
-            //returning the Courses list to view  
             return RedirectToAction("MyCourses");
         }
 
@@ -229,5 +264,26 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
+        // POST: Admin/UpdateTeacher
+        public ActionResult UpdateTeacher(int id = 1)
+        {
+            if (id != 0)
+            {
+                HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("api/Teachers/" + id.ToString()).Result;
+                return View(response.Content.ReadAsAsync<TeacherUserModel>().Result);
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult UpdateTeacher(TeacherUserModel teacher)
+        {
+            if (teacher.TeacherID != 0)
+            {
+                HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Teachers/" + teacher.TeacherID, teacher).Result;
+                TempData["SuccessMessage"] = "Teacher Updated Successfully";
+            }
+            return RedirectToAction("ViewTeachers");
+        }
     }
 }

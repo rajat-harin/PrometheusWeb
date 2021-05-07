@@ -12,11 +12,12 @@ namespace PrometheusWeb.Services.Services.Tests
     [TestClass()]
     public class CourseServiceTests
     {
+        CourseService courseService = new CourseService();
         [TestMethod()]
         public void AddCourseTest()
         {
             //Arrange
-            CourseService courseService = new CourseService();
+
             CourseUserModel userModel = new CourseUserModel
             {
                 Name = "Test",
@@ -31,39 +32,32 @@ namespace PrometheusWeb.Services.Services.Tests
             //Assert
             Assert.IsTrue(result);
         }
-
         [TestMethod()]
         public void DeleteCourseTest()
         {
             //Arrange
-            CourseService courseService = new CourseService();
-            int id = 5;
-
+            int id = 10;
             //Act
             var result = courseService.DeleteCourse(id);
 
             //Assert
             Assert.IsNotNull(result);
         }
-
-        public void GetCourseTest()
+        [TestMethod()]
+        public void getCourseTest()
         {
             //Arrange
-            CourseService courseService = new CourseService();
-            int id = 2;
-
+            int id = 10;
             //Act
             var result = courseService.GetCourse(id);
 
             //Assert
             Assert.IsNotNull(result);
         }
-
         [TestMethod()]
         public void GetCoursesTest()
         {
             //Arrange
-            CourseService courseService = new CourseService();
 
             //Act
             var result = courseService.GetCourses();
@@ -71,40 +65,35 @@ namespace PrometheusWeb.Services.Services.Tests
             //Assert
             Assert.IsNotNull(result);
         }
-
         [TestMethod()]
         public void UpdateCourseTest()
         {
+            int id = 10;
             //Arrange
-            CourseService courseService = new CourseService();
-            CourseUserModel userModel = new CourseUserModel
+            CourseUserModel course = new CourseUserModel
             {
+                CourseID = 1,
                 Name = "Test",
-                CourseID = 2120,
                 StartDate = DateTime.Now,
                 EndDate = DateTime.Now
             };
-
             //Act
-            var result = courseService.UpdateCourse(5, userModel);
+            var result = courseService.UpdateCourse(id, course);
 
             //Assert
-            Assert.IsTrue(result);
+            Assert.IsNotNull(result);
         }
-        
-
         [TestMethod()]
-        public void CourseExistsTest()
+
+        public void IsCourseExistsTest()
         {
-            //Arrange
-            CourseService enrollmentService = new CourseService();
-            int id = 2;
-
+            //Arrange 
+            int id = 10;
             //Act
-            var result = enrollmentService.IsCourseExists(id);
-
+            var result = courseService.IsCourseExists(id);
             //Assert
             Assert.IsTrue(result);
+
         }
     }
 }

@@ -121,6 +121,12 @@
     <Compile Include="Services\AssignmentServiceTests.cs" />
     <Compile Include="Services\CourseServiceTests.cs" />
     <Compile Include="Services\EnrollmentServiceTests.cs" />
+    <Compile Include="Services\HomeworkPlanServiceTest.cs" />
+    <Compile Include="Services\HomeworkServiceTest.cs" />
+    <Compile Include="Services\StudentServiceTest.cs" />
+    <Compile Include="Services\TeacherServiceTest.cs" />
+    <Compile Include="Services\TeachesServiceTest.cs" />
+    <Compile Include="Services\UserServiceTest.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
