@@ -7,7 +7,7 @@
     .column {
         float: left;
         width: 19%;
-        padding: 0 10px;
+        margin: 3%;
     }
 
     /* Remove extra left and right margins, due to padding in columns */
@@ -24,14 +24,18 @@
 
     /* Style the counter cards */
     .card {
-        border:groove;
-        border-color:#027dc5;
-        border-radius:10%;
+        border: groove;
+        border-color: #027dc5;
+        border-radius: 10%;
         box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
         padding: 16px;
         text-align: center;
-        background-color: #a0c3e2;
+        background: linear-gradient(-45deg, #36d1dc, #5b86e5);
     }
+
+        .card:hover {
+            transform: scale(1.1);
+        }
 </style>
 <div class="container">
     <h2>My Enrolled Courses</h2>

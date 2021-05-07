@@ -15,7 +15,7 @@
     .column {
         float: left;
         width: 19%;
-        padding: 0 10px;
+        margin: 3%;
     }
 
     /* Remove extra left and right margins, due to padding in columns */
@@ -32,35 +32,43 @@
 
     /* Style the counter cards */
     .card {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
-        padding: 20px;
-        padding-left: 10px;
+        border: groove;
+        border-color: #027dc5;
+        border-radius: 10%;
+        box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+        padding: 16px;
         text-align: center;
-        background-color: #f1f1f1;
+        background: linear-gradient(-45deg, #36d1dc, #5b86e5);
+       
     }
+
+        .card:hover {
+            transform: scale(1.1);
+        }
 </style>
 
 @*Card implementation here*@
-<div class="container" style="padding-top:16%; padding-left:14%">
-    <h2 style="padding-left:29%">Student Menu</h2>
+<h2 style="padding-left:29%">Teacher Menu</h2>
+<div class="container" style="padding-top:12%; padding-left:4%">
+    <h2 style="padding-left:40%">Teacher Menu</h2>
 
     <div class="row">
         <div class="column">
-            <div class="card" style="width: 16rem; height:23rem">
-                <img src="..." class="card-img-top" alt="...">
+            <div class="card" style="width: 25rem; height:25rem; ">
+               
                 <div class="card-body">
                     <h4 class="card-title" style="color:black; font-weight:bold">View Courses</h4>
-                    <h6 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">View all the Courses !!!        </h6>
+                    <h6 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">View all the Courses        </h6>
                     <br />
 
 
-                    <button class="btn" style="font-weight:900;padding-top:18px;">@Html.ActionLink("View Courses", "ViewCoursesForTeaching", "Courses")</button>
+                    <button class="btn" style="font-weight:900;">@Html.ActionLink("View Courses", "ViewCoursesForTeaching", "Courses")</button>
                 </div>
             </div>
         </div>
         <div class="column">
-            <div class="card" style="width: 16rem;height:23rem">
-                <img src="..." class="card-img-top" alt="...">
+            <div class="card" style="width: 25rem; height:25rem; ">
+                
                 <div class="card-body">
                     <h4 class="card-title" style="color:black; font-weight:bold">View Students</h4>
                     <h6 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">View all the students under you !!!</h6>
@@ -70,24 +78,24 @@
             </div>
         </div>
         <div class="column">
-            <div class="card" style="width: 16rem;height:23rem">
-                <img src="..." class="card-img-top" alt="...">
+            <div class="card" style="width: 25rem; height:25rem; ">
+               
                 <div class="card-body">
                     <h4 class="card-title" style="color:black; font-weight:bold">View Homework</h4>
-                    <h6 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">Add or Edit Homework of your courses !!!</h6>
-
+                    <h6 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">Add or Edit Homework of your courses</h6>
+                    <br />  
                     <button class="btn" style="font-weight:900">@Html.ActionLink("Homework", "ViewHomeworks", "Homework")</button>
                 </div>
             </div>
         </div>
         <div class="column">
-            <div class="card" style="width: 16rem;height:23rem">
-                <img src="..." class="card-img-top" alt="...">
+            <div class="card" style="width: 25rem; height:25rem; ">
+              
                 <div class="card-body">
                     <h4 class="card-title" style="color:black; font-weight:bold">Update Profile</h4>
-                    <h6 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">Update your Personal details here !!!         </h6>
-
-                    <button class="btn" style="font-weight:900; padding-top:18px;">@Html.ActionLink("Update Profile", "UpdateTeacherProfile", "Teacher")</button>
+                    <h6 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">Update your Personal details here        </h6>
+                    <br />
+                    <button class="btn" style="font-weight:900; ">@Html.ActionLink("Update Profile", "UpdateTeacherProfile", "Teacher")</button>
                 </div>
             </div>
         </div>

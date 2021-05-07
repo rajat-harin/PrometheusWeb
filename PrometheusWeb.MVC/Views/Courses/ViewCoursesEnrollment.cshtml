@@ -29,6 +29,10 @@
     caption {
         caption-side: bottom;
     }
+    .btn:hover {
+        background-color: lightgreen;
+        right: 0px;
+    }
 </style>
 <body style="background-color:#d9dad9;"></body>
 <h2>ViewCourses</h2>
@@ -69,7 +73,7 @@
 
 
         <td>
-            @Html.ActionLink("Enroll", "EnrollInCourse", item ) |
+            <button class="btn">@Html.ActionLink("Enroll", "EnrollInCourse", item) </button>
             
         </td>
 
