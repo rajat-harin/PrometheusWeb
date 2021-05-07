@@ -24,6 +24,7 @@ namespace PrometheusWeb.Services.Controllers
         }
 
         // GET: api/Courses
+        [Authorize]
         public IQueryable<CourseUserModel> GetCourses()
         {
             return _courseService.GetCourses();

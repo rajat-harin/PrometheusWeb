@@ -143,6 +143,11 @@ namespace PrometheusWeb.Services.Services
             return true;
         }
 
+        public int GetTeacherID(string UserID)
+        {
+            return db.Teachers.Where(item => item.UserID.Equals(UserID)).FirstOrDefault().TeacherID;
+        }
+
         public bool IsTeacherExists(int id)
         {
             return db.Teachers.Count(e => e.TeacherID == id) > 0;

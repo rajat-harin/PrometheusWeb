@@ -105,6 +105,26 @@ namespace PrometheusWeb.Services.Controllers
             return Ok(course);
         }
 
+        // GET: api/StudentID
+        [HttpGet]
+        [Route("api/Student/GetID")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult GetStudentID(string userID)
+        {
+            try
+            {
+                int StudentID = _studentService.GetStudentID(userID);
+                if (StudentID == 0)
+                    return NotFound();
+                return Ok(StudentID);
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
+
+        }
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
