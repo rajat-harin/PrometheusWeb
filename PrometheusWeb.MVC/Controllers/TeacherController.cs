@@ -83,6 +83,7 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
+        // BELOW TWO TO BE MOVED TO COURSE CONTROLLER
         // GET: Teacher/ViewCourses
         public async Task<ActionResult> ViewCourses()  //@TODO: Id to be changed default to 0 after auth
         {

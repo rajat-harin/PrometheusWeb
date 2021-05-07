@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
+using Microsoft.Owin.Security.OAuth;
 using Owin;
+using PrometheusWeb.Auth;
 using PrometheusWeb.MVC.Models;
 
 namespace PrometheusWeb.MVC
@@ -42,6 +45,10 @@ namespace PrometheusWeb.MVC
                 LoginPath = new PathString("/Account/Login"),
 
             });
+
+            app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
+            HttpConfiguration config = new HttpConfiguration();
+            WebApiConfig.Register(config);
 
             //app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 

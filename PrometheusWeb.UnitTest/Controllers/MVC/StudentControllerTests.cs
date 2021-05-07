@@ -26,8 +26,18 @@ namespace PrometheusWeb.MVC.Controllers.Tests
             Assert.IsNotNull(result); //Testing for Null result
             Assert.IsInstanceOfType(result, typeof(ViewResult)); // Type Checking
             Assert.AreEqual("Student Index Page", result.ViewBag.Title); // Testing if VIewbag title is same
-            
+        }
+        public void IndexReturnTypeTest()
+        {
+            //Arrange
+            var controller = new StudentController();
 
+            //Act
+            var result = controller.Index().Result as ViewResult;
+            //Assert
+           
+            Assert.IsInstanceOfType(result, typeof(ViewResult)); // Type Checking
+            
         }
 
         [TestMethod()]
