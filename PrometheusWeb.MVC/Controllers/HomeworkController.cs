@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using PrometheusWeb.Data.DataModels;
 using PrometheusWeb.Data.UserModels;
+using PrometheusWeb.Exceptions;
 using PrometheusWeb.MVC.Models.ViewModels;
 using SendGrid.Helpers.Mail;
 using System;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -157,7 +159,8 @@ namespace PrometheusWeb.MVC.Controllers
         }
 
         // GET: Student/GetHomeworks
-        public async Task<ActionResult> GetHomeworks(int id = 1)
+        [Authorize(Roles ="student")]
+        public async Task<ActionResult> GetHomeworksOfStudent(int id = 1)
         {
             //string url = "api/h";
             List<AssignedHomework> assignedHomeWord = new List<AssignedHomework>();
@@ -165,12 +168,36 @@ namespace PrometheusWeb.MVC.Controllers
             List<AssignmentUserModel> assignments = new List<AssignmentUserModel>();
             List<HomeworkUserModel> homeworks = new List<HomeworkUserModel>();
 
+            //Getting Identity Data for Student
+            var identity = (ClaimsIdentity)User.Identity;
+            var ID = identity.Claims.Where(c => c.Type == "ID")
+                        .Select(c => c.Value).FirstOrDefault();
+            int studentID;
+            try
+            {
+                if (ID != null)
+                {
+                    studentID = Int32.Parse(ID);
+                }
+                else
+                {
+                    throw new PrometheusWebException("Failed to retrieve ID");
+                }
+            }
+            catch (Exception)
+            {
+                return new HttpStatusCodeResult(500);
+            }
+            var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                        .Select(c => c.Value).FirstOrDefault();
             using (var client = new HttpClient())
             {
                 //Passing service base url  
                 client.BaseAddress = new Uri(Baseurl);
 
                 client.DefaultRequestHeaders.Clear();
+                //Adding Auth Token
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -231,9 +258,31 @@ namespace PrometheusWeb.MVC.Controllers
 
         }
 
-        public async Task<ActionResult> GetHomeworkPlan(int id = 1)  //@TODO: change default to 0 after auth
+        [Authorize(Roles ="student")]
+        public async Task<ActionResult> GetHomeworkPlan(int id = 0)  //@TODO: change default to 0 after auth
         {
-
+            //Getting Identity Data for Student
+            var identity = (ClaimsIdentity)User.Identity;
+            var ID = identity.Claims.Where(c => c.Type == "ID")
+                        .Select(c => c.Value).FirstOrDefault();
+            int studentID;
+            try
+            {
+                if (ID != null)
+                {
+                    studentID = Int32.Parse(ID);
+                }
+                else
+                {
+                    throw new PrometheusWebException("Failed to retrieve ID");
+                }
+            }
+            catch (Exception)
+            {
+                return new HttpStatusCodeResult(500);
+            }
+            var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                        .Select(c => c.Value).FirstOrDefault();
             List<HomeworkPlanUserModel> homeworkPlans = new List<HomeworkPlanUserModel>();
 
             using (var client = new HttpClient())

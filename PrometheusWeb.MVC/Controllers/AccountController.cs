@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Newtonsoft.Json;
+using PrometheusWeb.Data.DataModels;
 using PrometheusWeb.MVC.Models;
 using PrometheusWeb.Utilities.Models;
 
@@ -70,30 +71,30 @@ namespace PrometheusWeb.MVC.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        /* public async Task<ActionResult> Login(LoginModel model, string returnUrl)
-         {
-             if (!ModelState.IsValid)
-             {
-                 return View(model);
-             }
+        /*public async Task<ActionResult> Login(LoginModel model, string returnUrl)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
 
-             // This doesn't count login failures towards account lockout
-             // To enable password failures to trigger account lockout, change to shouldLockout: true
-             var result = await SignInManager.PasswordSignInAsync(model.UserID, model.Password, model.RememberMe, false);
-             switch (result)
-             {
-                 case SignInStatus.Success:
-                     return RedirectToLocal(returnUrl);
-                 case SignInStatus.LockedOut:
-                     return View("Lockout");
-                 case SignInStatus.RequiresVerification:
-                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                 case SignInStatus.Failure:
-                 default:
-                     ModelState.AddModelError("", "Invalid login attempt.");
-                     return View(model);
-             }
-         }*/
+            // This doesn't count login failures towards account lockout
+            // To enable password failures to trigger account lockout, change to shouldLockout: true
+            var result = await SignInManager.PasswordSignInAsync(model.UserID, model.Password, model.RememberMe, false);
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    return RedirectToLocal(returnUrl);
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
+                case SignInStatus.RequiresVerification:
+                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                case SignInStatus.Failure:
+                default:
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                    return View(model);
+            }
+        }*/
         public ActionResult Login(LoginModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
@@ -112,30 +113,60 @@ namespace PrometheusWeb.MVC.Controllers
                 });
 
                 HttpResponseMessage result = httpClient.PostAsync(getTokenUrl, content).Result;
-
+                HttpResponseMessage userData = httpClient.GetAsync("https://localhost:44375/api/Users/").Result;
+                
                 string resultContent = result.Content.ReadAsStringAsync().Result;
-                if (result.IsSuccessStatusCode)
+                string userDataContent = userData.Content.ReadAsStringAsync().Result;
+                if (result.IsSuccessStatusCode && userData.IsSuccessStatusCode)
                 {
                     var token = JsonConvert.DeserializeObject<Token>(resultContent);
-
+                    var users = JsonConvert.DeserializeObject<List<User>>(userDataContent);
+                    var user = users.Where(item => item.UserID == model.UserID).SingleOrDefault();
                     AuthenticationProperties options = new AuthenticationProperties();
 
                     options.AllowRefresh = true;
                     options.IsPersistent = true;
                     options.ExpiresUtc = DateTime.UtcNow.AddSeconds(token.ExpiresIn);
+                    int ID;
+                    if(user.Role.Equals("student"))
+                    {
+                        HttpResponseMessage ResfromStudent = httpClient.GetAsync("https://localhost:44375/api/Student/GetID/?userID="+model.UserID).Result;
+                        string resultID = ResfromStudent.Content.ReadAsStringAsync().Result;
+                        ID = JsonConvert.DeserializeObject<int>(resultID);
 
+                    }
+                    else
+                    {
+                        HttpResponseMessage ResfromStudent = httpClient.GetAsync("https://localhost:44375/api/Teacher/GetID/?userID=" + model.UserID).Result;
+                        string resultID = ResfromStudent.Content.ReadAsStringAsync().Result;
+                        ID = JsonConvert.DeserializeObject<int>(resultID);
+                    }
                     var claims = new[]
                     {
                     new Claim(ClaimTypes.Name, model.UserID),
-                    new Claim("AcessToken", string.Format("Bearer {0}", token.AccessToken)),
+                    new Claim("AcessToken", string.Format(token.AccessToken)),
+                    new Claim(ClaimTypes.Role, user.Role),
+                    new Claim("ID", ID.ToString())
                 };
 
-                    var identity = new ClaimsIdentity(claims, "Bearer");
+                    var identity = new ClaimsIdentity(claims, "ApplicationCookie");
                     Request.GetOwinContext().Authentication.SignIn(options, identity);
 
 
+                    if(user.Role.Equals("admin"))
+                    {
+                        return RedirectToAction("Index", "Admin");
+                    }
+                    else if(user.Role.Equals("teacher"))
+                    {
+                        return RedirectToAction("Index", "Teacher");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Student");
+                    }
 
-                    return RedirectToAction("Index", "Home");
+                    
                 }
                 else
                 {

@@ -12,5 +12,6 @@ namespace PrometheusWeb.Services.Services
         bool AddTeacher(TeacherUserModel teacherModel);
         bool UpdateTeacher(int id, TeacherUserModel teacherModel);
         bool IsTeacherExists(int id);
+        int GetTeacherID(string UserID);
     }
 }

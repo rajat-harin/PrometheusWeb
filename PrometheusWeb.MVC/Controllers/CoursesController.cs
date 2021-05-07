@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using PrometheusWeb.Data.DataModels;
 using PrometheusWeb.Data.UserModels;
+using PrometheusWeb.Exceptions;
 using PrometheusWeb.MVC.Models.ViewModels;
 using PrometheusWeb.Utilities;
 using SendGrid.Helpers.Mail;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -23,6 +25,7 @@ namespace PrometheusWeb.MVC.Controllers
         string Baseurl = "https://localhost:44375/";
         
         // GET: Course
+        
         public ActionResult Index()
         {
             ViewBag.Title = "Course Index Page";
@@ -228,21 +231,27 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
+
         // GET: Student/ViewCourses
+        [Authorize(Roles ="student")]
         public async Task<ActionResult> ViewCoursesEnrollment(int id = 1)  //@TODO: change default to 0 after auth
         {
             List<CourseUserModel> courses = new List<CourseUserModel>();
 
             using (var client = new HttpClient())
             {
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+               
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
                 //Passing service base url  
                 client.BaseAddress = new Uri(Baseurl);
 
 
                 client.DefaultRequestHeaders.Clear();
-                //TokenManager.CallAPIResource("VGdaYBtkKCqaGTAys_ni_y8jJsBoNa802g7NwaDXQYqK4B3iYha3CMDzMfMNthBYR1jv_YsZHoL6SJJif9ypPlQw8s5MmKpsOZe3YpR_RoHOAG636IP6_0ZW6OAeXB8roal3ADI6t_YohDViKecpIiEetB-hs1BvjXHLHV10Nd1v4PgtCYsYW2aPTY7atpqNAi_TYHRNIyni5fC8Z4qYEAFZx7gce0UbvH0Rvw-Bk2zX9fIDg_wbUBWFApSWPGGTAE2WAx17IzBJWCWhDmyOGY_G44rMtYIetebz57tVqDQ");
-                Token tokenFromMgr = TokenManager.GetAccessToken("Rajat", "123");
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenFromMgr.AccessToken);
+                
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
                 //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -274,10 +283,43 @@ namespace PrometheusWeb.MVC.Controllers
         }
 
         // GET: Student/MyCourses
-        public async Task<ActionResult> StudentCourses(int id = 1)  //@TODO: change default to 0 after auth
+        [Authorize]
+        public async Task<ActionResult> StudentCourses(int id = 0)  
         {
             List<CourseUserModel> courses = new List<CourseUserModel>();
             List<EnrollmentUserModel> enrollments = new List<EnrollmentUserModel>();
+
+            var identity = (ClaimsIdentity)User.Identity;
+            int studentID;
+            if (id==0)
+            {
+
+            
+            var ID = identity.Claims.Where(c => c.Type == "ID")
+                        .Select(c => c.Value).FirstOrDefault();
+            
+            try
+            {
+                if(ID != null)
+                {
+                    studentID = Int32.Parse(ID);
+                }
+                else
+                {
+                    throw new PrometheusWebException("Failed to retrieve ID");
+                }
+            }
+            catch(Exception)
+            {
+                return new HttpStatusCodeResult(500);
+            }
+            }
+            else
+            {
+                studentID = id;
+            }
+            var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                        .Select(c => c.Value).FirstOrDefault();
 
             using (var client = new HttpClient())
             {
@@ -285,6 +327,8 @@ namespace PrometheusWeb.MVC.Controllers
                 client.BaseAddress = new Uri(Baseurl);
 
                 client.DefaultRequestHeaders.Clear();
+                
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -302,7 +346,7 @@ namespace PrometheusWeb.MVC.Controllers
                         //Deserializing the response recieved from web api and storing into the list  
                         enrollments = JsonConvert.DeserializeObject<List<EnrollmentUserModel>>(enrollmentResponse);
 
-                        var result = enrollments.Where(item => item.StudentID == id).ToList();
+                        var result = enrollments.Where(item => item.StudentID == studentID).ToList();
                         if (result.Any())
                         {
                             return View(result);
@@ -320,7 +364,8 @@ namespace PrometheusWeb.MVC.Controllers
         }
 
         // GET: Student/EnrollInCourse
-        public async Task<ActionResult> EnrollInCourse(CourseUserModel course)  //@TODO: change default to 0 after auth
+        [Authorize(Roles ="student")]
+        public async Task<ActionResult> EnrollInCourse(CourseUserModel course)  
         {
             if (course.StartDate.HasValue)
             {
@@ -342,13 +387,34 @@ namespace PrometheusWeb.MVC.Controllers
                     return View();
                 }
             }
-            int StudentID = 1;
+
+            var identity = (ClaimsIdentity)User.Identity;
+            var ID = identity.Claims.Where(c => c.Type == "ID")
+                        .Select(c => c.Value).FirstOrDefault();
+            int studentID;
+            try
+            {
+                if (ID != null)
+                {
+                    studentID = Int32.Parse(ID);
+                }
+                else
+                {
+                    throw new PrometheusWebException("Failed to retrieve ID");
+                }
+            }
+            catch (Exception)
+            {
+                return new HttpStatusCodeResult(500);
+            }
+            var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                        .Select(c => c.Value).FirstOrDefault();
             //TODO: Get Student ID from Auth
 
             EnrollmentUserModel enrollments = new EnrollmentUserModel
             {
                 CourseID = course.CourseID,
-                StudentID = StudentID
+                StudentID = studentID
             };
 
             using (var client = new HttpClient())
@@ -357,6 +423,10 @@ namespace PrometheusWeb.MVC.Controllers
                 client.BaseAddress = new Uri(Baseurl);
 
                 client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 

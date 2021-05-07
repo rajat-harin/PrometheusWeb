@@ -359,7 +359,7 @@
     <Content Include="Views\Student\EnrolledStudents.cshtml" />
     <Content Include="Views\Courses\SaveCourses.cshtml" />
     <Content Include="Views\Courses\ViewCoursesForTeaching.cshtml" />
-    <Content Include="Views\Homework\GetHomeworks.cshtml" />
+    <Content Include="Views\Homework\GetHomeworksOfStudent.cshtml" />
     <Content Include="Views\Teacher\ViewTeachers.cshtml" />
     <Content Include="Views\Teacher\AddTeacher.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
@@ -407,6 +407,10 @@
     <ProjectReference Include="..\PrometheusWeb.Data\PrometheusWeb.Data.csproj">
       <Project>{C0BD8152-7652-443B-AF37-D24885AC120F}</Project>
       <Name>PrometheusWeb.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PrometheusWeb.Exceptions\PrometheusWeb.Exceptions.csproj">
+      <Project>{9D825B69-D69F-491C-9388-9E58B542D0D3}</Project>
+      <Name>PrometheusWeb.Exceptions</Name>
     </ProjectReference>
     <ProjectReference Include="..\PrometheusWeb.Utilities\PrometheusWeb.Utilities.csproj">
       <Project>{11D563AA-DD2A-47C4-B660-FA1348242F4B}</Project>

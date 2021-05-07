@@ -40,7 +40,8 @@
 <div class="container" style="background:#f8f8f6; " >
    
     <p>
-        <button class="btn btn-toolbar">@Html.ActionLink("Generate New Plan", "GenerateHomeworkPlan")</button>
+        <button class="btn btn-primary">@Html.ActionLink("Generate New Plan", "GenerateHomeworkPlan", null, //   Route args if needed; null if not.
+            new { @style = "color:White;" })</button>
     </p>
     
     @if (Model != null)
