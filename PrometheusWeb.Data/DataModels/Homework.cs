@@ -15,7 +15,6 @@ namespace PrometheusWeb.Data.DataModels
             HomeworkPlans = new HashSet<HomeworkPlan>();
         }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int HomeWorkID { get; set; }
 
         [StringLength(150)]

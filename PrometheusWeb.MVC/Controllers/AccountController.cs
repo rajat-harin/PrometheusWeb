@@ -130,8 +130,7 @@ namespace PrometheusWeb.MVC.Controllers
                     new Claim("AcessToken", string.Format("Bearer {0}", token.AccessToken)),
                 };
 
-                    var identity = new ClaimsIdentity(claims, "ApplicationCookie");
-
+                    var identity = new ClaimsIdentity(claims, "Bearer");
                     Request.GetOwinContext().Authentication.SignIn(options, identity);
 
 

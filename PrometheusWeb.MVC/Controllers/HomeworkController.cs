@@ -89,6 +89,7 @@ namespace PrometheusWeb.MVC.Controllers
         public ActionResult AddOrEditHomeworks(int id = 0)
         {
             if (id == 0)
+
                 return View(new HomeworkUserModel());
             else
             {
@@ -102,11 +103,47 @@ namespace PrometheusWeb.MVC.Controllers
         {
             if (homework.HomeWorkID == 0)
             {
+                if (homework.Deadline.HasValue)
+                {
+                    TimeSpan diff = (DateTime)homework.Deadline - System.DateTime.Now;
+                    if (diff.Days == 0)
+                    {
+                        TempData["ErrorMessage"] = "Course StartDate cannot be Current Date";
+                        return View();
+                    }
+                }
+                if (homework.ReqTime.HasValue)
+                {
+                    TimeSpan diff = (DateTime)homework.ReqTime - (DateTime)homework.Deadline;
+                    if (diff.Days > 0)
+                    {
+                        TempData["ErrorMessage"] = "Course Required DateTime cannot be beyond Deadline";
+                        return View();
+                    }
+                }
                 HttpResponseMessage response = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Homework/", homework).Result;
                 TempData["SuccessMessage"] = "Homework Added Successfully";
             }
             else
             {
+                if (homework.Deadline.HasValue)
+                {
+                    TimeSpan diff = (DateTime)homework.Deadline - System.DateTime.Now;
+                    if (diff.Days == 0)
+                    {
+                        TempData["ErrorMessage"] = "Course StartDate cannot be Current Date";
+                        return View();
+                    }
+                }
+                if (homework.ReqTime.HasValue)
+                {
+                    TimeSpan diff = (DateTime)homework.ReqTime - (DateTime)homework.Deadline;
+                    if (diff.Days > 0)
+                    {
+                        TempData["ErrorMessage"] = "Course Required DateTime cannot be beyond Deadline";
+                        return View();
+                    }
+                }
                 HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Homework/" + homework.HomeWorkID, homework).Result;
                 TempData["SuccessMessage"] = "Homework Updated Successfully";
             }
