@@ -11,156 +11,104 @@ using System.Web.Http.Description;
 using PrometheusWeb.Data;
 using PrometheusWeb.Data.DataModels;
 using PrometheusWeb.Data.UserModels;
+using PrometheusWeb.Exceptions;
+using PrometheusWeb.Services.Services;
 
 namespace PrometheusWeb.Services.Controllers
 {
     public class UsersController : ApiController
     {
-        private PrometheusEntities db = new PrometheusEntities();
-
-        // GET: api/Users
-        public IQueryable<AdminUserModel> GetUsers()
+        private IUserService _userService = null;
+        public UsersController(IUserService userService)
         {
-            return db.Users.Select(item => new AdminUserModel
-            {
-                UserID = item.UserID,
-                Password = item.Password,
-                Role = item.Role,
-                SecurityQuestion = item.SecurityQuestion,
-                SecurityAnswer = item.SecurityAnswer
-            });
+            _userService = userService;
         }
 
-        // GET: api/Users/5
-        [ResponseType(typeof(User))]
+        // GET: api/Courses
+        public IQueryable<AdminUserModel> GetUsers()
+        {
+            return _userService.GetUsers();
+        }
+
+        // GET: api/Courses/5
+        [ResponseType(typeof(AdminUserModel))]
         public IHttpActionResult GetUser(string id)
         {
-            User user = db.Users.Find(id);
+            AdminUserModel user = _userService.GetUser(id);
             if (user == null)
             {
                 return NotFound();
             }
-            AdminUserModel User = new AdminUserModel
-            {
-                UserID = user.UserID,
-                Password = user.Password,
-                Role = user.Role,
-                SecurityQuestion = user.SecurityQuestion,
-                SecurityAnswer = user.SecurityAnswer
-            };
-
-            return Ok(User);
+            return Ok(user);
         }
 
-        // PUT: api/Users/5
+        // PUT: api/Courses/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutUser(string id, AdminUserModel adminModel)
+        public IHttpActionResult PutUser(string id, AdminUserModel userModel)
         {
-            User user = new User
-            {
-                UserID = adminModel.UserID,
-                Password = adminModel.Password,
-                Role = adminModel.Role,
-                SecurityQuestion = adminModel.SecurityQuestion,
-                SecurityAnswer = adminModel.SecurityAnswer
-            };
+            bool result;
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            if (id != user.UserID)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(user).State = EntityState.Modified;
-
             try
             {
-                db.SaveChanges();
+                result = _userService.UpdateUser(id, userModel);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception)
             {
-                if (!UserExists(id))
+                if (!_userService.IsUserExists(id))
                 {
                     return NotFound();
                 }
                 else
                 {
-                    throw;
+                    return StatusCode(HttpStatusCode.InternalServerError);
                 }
             }
 
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Users
+        // POST: api/Courses
         [ResponseType(typeof(User))]
-        public IHttpActionResult PostUser(AdminUserModel adminModel)
+        public IHttpActionResult PostUser(AdminUserModel userModel)
         {
-            User user = new User
-            {
-                UserID = adminModel.UserID,
-                Password = adminModel.Password,
-                Role = adminModel.Role,
-                SecurityQuestion = adminModel.SecurityQuestion,
-                SecurityAnswer = adminModel.SecurityAnswer
-            };
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            db.Users.Add(user);
-
             try
             {
-                db.SaveChanges();
-            }
-            catch (DbUpdateException)
-            {
-                if (UserExists(user.UserID))
-                {
-                    return Conflict();
-                }
+                var result = _userService.AddUser(userModel);
+                if (result)
+                    return CreatedAtRoute("DefaultApi", new { id = userModel.UserID }, userModel);
                 else
-                {
-                    throw;
-                }
+                    return StatusCode(HttpStatusCode.InternalServerError);
             }
-
-            return CreatedAtRoute("DefaultApi", new { id = user.UserID }, user);
+            catch (PrometheusWebException)
+            {
+                return StatusCode(HttpStatusCode.Conflict);
+            }
+            catch
+            {
+                return StatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
-        // DELETE: api/Users/5
+        // DELETE: api/Courses/5
         [ResponseType(typeof(User))]
         public IHttpActionResult DeleteUser(string id)
         {
-            User user = db.Users.Find(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            db.Users.Remove(user);
-            db.SaveChanges();
+            AdminUserModel user = _userService.DeleteUser(id);
 
             return Ok(user);
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
 
-        private bool UserExists(string id)
-        {
-            return db.Users.Count(e => e.UserID == id) > 0;
+            base.Dispose(disposing);
         }
     }
 }

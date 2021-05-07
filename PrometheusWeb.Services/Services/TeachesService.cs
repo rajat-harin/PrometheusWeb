@@ -1,6 +1,7 @@
 ﻿using PrometheusWeb.Data;
 using PrometheusWeb.Data.DataModels;
 using PrometheusWeb.Data.UserModels;
+using PrometheusWeb.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -31,6 +32,17 @@ namespace PrometheusWeb.Services.Services
                 db.SaveChanges();
 
                 return true;
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException.InnerException.Message.Contains("UQ__Teacher__D6D73A8609D4D9F2"))
+                {
+                    throw new PrometheusWebException("Phone No. Already used!");
+                }
+                else
+                {
+                    throw;
+                }
             }
             catch (Exception)
             {

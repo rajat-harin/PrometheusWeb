@@ -106,16 +106,46 @@ namespace PrometheusWeb.MVC.Controllers
                     }
                 }
                 HttpResponseMessage responseUser = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Users/", user).Result;
+
                 HttpResponseMessage responseStudent = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Teachers/", user).Result;
 
-                TempData["SuccessMessage"] = "Teacher Added Successfully";
+                if (responseUser.IsSuccessStatusCode)
+                {
+                    TempData["SuccessMessage"] = "Student Added Successfully";
+                    ViewBag.Message = "Student Added Successfully";
+
+                }
+                else if (responseUser.StatusCode == HttpStatusCode.Conflict)
+                {
+                    TempData["ErrorMessage"] = "UserID Already Taken";
+                    ViewBag.Message = "UserID Already Taken";
+                }
+
+                else
+                {
+                    TempData["ErrorMessage"] = "There was error registering a Student!";
+                    ViewBag.Message = "There was error registering a Student!";
+                }
+
+                if (responseStudent.IsSuccessStatusCode)
+                {
+                    TempData["SuccessMessage"] = "Student Added Successfully";
+                    ViewBag.Message = "Student Added Successfully";
+
+                }
+                else if (responseStudent.StatusCode == HttpStatusCode.Conflict)
+                {
+                    TempData["ErrorMessage"] = "Phone No Already Taken try another Phone No";
+                    ViewBag.Message = "Phone No Already Taken try another Phone No";
+                }
+
+                else
+                {
+                    TempData["ErrorMessage"] = "There was error registering a Teacher!";
+                    ViewBag.Message = "There was error registering a Teacher!";
+                }
             }
-            else
-            {
-                HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Teachers/" + user.TeacherID, user).Result;
-                TempData["SuccessMessage"] = "Teacher Updated Successfully";
-            }
-            return RedirectToAction("ViewTeachers");
+            return RedirectToAction("AddTeacher");
         }
 
         // DELETE: Admin/DeleteTeacher
