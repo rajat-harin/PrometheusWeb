@@ -115,8 +115,6 @@ namespace PrometheusWeb.MVC.Controllers
                     TempData["ErrorMessage"] = "There was error registering a Student!";
                     ViewBag.Message = "There was error registering a Student!";
                 }
-
-                
             }
             return RedirectToAction("AddStudent");
         }

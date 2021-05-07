@@ -42,7 +42,7 @@ namespace PrometheusWeb.Services.Services
             }
             catch (DbUpdateException ex)
             {
-                if (ex.InnerException.InnerException.Message.Contains("UQ__Student__D6D73A8697C9A7ED"))
+                if (ex.InnerException.InnerException.Message.Contains("UQ__Student__"))
                 {
                     throw new PrometheusWebException("Phone No. Already used!");
                 }
