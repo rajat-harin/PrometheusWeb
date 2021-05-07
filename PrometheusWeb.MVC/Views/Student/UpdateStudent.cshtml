@@ -1,23 +1,22 @@
-﻿@model PrometheusWeb.Data.UserModels.TeacherUserModel
+﻿@model PrometheusWeb.Data.UserModels.StudentUserModel
 @{
-    ViewBag.Title = "EditTeacher";
+    ViewBag.Title = "UpdateStudent";
 }
 
-<h2>Edit Teacher</h2>
+<h2>Edit Student</h2>
 
 <div style="padding-left:700px; ">
-    <h2>Edit Teacher</h2>
+    <h2>Edit Student</h2>
 </div>
-@using (Html.BeginForm("EditTeacher", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("UpdateStudent", "Student", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
     <div style="padding-left:665px; ">
         <h4>Create a new course.</h4>
     </div>
     <hr />
-    @Html.HiddenFor(model => model.TeacherID)
+    @Html.HiddenFor(model => model.StudentID)
     @Html.HiddenFor(model => model.UserID)
-    @Html.HiddenFor(model => model.IsAdmin)
     <div class="form-group" style="padding-left:540px">
         @Html.LabelFor(m => m.FName, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">

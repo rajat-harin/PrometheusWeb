@@ -23,11 +23,10 @@ namespace PrometheusWeb.MVC.Controllers
             return View();
         }
 
-        // GET: Teacher/MyCourses
-        public async Task<ActionResult> MyCourses(int TeacherId = 1)  //@TODO: change default to 0 after auth
+        // GET: Admin/ViewTeachers
+        public async Task<ActionResult> ViewTeachers()
         {
-            List<CourseUserModel> courses = new List<CourseUserModel>();
-            List<TeacherCourseUserModel> teachingCourses = new List<TeacherCourseUserModel>();
+            List<TeacherUserModel> teachers = new List<TeacherUserModel>();
 
             using (var client = new HttpClient())
             {
@@ -38,233 +37,135 @@ namespace PrometheusWeb.MVC.Controllers
                 //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                //Sending request to find web api REST service resource Get:Courses & Get:Teacher Courses using HttpClient  
-                HttpResponseMessage ResFromCourses = await client.GetAsync("api/Courses/");
-                HttpResponseMessage ResFromTeachingCourses = await client.GetAsync("api/Teaches/");
-
-                //Checking the response is successful or not which is sent using HttpClient  
-                if (ResFromCourses.IsSuccessStatusCode && ResFromTeachingCourses.IsSuccessStatusCode)
-                {
-                    //Storing the response details recieved from web api   
-                    var courseResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
-                    var TeachingCourseResponse = ResFromTeachingCourses.Content.ReadAsStringAsync().Result;
-
-                    //Deserializing the response recieved from web api and storing into the list  
-                    courses = JsonConvert.DeserializeObject<List<CourseUserModel>>(courseResponse);
-                    teachingCourses = JsonConvert.DeserializeObject<List<TeacherCourseUserModel>>(TeachingCourseResponse);
-
-                    try
-                    {
-                        var result = teachingCourses.Where(item => item.TeacherID == TeacherId).Join(
-                        courses,
-                        teachingCourse => teachingCourse.CourseID,
-                        course => course.CourseID,
-                        (teachingCourse, course) => new TeacherCourses
-                        {
-                            TeacherID = (int)teachingCourse.TeacherID,
-                            CourseID = (int)teachingCourse.CourseID,
-                            Name = course.Name,
-                            StartDate = (DateTime) course.StartDate,
-                            EndDate = (DateTime) course.EndDate
-                        }
-                        ).ToList();
-                            if (result.Any())
-                            {
-                                return View(result);
-                            }
-                    }
-                    catch
-                    {
-                        return new HttpStatusCodeResult(500);
-                    }
-
-                }
-                //returning the Courses list to view  
-                return new HttpStatusCodeResult(404);
-            }
-        }
-
-        // GET: Teacher/ViewCourses
-        public async Task<ActionResult> ViewCourses()  //@TODO: Id to be changed default to 0 after auth
-        {
-            List<CourseUserModel> courses = new List<CourseUserModel>();
-
-            using (var client = new HttpClient())
-            {
-                //Passing service base url  
-                client.BaseAddress = new Uri(Baseurl);
-
-                client.DefaultRequestHeaders.Clear();
-                //Define request data format  
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                //Sending request to find web api REST service resource using HTTP Client
-                HttpResponseMessage ResFromCourses = await client.GetAsync("api/Courses/");
+                //Sending request to find web api REST service resource Get:Courses & Get:Enrollemnts using HttpClient  
+                HttpResponseMessage ResFromCourses = await client.GetAsync("api/Teachers/");
 
 
                 //Checking the response is successful or not which is sent using HttpClient  
                 if (ResFromCourses.IsSuccessStatusCode)
                 {
                     //Storing the response details recieved from web api   
-                    var courseResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
+                    var teacherResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
 
 
                     //Deserializing the response recieved from web api and storing into the list  
-                    courses = JsonConvert.DeserializeObject<List<CourseUserModel>>(courseResponse);
+                    teachers = JsonConvert.DeserializeObject<List<TeacherUserModel>>(teacherResponse);
 
                 }
-                //returning the Courses list to view  
-                return View(courses);
+                //returning the employee list to view  
+                return View(teachers);
             }
         }
-        public async Task<ActionResult> SaveCourses(int courseId, int teacherId)
+
+        // POST: Admin/AddTeacher
+        public ActionResult AddTeacher(int id = 0)
         {
-            var client = new HttpClient();
-            //Passing service base url  
-            client.BaseAddress = new Uri(Baseurl);
-
-
-
-            client.DefaultRequestHeaders.Clear();
-            //Define request data format  
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-
-
-            //Sending request to find web api REST service resource Get:Courses & Get:Enrollemnts using HttpClient  
-            HttpResponseMessage ResFromCourses = await client.GetAsync("api/Courses/" + courseId.ToString());
-            HttpResponseMessage ResFromTeaches = await client.GetAsync("api/Teaches/" + teacherId.ToString());
-
-            //Storing the response details recieved from web api   
-            var teacherCourseResponse = ResFromCourses.Content.ReadAsAsync<CourseUserModel>().Result;
-
-
-
-            return View(teacherCourseResponse);
+            if (id == 0)
+            {
+                var list = new List<string>() { "What is your Pet Name?", "What is your Nick Name", "What is your School Name?" };
+                ViewBag.list = list;
+                return View(new AdminUserModel());
+            }
+            else
+            {
+                HttpResponseMessage responseStudent = GlobalVariables.WebApiClient.GetAsync("api/Teachers/" + id.ToString()).Result;
+                HttpResponseMessage responseUser = GlobalVariables.WebApiClient.GetAsync("api/Users/" + id.ToString()).Result;
+                return View(responseUser.Content.ReadAsAsync<AdminUserModel>().Result);
+            }
         }
 
-
-        //POST : Teacher/SaveCourses
         [HttpPost]
-        public async Task<ActionResult> SaveCourses(CourseUserModel courseModel)
+        public ActionResult AddTeacher(AdminUserModel user)
         {
-            int TeacherID = 1;
-            if (courseModel.StartDate.HasValue)
+            if (user.TeacherID == 0)
             {
-                TimeSpan diff = DateTime.Now - (DateTime)courseModel.StartDate;
-                if (diff.Days > 7)
+                if (user.IsAdmin == true)
                 {
-                    TempData["ErrorMessage"] = "Registration for this course is over!";
-                    ViewBag.Message = "Registration for this course is over!";
-                    return View();
-                }
-            }
-            TeacherCourseUserModel teaches = new TeacherCourseUserModel
-            {
-                CourseID = courseModel.CourseID,
-                TeacherID = TeacherID
-            };
-            using (var client = new HttpClient())
-            {
-                //Passing service base url  
-                client.BaseAddress = new Uri(Baseurl);
-
-
-
-                client.DefaultRequestHeaders.Clear();
-                //Define request data format  
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-
-
-                //Sending request to Post web api REST service resource using HttpClient  
-                HttpResponseMessage ResFromTeaches = await client.PostAsJsonAsync("api/Teaches/", teaches);
-
-
-
-                //Checking the response is successful or not which is sent using HttpClient  
-                if (ResFromTeaches.IsSuccessStatusCode)
-                {
-                    TempData["SuccessMessage"] = "Enrolled Successfully";
-                }
-                else if (ResFromTeaches.StatusCode == HttpStatusCode.Conflict)
-                {
-                    TempData["ErrorMessage"] = "Already Enrolled!";
+                    user.Role = "admin";
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "There was error enrolling in Course!";
+                    user.Role = "teacher";
                 }
-            }
-            return RedirectToAction("MyCourses");
-        }
-
-        //View My Students
-        public async Task<ActionResult> MyStudents(int courseId, int teacherId = 1)  //@TODO: change default to 0 after auth
-        {
-            List<StudentUserModel> students = new List<StudentUserModel>();
-            List<EnrollmentUserModel> enrollments = new List<EnrollmentUserModel>();
-            List<CourseUserModel> courses = new List<CourseUserModel>();
-
-            using (var client = new HttpClient())
-            {
-                //Passing service base url  
-                client.BaseAddress = new Uri(Baseurl);
-
-                client.DefaultRequestHeaders.Clear();
-                //Define request data format  
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                //Sending request to find web api REST service resource using HttpClient  
-                HttpResponseMessage ResFromStudents = await client.GetAsync("api/Students/");
-                HttpResponseMessage ResFromEnrollment = await client.GetAsync("api/Enrollments/");
-                
-                //Checking the response is successful or not which is sent using HttpClient  
-                if (ResFromStudents.IsSuccessStatusCode && ResFromEnrollment.IsSuccessStatusCode)
+                var list = new List<string>() { "What is your Pet Name?", "What is your Nick Name", "What is your School Name?" };
+                ViewBag.list = list;
+                if (user.DOB.HasValue)
                 {
-                    //Storing the response details recieved from web api   
-                    var studentResponse = ResFromStudents.Content.ReadAsStringAsync().Result;
-                    var enrollmentResponse = ResFromEnrollment.Content.ReadAsStringAsync().Result;
-
-                    //Deserializing the response recieved from web api and storing into the list  
-                    students = JsonConvert.DeserializeObject<List<StudentUserModel>>(studentResponse);
-                    enrollments = JsonConvert.DeserializeObject<List<EnrollmentUserModel>>(enrollmentResponse);
-
-                    try
+                    TimeSpan diff = DateTime.Now - (DateTime)user.DOB;
+                    if (diff.Days == 0)
                     {
-                        var result = enrollments.Where(item => item.CourseID == courseId).Join(
-                        students,
-                        enrollment => enrollment.StudentID,
-                        student => student.StudentID,
-                        (enrollment, student) => new StudentUserModel
-                        {
-                            StudentID = student.StudentID,
-                            FName = student.FName,
-                            LName = student.LName,
-                            MobileNo = student.MobileNo,
-                            Address = student.Address,
-                            City = student.City,
-                            DOB = student.DOB
-                        }
-                        ).ToList();
-
-                        if (result.Any())
-                        {
-                            return View(result);
-                        }
+                        TempData["ErrorMessage"] = "DOB cannot be same with CurrentDate";
+                        ViewBag.Message = "DOB cannot be same with CurrentDate";
+                        return View();
                     }
-                    catch
+                    if (user.DOB > DateTime.Now)
                     {
-                        return new HttpStatusCodeResult(500);
+                        TempData["ErrorMessage"] = "DOB cannot be CurrentDate or after CurrentDate";
+                        ViewBag.Message = "DOB cannot be same with CurrentDate";
+                        return View();
                     }
                 }
-                //returning the employee list to view  
-                return new HttpStatusCodeResult(404);
+                HttpResponseMessage responseUser = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Users/", user).Result;
+                HttpResponseMessage responseStudent = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Teachers/", user).Result;
+
+                TempData["SuccessMessage"] = "Teacher Added Successfully";
             }
+            else
+            {
+                HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Teachers/" + user.TeacherID, user).Result;
+                TempData["SuccessMessage"] = "Teacher Updated Successfully";
+            }
+            return RedirectToAction("ViewTeachers");
         }
 
-        // POST: Admin/UpdateTeacher
-        public ActionResult UpdateTeacher(int id = 1)
+        // DELETE: Admin/DeleteTeacher
+        public ActionResult DeleteTeacher(int id)
+        {
+            HttpResponseMessage response = GlobalVariables.WebApiClient.DeleteAsync("api/Teachers/" + id.ToString()).Result;
+            HttpResponseMessage responseUser = GlobalVariables.WebApiClient.DeleteAsync("api/Users/" + id.ToString()).Result;
+            TempData["SuccessMessage"] = "Teacher Deleted Successfully";
+            return RedirectToAction("ViewTeachers");
+        }
+
+        // POST: Admin/EditTeacherProfile
+        public ActionResult UpdateTeacher(int id = 0)
+        {
+            if (id != 0)
+            {
+                HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("api/Teachers/" + id.ToString()).Result;
+                return View(response.Content.ReadAsAsync<TeacherUserModel>().Result);
+            }
+            return RedirectToAction("ViewTeachers");
+        }
+
+        [HttpPost]
+        public ActionResult UpdateTeacher(TeacherUserModel teacher)
+        {
+            if (teacher.TeacherID != 0)
+            {
+                if (teacher.DOB.HasValue)
+                {
+                    TimeSpan diff = DateTime.Now - (DateTime)teacher.DOB;
+                    if (diff.Days == 0)
+                    {
+                        TempData["ErrorMessage"] = "DOB cannot be same with CurrentDate";
+                        ViewBag.Message = "DOB cannot be same with CurrentDate";
+                        return View();
+                    }
+                    if (teacher.DOB > DateTime.Now)
+                    {
+                        TempData["ErrorMessage"] = "DOB cannot be CurrentDate or after CurrentDate";
+                        ViewBag.Message = "DOB cannot be same with CurrentDate";
+                        return View();
+                    }
+                }
+                HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Teachers/" + teacher.TeacherID, teacher).Result;
+                TempData["SuccessMessage"] = "Teacher Updated Successfully";
+            }
+            return RedirectToAction("ViewTeachers");
+        }
+
+        public ActionResult UpdateTeacherProfile(int id = 1)
         {
             if (id != 0)
             {
@@ -275,14 +176,48 @@ namespace PrometheusWeb.MVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult UpdateTeacher(TeacherUserModel teacher)
+        public ActionResult UpdateTeacherProfile(TeacherUserModel teacher)
         {
             if (teacher.TeacherID != 0)
             {
                 HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Teachers/" + teacher.TeacherID, teacher).Result;
                 TempData["SuccessMessage"] = "Teacher Updated Successfully";
             }
-            return RedirectToAction("ViewTeachers");
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> SearchTeacher(string search)
+        {
+            List<TeacherUserModel> teachers = new List<TeacherUserModel>();
+
+            using (var client = new HttpClient())
+            {
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+                client.DefaultRequestHeaders.Clear();
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                //Sending request to find web api REST service resource Get:Students using HttpClient  
+                HttpResponseMessage ResFromCourses = await client.GetAsync("api/Teachers/");
+
+
+                //Checking the response is successful or not which is sent using HttpClient  
+                if (ResFromCourses.IsSuccessStatusCode)
+                {
+                    //Storing the response details recieved from web api   
+                    var teacherResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
+
+
+                    //Deserializing the response recieved from web api and storing into the list  
+                    teachers = JsonConvert.DeserializeObject<List<TeacherUserModel>>(teacherResponse);
+
+                }
+                //returning the employee list to view  
+                return View(teachers.Where(x => x.FName.StartsWith(search) | search == null).ToList());
+            }
         }
     }
 }

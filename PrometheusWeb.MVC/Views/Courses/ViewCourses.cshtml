@@ -42,7 +42,7 @@
 </body>
 <div class="container" style="background:#f8f8f6">
     <p>
-        @Html.ActionLink("Create New", "AddOrEditCourses")
+        @Html.ActionLink("Create New", "AddCourse")
         @using (Html.BeginForm("SearchCourse", "Courses", FormMethod.Get))
         {
             <input type="text" name="search" placeholder="Enter Course Name" style="color:black; font-weight:600;" />
@@ -84,7 +84,7 @@
                     @Html.DisplayFor(modelItem => item.EndDate)
                 </td>
                 <td>
-                    <a href="@Url.Action("AddOrEditCourses", "Courses", new { id = item.CourseID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Edit</a>
+                    <a href="@Url.Action("UpdateCourse", "Courses", new { id = item.CourseID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Edit</a>
                     @*<a href="@Url.Action("Delete", "Courses", new { id = item.CourseID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Delete</a>*@
                     <a onclick="Delete(@item.CourseID)" class="btn btn-default"><i class="fa fa-trash"></i>  Delete</a>
                 </td>
@@ -110,7 +110,7 @@
 
         function Delete(id) {
             alertify.confirm('Courses register','Are You Sure to Delete this Record ?',function(){
-                window.location.href  = '@Url.Action("Delete","Courses")/'+id;
+                window.location.href  = '@Url.Action("DeleteCourse","Courses")/'+id;
             },null );
         }
     </script>

@@ -40,7 +40,7 @@
 <div class="container" style="background:#f8f8f6">
     <p>
         @*@Html.ActionLink("Create New", "Create")*@
-        @using (Html.BeginForm("SearchTeacher", "Admin", FormMethod.Get))
+        @using (Html.BeginForm("SearchTeacher", "Teacher", FormMethod.Get))
         {
             <input type="text" name="search" placeholder="Enter Student Name" style="color:black; font-weight:600;" />
             <input type="submit" name="submit" value="Search" style="background-color:greenyellow; color:black; font-weight:600;" />
@@ -109,7 +109,7 @@
                     @Html.DisplayFor(modelItem => item.IsAdmin)
                 </td>
                 <td>
-                    <a href="@Url.Action("EditTeacher", "Admin", new { id = item.TeacherID})" class="btn btn-primary"><i class="fa fa-pencil"></i>  Edit</a>
+                    <a href="@Url.Action("UpdateTeacher", "Teacher", new { id = item.TeacherID})" class="btn btn-primary"><i class="fa fa-pencil"></i>  Edit</a>
                     @*<a href="@Url.Action("Delete", "Admin", new { id = item.StudentID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Delete</a>*@
                     <a onclick="Delete(@item.TeacherID)" class="btn btn-danger"><i class="fa fa-trash"></i>  Delete</a>
                 </td>
@@ -118,3 +118,24 @@
 
     </table>
 </div>
+@section scripts{
+    <script>
+        $(function () {
+            var successMessage = '@TempData["SuccessMessage"]'
+            if (successMessage != '')
+                alertify.success(successMessage);
+        });
+
+        $(function () {
+            var errorMessage = '@TempData["ErrorMessage"]'
+            if (errorMessage != '')
+                alertify.error(errorMessage);
+        });
+
+        function Delete(id) {
+            alertify.confirm('Courses register','Are You Sure to Delete this Record ?',function(){
+                window.location.href  = '@Url.Action("DeleteTeacher", "Teacher")/'+id;
+            },null );
+        }
+    </script>
+}

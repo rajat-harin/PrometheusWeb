@@ -11,7 +11,7 @@
         font-weight: bold;
     }
 
-    
+
     .column {
         float: left;
         width: 19%;
@@ -31,14 +31,14 @@
         }
 
     /* Style the counter cards */
-   .card {
-        border:groove;
-        border-color:#027dc5;
-        border-radius:10%;
+    .card {
+        border: groove;
+        border-color: #027dc5;
+        border-radius: 10%;
         box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
         padding: 16px;
         text-align: center;
-        background-color: #a0c3e2;  
+        background-color: #a0c3e2;
     }
 </style>
 
@@ -47,13 +47,13 @@
 
 <!--<div class="btn-group-vertical" style="width:100%; padding:200px; background-color:#d9dad9" ;>
     <h2 style="padding-left:42%">Admin Menu</h2>-->
-    @*<button class="btn" style="font-weight:900">@Html.ActionLink("Admin", "Index", "Admin")</button>*@
-    <!--<br>
-    <button class="btn" style="font-weight:900">@Html.ActionLink("Add Teacher", "AddTeacher", "Admin")
+@*<button class="btn" style="font-weight:900">@Html.ActionLink("Admin", "Index", "Admin")</button>*@
+<!--<br>
+    <button class="btn" style="font-weight:900">@Html.ActionLink("Add Course", "AddCourse", "Courses")
             <p>To add new Teacher</p>
     </button>
     <br>
-    <button class="btn" style="font-weight:900">@Html.ActionLink("Add Student", "AddStudent", "Admin")
+    <button class="btn" style="font-weight:900">@Html.ActionLink("View", "AddStudent", "Admin")
         <p>To add new Student</p>
     </button>
     <br>
@@ -77,20 +77,9 @@
                 <div class="card-body">
                     <h4 class="card-title" style="color:black; font-weight:bold">Add Teacher</h4>
                     <h6 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">To add new Teacher</h6>
-                    <br/>
-                    <button class="btn" style="font-weight:900">@Html.ActionLink("Add Teacher", "AddTeacher", "Teacher")</button>
-                </div>
-            </div>
-        </div>
-        <div class="column">
-            <div class="card" style="width: 16rem;height:25rem">
-                <img src="..." class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h4 class="card-title" style="color:black; font-weight:bold">Add Student</h4>
-                    <h6 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">To add new Student</h6>
                     <br />
-                    <button class="btn" style="font-weight:900">@Html.ActionLink("Add Student", "AddStudent", "Student")</button>
-</div>
+                    <button class="btn" style="font-weight:900">@Html.ActionLink("Add Course", "AddCourse", "Courses")</button>
+                </div>
             </div>
         </div>
         <div class="column">
@@ -99,18 +88,7 @@
                 <div class="card-body">
                     <h4 class="card-title" style="color:black; font-weight:bold">View Students</h4>
                     <h6 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">To view existing students OR Delete students</h6>
-                    <button class="btn" style="font-weight:900">@Html.ActionLink("View Students", "ViewStudents", "Student")</button>
-                </div>
-            </div>
-        </div>
-        <div class="column">
-            <div class="card" style="width: 16rem;height:25rem">
-                <img src="..." class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h4 class="card-title" style="color:black; font-weight:bold">View Teachers</h4>
-                    <h6 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">To view existing teachers OR Delete teachers</h6>
-                    
-                    <button class="btn" style="font-weight:900">@Html.ActionLink("View Teachers", "ViewTeachers", "Teacher")</button>
+                    <button class="btn" style="font-weight:900">@Html.ActionLink("View Courses", "ViewCourses", "Courses")</button>
                 </div>
             </div>
         </div>

@@ -40,9 +40,6 @@
     </style>
 <body style=" background-color:#d9dad9;"></body>
 <div class="container" style="background-color: #f8f8f6;">
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
     <table class="table">
         <tr>
             <th>
@@ -104,11 +101,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.CourseID)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
                 </td>
             </tr>
         }

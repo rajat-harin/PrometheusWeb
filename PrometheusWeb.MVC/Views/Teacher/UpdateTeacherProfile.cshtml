@@ -1,0 +1,94 @@
+﻿@model PrometheusWeb.Data.UserModels.TeacherUserModel
+@{
+    ViewBag.Title = "UpdateTeacherProfile";
+}
+
+<h2>Update Teacher</h2>
+
+<div style="padding-left:700px; ">
+    <h2>Edit Teacher</h2>
+</div>
+@using (Html.BeginForm("UpdateTeacherProfile", "Teacher", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <div style="padding-left:665px; ">
+        <h4>Create a new course.</h4>
+    </div>
+    <hr />
+    @Html.HiddenFor(model => model.TeacherID)
+    @Html.HiddenFor(model => model.UserID)
+    @Html.HiddenFor(model => model.IsAdmin)
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.FName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.FName)
+            @Html.ValidationMessageFor(m => m.FName)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.LName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.LName)
+            @Html.ValidationMessageFor(m => m.LName)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.DOB, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.DOB, new { htmlAttributes = new { @class = "datepicker" } })
+            @Html.ValidationMessageFor(m => m.DOB)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.Address, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.Address)
+            @Html.ValidationMessageFor(m => m.Address)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.City, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.City)
+            @Html.ValidationMessageFor(m => m.City)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.MobileNo, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.MobileNo)
+            @Html.ValidationMessageFor(m => m.MobileNo)
+        </div>
+    </div>
+    <div class="form-group" style="padding-left:750px">
+        <input type="submit" value="Submit" class="btn button" />
+        <input type="reset" value="Reset" class="btn button" />
+    </div>
+}
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval");
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script>
+        $(function () {
+            $(".datepicker").datepicker({
+                dateFormat: "yy-mm-dd",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "1990:2021"
+            });
+        });
+    </script>
+    <script>
+        $(function () {
+            var successMessage = '@TempData["SuccessMessage"]'
+            if (successMessage != '')
+                alertify.success(successMessage);
+        });
+        $(function () {
+            var errorMessage = '@TempData["ErrorMessage"]'
+            if (errorMessage != '')
+                alertify.error(errorMessage);
+        });
+    </script>
+}

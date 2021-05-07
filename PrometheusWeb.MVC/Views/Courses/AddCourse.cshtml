@@ -1,7 +1,6 @@
-﻿@model PrometheusWeb.Data.UserModels.HomeworkPlanUserModel
-
+﻿@model PrometheusWeb.Data.UserModels.CourseUserModel
 @{
-    ViewBag.Title = "UpdatePlan";
+    ViewBag.Title = "AddCourse";
 }
 <style>
     body {
@@ -138,60 +137,61 @@
         padding: 0px;
     }
 </style>
-<h2>UpdatePlan</h2>
-
-
-@using (Html.BeginForm("UpdatePlan", "Student", FormMethod.Post, Model))
-
-
+<div style="padding-left:700px; ">
+    <h2>Add or Edit Course</h2>
+</div>
+@using (Html.BeginForm("AddCourse", "Courses", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
-    <div cla></div>
-    <div class="form-horizontal">
-        
-        <hr />
-
-        @Html.HiddenFor(model => model.HomeworkID)
-        @Html.HiddenFor(model => model.HomeworkPlanID)
-        @Html.HiddenFor(model => model.StudentID)
-
-    <div class="container" style="background-color:#f8f8f6;">
-        <div class="form-group" style="padding:1%; padding-left:35%">
-            @Html.LabelFor(model => model.PriorityLevel, htmlAttributes: new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PriorityLevel, new { htmlAttributes = new { @class = "col-md-2 control-label" } })
-                @Html.ValidationMessageFor(model => model.PriorityLevel, "", new { @class = "text-danger" })
-            </div>
+    <div style="padding-left:665px; ">
+        <h4>Create a new course.</h4>
+    </div>
+    <hr />
+    @*@Html.ValidationSummary("", new { @class = "text-danger" })*@
+    @Html.HiddenFor(model => model.CourseID)
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.Name)
+            @Html.ValidationMessageFor(m => m.Name)
         </div>
-
-        <div class="form-group" style="padding:1%; padding-left:35%">
-            @Html.LabelFor(model => model.isCompleted, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.isCompleted, new { htmlAttributes = new { @class = "col-md-2 control-label" } })
-                @Html.ValidationMessageFor(model => model.isCompleted, "", new { @class = "text-danger" })
-            </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.StartDate, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.StartDate, new { htmlAttributes = new { @class = "datepicker" } })
+            @Html.ValidationMessageFor(m => m.StartDate)
         </div>
-
-        <div class="form-group" style="padding:1%; padding-left:35%" ;">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-success" />
-            </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.EndDate, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.EndDate, new { htmlAttributes = new { @class = "datepicker" } })
+            @Html.ValidationMessageFor(m => m.EndDate)
         </div>
-        <div style="padding:1%; padding-left:35%">
-            @Html.ActionLink("Back to List", "GetHomeworkPlan")
-        </div>
-    </div></div>
+    </div>
+    <div class="form-group" style="padding-left:750px">
+        <input type="submit" value="Submit" class="btn-primary" />
+        <input type="reset" value="Reset" class="btn-danger" />
+    </div>
 }
-
-
-
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
 @section scripts{
+    @Scripts.Render("~/bundles/jqueryval");
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
     <script>
         $(function () {
-            var successMessage = '@TempData["SuccessMessage"]'
-            if (successMessage != '')
-                alertify.success(successMessage);
+            $(".datepicker").datepicker({
+                dateFormat: "yy-mm-dd",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "1990:2021"
+            });
         });
-
+        $(function () {
+            var errorMessage = '@TempData["ErrorMessage"]'
+            if (errorMessage != '')
+                alertify.error(errorMessage);
+        });
     </script>
 }

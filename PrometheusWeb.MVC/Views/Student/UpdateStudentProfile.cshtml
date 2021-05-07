@@ -1,6 +1,6 @@
 ﻿@model PrometheusWeb.Data.UserModels.StudentUserModel
 @{
-    ViewBag.Title = "EditStudent";
+    ViewBag.Title = "UpdateStudentProfile";
 }
 
 <h2>Edit Student</h2>
@@ -8,7 +8,7 @@
 <div style="padding-left:700px; ">
     <h2>Edit Student</h2>
 </div>
-@using (Html.BeginForm("EditStudent", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("UpdateStudentProfile", "Student", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
     <div style="padding-left:665px; ">

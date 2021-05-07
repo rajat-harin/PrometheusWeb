@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<PrometheusWeb.Data.UserModels.StudentUserModel>
 
 @{
-    ViewBag.Title = "MyStudents";
+    ViewBag.Title = "EnrolledStudents";
 }
 <style>
     table {
@@ -88,7 +88,7 @@
             @Html.DisplayFor(modelItem => item.MobileNo)
         </td>
         <td>
-            <a href="@Url.Action("MyCourses","Student",
+            <a href="@Url.Action("StudentCourses","Courses",
                     new { studentId = item.StudentID})" class="btn btn-primary">View Course</a>
         </td>
     </tr>

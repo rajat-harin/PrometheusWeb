@@ -46,7 +46,7 @@
                 @Html.DisplayFor(modelItem => item.EndDate)
             </td>
             <td>
-                <a href="@Url.Action("AddOrEditCourses", "Courses", new { id = item.CourseID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Edit</a>
+                <a href="@Url.Action("UpdateCourse", "Courses", new { id = item.CourseID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Edit</a>
                 @*<a href="@Url.Action("Delete", "Admin", new { id = item.StudentID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Delete</a>*@
                 <a onclick="Delete(@item.CourseID)" class="btn btn-default"><i class="fa fa-trash"></i>  Delete</a>
             </td>
@@ -54,3 +54,24 @@
     }
 
 </table>
+@section scripts{
+    <script>
+        $(function () {
+            var successMessage = '@TempData["SuccessMessage"]'
+            if (successMessage != '')
+                alertify.success(successMessage);
+        });
+
+        $(function () {
+            var errorMessage = '@TempData["ErrorMessage"]'
+            if (errorMessage != '')
+                alertify.error(errorMessage);
+        });
+
+        function Delete(id) {
+            alertify.confirm('Courses register','Are You Sure to Delete this Record ?',function(){
+                window.location.href  = '@Url.Action("DeleteCourse","Courses")/'+id;
+            },null );
+        }
+    </script>
+}

@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<PrometheusWeb.Data.UserModels.CourseUserModel>
 
 @{
-    ViewBag.Title = "ViewCourses";
+    ViewBag.Title = "ViewCoursesForTeaching";
 }
 <style>
     table {
@@ -76,7 +76,7 @@
     </body>
     <div class="container" style="background:#f8f8f6">
         <p>
-            <a href="@Url.Action("MyCourses","Teacher")" class="btn btn-primary">Show My Courses</a>
+            <a href="@Url.Action("TeacherCourses","Courses")" class="btn btn-primary">Show My Courses</a>
         </p>
 
         <table class="table table-striped">
@@ -114,8 +114,8 @@
                         @Html.DisplayFor(modelItem => item.EndDate)
                     </td>
                     <td>
-                        <a href="@Url.Action("SaveCourses","Teacher",new {courseId=item.CourseID,
-                        teacherId = 1})" class="btn btn-primary">Save Course</a>
+                        <a href="@Url.Action("SaveCourses","Courses",new {courseId=item.CourseID,
+                        teacherId = 1})" class="btn btn-primary">Teach Course</a>
                     </td>
                 </tr>
             }

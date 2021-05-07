@@ -40,7 +40,7 @@
 <div class="container" style="background:#f8f8f6; " >
    
     <p>
-        <button class="btn btn-toolbar">@Html.ActionLink("Generate New Plan", "GeneratePlan")</button>
+        <button class="btn btn-toolbar">@Html.ActionLink("Generate New Plan", "GenerateHomeworkPlan")</button>
     </p>
     
     @if (Model != null)
@@ -82,7 +82,7 @@
                         @Html.DisplayFor(modelItem => item.isCompleted)
                     </td>
                     <td>
-                        <button class="btn btn-block">@Html.ActionLink("Update Plan", "UpdatePlan", new { id = item.HomeworkPlanID }) </button>
+                        <button class="btn btn-block">@Html.ActionLink("Update Plan", "UpdateHomeworkPlan", new { id = item.HomeworkPlanID }) </button>
                     </td>
                 </tr>
             }

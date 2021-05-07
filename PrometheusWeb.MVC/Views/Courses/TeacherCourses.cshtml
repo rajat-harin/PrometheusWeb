@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<PrometheusWeb.MVC.Models.ViewModels.TeacherCourses>
 
 @{
-    ViewBag.Title = "MyCourses";
+    ViewBag.Title = "TeacherCourses";
 }
 <style>
     table {
@@ -80,7 +80,7 @@
                     @Html.DisplayFor(modelItem => item.EndDate)
                 </td>
                 <td>
-                    <a href="@Url.Action("MyStudents","Teacher",new {courseId=item.CourseID
+                    <a href="@Url.Action("EnrolledStudents","Student",new {courseId=item.CourseID
                 })" class="btn btn-primary">View Students</a>
                 </td>
             </tr>
