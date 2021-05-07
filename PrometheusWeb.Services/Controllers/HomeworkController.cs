@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using PrometheusWeb.Data;
+using PrometheusWeb.Exceptions;
 using PrometheusWeb.Data.DataModels;
 using PrometheusWeb.Data.UserModels;
 using PrometheusWeb.Services.Services;
@@ -26,7 +27,15 @@ namespace PrometheusWeb.Services.Controllers
         // GET: api/Homework
         public IQueryable<HomeworkUserModel> GetHomeworks()
         {
-            return _homeworkService.GetHomeworks();
+            try
+            {
+                IQueryable<HomeworkUserModel> homeworks = _homeworkService.GetHomeworks();
+                return homeworks;
+            }
+            catch(Exception)
+            {
+                return null;
+            }
         }
 
         // GET: api/Homework/5
@@ -73,20 +82,55 @@ namespace PrometheusWeb.Services.Controllers
         [ResponseType(typeof(Homework))]
         public IHttpActionResult PostHomework(HomeworkUserModel homeworkModel)
         {
-            var result = _homeworkService.AddHomework(homeworkModel);
-            if (result)
-                return CreatedAtRoute("DefaultApi", new { id = homeworkModel.HomeWorkID }, homeworkModel);
-            else
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = _homeworkService.AddHomework(homeworkModel);
+                if (result)
+                    return CreatedAtRoute("DefaultApi", new { id = homeworkModel.HomeWorkID }, homeworkModel);
+                else
+                    return StatusCode(HttpStatusCode.InternalServerError);
+            }
+            catch (PrometheusWebException)
+            {
+                return StatusCode(HttpStatusCode.Conflict);
+            }
+            catch
+            {
                 return StatusCode(HttpStatusCode.InternalServerError);
+            }
+
         }
 
         // DELETE: api/Homework/5
         [ResponseType(typeof(Homework))]
         public IHttpActionResult DeleteHomework(int id)
         {
-            HomeworkUserModel homework = _homeworkService.DeleteHomework(id);
+            try
+            {
+                HomeworkUserModel homework = _homeworkService.DeleteHomework(id);
+                if(homework != null)
+                {
+                    return Ok(homework);
+                }
+                else
+                {
+                    return StatusCode(HttpStatusCode.NotFound);
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(HttpStatusCode.InternalServerError);
+            }
 
-            return Ok(homework);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
         }
     }
 }
