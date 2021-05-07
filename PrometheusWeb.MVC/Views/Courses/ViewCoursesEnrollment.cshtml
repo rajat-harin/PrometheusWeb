@@ -73,7 +73,8 @@
 
 
         <td>
-            <button class="btn">@Html.ActionLink("Enroll", "EnrollInCourse", item) </button>
+            <button class="btn btn-primary">@Html.ActionLink("Enroll", "EnrollInCourse", item, //   Route args if needed; null if not.
+            new { @style = "color:White;" }) </button>
             
         </td>
 

@@ -73,7 +73,10 @@
 <body style="background:#d9dad9;"></body>
 <div class="container" style="background:#f8f8f6;">
     <p>
-        @Html.ActionLink("Create New", "AddStudent")
+        <button class="btn btn-primary">
+            @Html.ActionLink("Create New", "AddStudent", null, //   Route args if needed; null if not.
+           new { @style = "color:White;" })
+        </button>
         @using (Html.BeginForm("SearchStudent", "Student", FormMethod.Get))
         {
             <input type="text" name="search" placeholder="Enter Student Name" style="color:black; font-weight:600;" />
