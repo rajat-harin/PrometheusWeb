@@ -64,82 +64,107 @@ namespace PrometheusWeb.MVC.Controllers
                 }
                 catch (Exception)
                 {
-
-                    throw;
+                    return new HttpStatusCodeResult(500);
                 }
                 return View();
             }
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public ActionResult AddCourse(CourseUserModel course)
         {
-            if (course.CourseID == 0)
+            using (var client = new HttpClient())
             {
-                if (course.StartDate.HasValue)
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+
+                client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
                 {
-                    TimeSpan diff = (DateTime)course.EndDate - (DateTime)course.StartDate;
-                    if (diff.Days == 0)
+                    if (course.CourseID == 0)
                     {
-                        TempData["ErrorMessage"] = "Course StartDate cannot be same with EndDate";
-                        return View();
+                        if (course.StartDate.HasValue)
+                        {
+                            TimeSpan diff = (DateTime)course.EndDate - (DateTime)course.StartDate;
+                            if (diff.Days == 0)
+                            {
+                                TempData["ErrorMessage"] = "Course StartDate cannot be same with EndDate";
+                                return View();
+                            }
+                        }
+                        if (course.EndDate.HasValue)
+                        {
+                            TimeSpan diff = (DateTime)course.EndDate - (DateTime)course.StartDate;
+                            if (diff.Days < 0)
+                            {
+                                TempData["ErrorMessage"] = "Course EndDate cannot be before StartDate";
+                                return View();
+                            }
+                        }
+                        HttpResponseMessage responseStudent = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Courses/", course).Result;
+                        if (responseStudent.IsSuccessStatusCode)
+                        {
+                            TempData["SuccessMessage"] = "Student Added Successfully";
+                            ViewBag.Message = "Student Added Successfully";
+
+                            TempData["SuccessMessage"] = "Student Added Successfully";
+                            ViewBag.Message = "Student Added Successfully";
+
+                        }
+                        else if (responseStudent.StatusCode == HttpStatusCode.Conflict)
+                        {
+                            TempData["ErrorMessage"] = "Phone No Already Taken try another Phone No";
+                            ViewBag.Message = "Phone No Already Taken try another Phone No";
+                        }
+
+                        else
+                        {
+                            TempData["ErrorMessage"] = "There was error registering a Teacher!";
+                            ViewBag.Message = "There was error registering a Teacher!";
+                        }
+                    }
+                    else
+                    {
+                        if (course.StartDate.HasValue)
+                        {
+                            TimeSpan diff = (DateTime)course.EndDate - (DateTime)course.StartDate;
+                            if (diff.Days == 0)
+                            {
+                                TempData["ErrorMessage"] = "Course StartDate cannot be same with EndDate";
+                                return View();
+                            }
+                        }
+                        if (course.EndDate.HasValue)
+                        {
+                            TimeSpan diff = (DateTime)course.EndDate - (DateTime)course.StartDate;
+                            if (diff.Days < 0)
+                            {
+                                TempData["ErrorMessage"] = "Course EndDate cannot before/same as StartDate";
+                                return View();
+                            }
+                        }
+                        HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Courses/" + course.CourseID, course).Result;
+                        TempData["SuccessMessage"] = "Course Updated Successfully";
                     }
                 }
-                if (course.EndDate.HasValue)
+                catch (Exception)
                 {
-                    TimeSpan diff = (DateTime)course.EndDate - (DateTime)course.StartDate;
-                    if (diff.Days < 0)
-                    {
-                        TempData["ErrorMessage"] = "Course EndDate cannot be before StartDate";
-                        return View();
-                    }
+                    return new HttpStatusCodeResult(500);
                 }
-                HttpResponseMessage responseStudent = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Courses/", course).Result;
-                if (responseStudent.IsSuccessStatusCode)
-                {
-                    TempData["SuccessMessage"] = "Student Added Successfully";
-                    ViewBag.Message = "Student Added Successfully";
-
-                    TempData["SuccessMessage"] = "Student Added Successfully";
-                    ViewBag.Message = "Student Added Successfully";
-
-                }
-                else if (responseStudent.StatusCode == HttpStatusCode.Conflict)
-                {
-                    TempData["ErrorMessage"] = "Phone No Already Taken try another Phone No";
-                    ViewBag.Message = "Phone No Already Taken try another Phone No";
-                }
-
-                else
-                {
-                    TempData["ErrorMessage"] = "There was error registering a Teacher!";
-                    ViewBag.Message = "There was error registering a Teacher!";
-                }
+                return RedirectToAction("ViewCourses");
             }
-            else
-            {
-                if (course.StartDate.HasValue)
-                {
-                    TimeSpan diff = (DateTime)course.EndDate - (DateTime)course.StartDate;
-                    if (diff.Days == 0)
-                    {
-                        TempData["ErrorMessage"] = "Course StartDate cannot be same with EndDate";
-                        return View();
-                    }
-                }
-                if (course.EndDate.HasValue)
-                {
-                    TimeSpan diff = (DateTime)course.EndDate - (DateTime)course.StartDate;
-                    if (diff.Days < 0)
-                    {
-                        TempData["ErrorMessage"] = "Course EndDate cannot before/same as StartDate";
-                        return View();
-                    }
-                }
-                HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Courses/" + course.CourseID, course).Result;
-                TempData["SuccessMessage"] = "Course Updated Successfully";
-            }
-            return RedirectToAction("ViewCourses");
         }
 
         // POST: Admin/EditTeacherProfile
@@ -170,44 +195,70 @@ namespace PrometheusWeb.MVC.Controllers
                         HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("api/Courses/" + id.ToString()).Result;
                         return View(response.Content.ReadAsAsync<CourseUserModel>().Result);
                     }
-                    return RedirectToAction("ViewCourses");
+                    
                 }
                 catch (Exception)
                 {
-
-                    throw;
+                    return new HttpStatusCodeResult(500);
                 }
-                
+                return RedirectToAction("ViewCourses");
             }   
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public ActionResult UpdateCourse(CourseUserModel course)
         {
-            if (course.CourseID != 0)
+            using (var client = new HttpClient())
             {
-                if (course.StartDate.HasValue)
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+
+                client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
                 {
-                    TimeSpan diff = (DateTime)course.EndDate - (DateTime)course.StartDate;
-                    if (diff.Days == 0)
+                    if (course.CourseID != 0)
                     {
-                        TempData["ErrorMessage"] = "Course StartDate cannot be same with EndDate";
-                        return View();
+                        if (course.StartDate.HasValue)
+                        {
+                            TimeSpan diff = (DateTime)course.EndDate - (DateTime)course.StartDate;
+                            if (diff.Days == 0)
+                            {
+                                TempData["ErrorMessage"] = "Course StartDate cannot be same with EndDate";
+                                return View();
+                            }
+                        }
+                        if (course.EndDate.HasValue)
+                        {
+                            TimeSpan diff = (DateTime)course.EndDate - (DateTime)course.StartDate;
+                            if (diff.Days < 0)
+                            {
+                                TempData["ErrorMessage"] = "Course EndDate cannot be before StartDate";
+                                return View();
+                            }
+                        }
+                        HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Courses/" + course.CourseID, course).Result;
+                        TempData["SuccessMessage"] = "Course Updated Successfully";
                     }
                 }
-                if (course.EndDate.HasValue)
+                catch (Exception)
                 {
-                    TimeSpan diff = (DateTime)course.EndDate - (DateTime)course.StartDate;
-                    if (diff.Days < 0)
-                    {
-                        TempData["ErrorMessage"] = "Course EndDate cannot be before StartDate";
-                        return View();
-                    }
+                    return new HttpStatusCodeResult(500);
                 }
-                HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Courses/" + course.CourseID, course).Result;
-                TempData["SuccessMessage"] = "Course Updated Successfully";
+
+                return RedirectToAction("ViewCourses");
             }
-            return RedirectToAction("ViewCourses");
         }
 
         // DELETE: Course/Delete
@@ -239,10 +290,8 @@ namespace PrometheusWeb.MVC.Controllers
                 }
                 catch (Exception)
                 {
-
-                    throw;
+                    return new HttpStatusCodeResult(500);
                 }
-
             }    
         }
 
@@ -290,9 +339,9 @@ namespace PrometheusWeb.MVC.Controllers
                 }
                 catch (Exception)
                 {
-                    throw;
+                    return new HttpStatusCodeResult(500);
                 }
-                
+
                 //returning the employee list to view  
                 return View(courses);
             }
@@ -342,10 +391,9 @@ namespace PrometheusWeb.MVC.Controllers
                 }
                 catch (Exception)
                 {
-
-                    throw;
+                    return new HttpStatusCodeResult(500);
                 }
-                
+
                 //returning the employee list to view  
                 return View(courses.Where(x => x.Name.StartsWith(search) | search == null).ToList());
             }
@@ -574,20 +622,20 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
-        [Authorize]
         // GET: Teacher/MyCourses
+        [Authorize(Roles = "admin,teacher")]
         public async Task<ActionResult> TeacherCourses(int id = 0)  //@TODO: change default to 0 after auth
         {
+            
             int TeacherId;
+            //Take Identity
             var identity = (ClaimsIdentity)User.Identity;
 
             if (id == 0)
             {
-
-
                 var ID = identity.Claims.Where(c => c.Type == "ID")
                             .Select(c => c.Value).FirstOrDefault();
-
+                //validate the ID
                 try
                 {
                     if (ID != null)
@@ -608,6 +656,7 @@ namespace PrometheusWeb.MVC.Controllers
             {
                 TeacherId = id;
             }
+            //create token
             var token = identity.Claims.Where(c => c.Type == "AcessToken")
                         .Select(c => c.Value).FirstOrDefault();
 
@@ -623,6 +672,8 @@ namespace PrometheusWeb.MVC.Controllers
                 client.BaseAddress = new Uri(Baseurl);
 
                 client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
                 //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -661,6 +712,11 @@ namespace PrometheusWeb.MVC.Controllers
                         {
                             return View(result);
                         }
+                        if(result.Count == 0)
+                        {
+                            TempData["Message"] = "No Courses Selected For Teaching";
+                            ViewBag.Message = "No Courses Selected For Teaching";
+                        }
                     }
                     catch
                     {
@@ -668,13 +724,21 @@ namespace PrometheusWeb.MVC.Controllers
                     }
 
                 }
+                else
+                {
+                    throw new PrometheusWebException("No Course Selected For Teaching");
+                    /*TempData["Message"] = "No Courses Selected For Teaching";
+                    ViewBag.Message = "No Courses Selected For Teaching";*/
+                }
                 //returning the StatusCode 
                 return new HttpStatusCodeResult(404);
             }
+            
+
         }
 
-        [Authorize(Roles = "teacher")]
         // GET: Teacher/ViewCourses
+        [Authorize(Roles = "admin, teacher")]
         public async Task<ActionResult> ViewCoursesForTeaching()  
         {
             List<CourseUserModel> courses = new List<CourseUserModel>();
@@ -700,7 +764,7 @@ namespace PrometheusWeb.MVC.Controllers
 
                 try
                 {
-                    //Sending request to find web api REST service resource Get:Courses & Get:Enrollemnts using HttpClient  
+                    //Sending request to find web api REST service resource Get:Courses using HttpClient  
                     HttpResponseMessage ResFromCourses = await client.GetAsync("api/Courses/");
                     //Checking the response is successful or not which is sent using HttpClient  
                     if (ResFromCourses.IsSuccessStatusCode)
@@ -711,43 +775,112 @@ namespace PrometheusWeb.MVC.Controllers
 
                         //Deserializing the response recieved from web api and storing into the list  
                         courses = JsonConvert.DeserializeObject<List<CourseUserModel>>(courseResponse);
-
+                        
+                    }
+                    else
+                    {
+                        throw new PrometheusWebException("Courses Not Avaialable!");
+                        /*TempData["ErrorMessage"] = "No Courses  Available";
+                        ViewBag.Message = "No Courses  Available!";*/
                     }
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception(ex.Message);
+                    return new HttpStatusCodeResult(500);
                 }
                 return View(courses);
             }
         }
 
+       [ Authorize(Roles = "admin,teacher")]
         //GET: Teacher/Save
-        public async Task<ActionResult> SaveCourses(int courseId, int teacherId)
+        public async Task<ActionResult> SaveCourses(int courseId, int id = 0)
         {
-            var client = new HttpClient();
-            //Passing service base url  
-            client.BaseAddress = new Uri(Baseurl);
+            //select identity
+            var identity = (ClaimsIdentity)User.Identity;
+            var ID = identity.Claims.Where(c => c.Type == "ID")
+                        .Select(c => c.Value).FirstOrDefault();
+            int teacherID;
 
-            client.DefaultRequestHeaders.Clear();
-            //Define request data format  
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            //validate Teacher ID
+            try
+            {
+                if (ID != null)
+                {
+                    teacherID = Int32.Parse(ID);
+                }
+                else
+                {
+                    //throw exception when failed to retrieeve id
+                    throw new PrometheusWebException("Failed to retrieve ID");
+                }
+            }
+            catch (Exception)
+            {
+                return new HttpStatusCodeResult(500);
+            }
+            var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                        .Select(c => c.Value).FirstOrDefault();
 
-            //Sending request to find web api REST service resource Get:Courses & Get:Enrollemnts using HttpClient  
-            HttpResponseMessage ResFromCourses = await client.GetAsync("api/Courses/" + courseId.ToString());
-            HttpResponseMessage ResFromTeaches = await client.GetAsync("api/Teaches/" + teacherId.ToString());
+           
 
-            //Storing the response details recieved from web api   
-            var teacherCourseResponse = ResFromCourses.Content.ReadAsAsync<CourseUserModel>().Result;
+            using (var client = new HttpClient())
+            {
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
 
-            return View(teacherCourseResponse);
+                client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                try
+                {
+                    //Sending request to find web api REST service resource Get:Courses & Get:Enrollemnts using HttpClient  
+                    HttpResponseMessage ResFromCourses = await client.GetAsync("api/Courses/" + courseId.ToString());
+                    HttpResponseMessage ResFromTeaches = await client.GetAsync("api/Teaches/" + teacherID.ToString());
+
+                    //Storing the response details recieved from web api   
+                    var teacherCourseResponse = ResFromCourses.Content.ReadAsAsync<CourseUserModel>().Result;
+                    return View(teacherCourseResponse);
+                }
+                catch(Exception)
+                {
+                    //returning the StatusCode 
+                    return new HttpStatusCodeResult(500);
+                }
+               
+            }
         }
 
+        [Authorize(Roles ="admin,teacher")]
         //POST : Teacher/SaveCourses
         [HttpPost]
         public async Task<ActionResult> SaveCourses(CourseUserModel courseModel)
         {
-            int TeacherID = 1;
+            var identity = (ClaimsIdentity)User.Identity;
+            var ID = identity.Claims.Where(c => c.Type == "ID")
+                        .Select(c => c.Value).FirstOrDefault();
+            int teacherID;
+            try
+            {
+                if (ID != null)
+                {
+                    teacherID = Int32.Parse(ID);
+                }
+                else
+                {
+                    throw new PrometheusWebException("Failed to retrieve ID");
+                }
+            }
+            catch (Exception)
+            {
+                return new HttpStatusCodeResult(500);
+            }
+            var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                        .Select(c => c.Value).FirstOrDefault();
+
             if (courseModel.StartDate.HasValue)
             {
                 TimeSpan diff = DateTime.Now - (DateTime)courseModel.StartDate;
@@ -760,7 +893,7 @@ namespace PrometheusWeb.MVC.Controllers
             TeacherCourseUserModel teaches = new TeacherCourseUserModel
             {
                 CourseID = courseModel.CourseID,
-                TeacherID = TeacherID
+                TeacherID = teacherID
             };
             using (var client = new HttpClient())
             {
@@ -768,25 +901,37 @@ namespace PrometheusWeb.MVC.Controllers
                 client.BaseAddress = new Uri(Baseurl);
 
                 client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 //Sending request to Post web api REST service resource using HttpClient  
                 HttpResponseMessage ResFromTeaches = await client.PostAsJsonAsync("api/Teaches/", teaches);
-
-                //Checking the response is successful or not which is sent using HttpClient  
-                if (ResFromTeaches.IsSuccessStatusCode)
+                try
                 {
-                    TempData["SuccessMessage"] = "Courses Selected Successfully For Teaching";
+                    //Checking the response is successful or not which is sent using HttpClient  
+                    if (ResFromTeaches.IsSuccessStatusCode)
+                    {
+                        TempData["SuccessMessage"] = "Courses Selected Successfully For Teaching";
+                        ViewBag.Message = "Courses Selected Successfully For Teaching";
+                    }
+                    else if (ResFromTeaches.StatusCode == HttpStatusCode.Conflict)
+                    {
+                        TempData["ErrorMessage"] = "Already Selected!";
+                        ViewBag.Message = "Already Selected";
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "There was error Selecting Course for Teaching!";
+                        ViewBag.Message = "There was error Selecting Course for Teaching!";
+                    }
                 }
-                else if (ResFromTeaches.StatusCode == HttpStatusCode.Conflict)
+                catch(Exception)
                 {
-                    TempData["ErrorMessage"] = "Already Selected!";
+                    return new HttpStatusCodeResult(500);
                 }
-                else
-                {
-                    TempData["ErrorMessage"] = "There was error Selecting Course for Teaching!";
-                }
+                
             }
             return RedirectToAction("TeacherCourses");
         }

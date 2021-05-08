@@ -1,6 +1,6 @@
 ﻿@model PrometheusWeb.Data.UserModels.HomeworkUserModel
 @{
-    ViewBag.Title = "AddOrEditHomeworks";
+    ViewBag.Title = "UpdateHomeworks";
 }
 <style>
     body {
@@ -166,48 +166,51 @@
 <div style="padding-left:700px; ">
     <h2>Add Student</h2>
 </div>
-@using (Html.BeginForm("AddOrEditHomeworks", "Homework", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("UpdateHomeworks", "Homework", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
-    
-        <div style="padding-left:665px; ">
-            <h2>Create or Edit a Homework.</h2>
+
+    <div style="padding-left:665px; ">
+        <h2>Update Homework</h2>
+    </div>
+    <hr />
+    @Html.HiddenFor(model => model.HomeWorkID)
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.Description, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.Description)
+            @Html.ValidationMessageFor(m => m.Description)
         </div>
-        <hr />
-        @Html.HiddenFor(model => model.HomeWorkID)
-        <div class="form-group" style="padding-left:540px">
-            @Html.LabelFor(m => m.Description, new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
-                @Html.EditorFor(m => m.Description)
-                @Html.ValidationMessageFor(m => m.Description)
-            </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.LongDescription, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.LongDescription)
+            @Html.ValidationMessageFor(m => m.LongDescription)
         </div>
-        <div class="form-group" style="padding-left:540px">
-            @Html.LabelFor(m => m.LongDescription, new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
-                @Html.EditorFor(m => m.LongDescription)
-                @Html.ValidationMessageFor(m => m.LongDescription)
-            </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.Deadline, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.Deadline, new { htmlAttributes = new { @class = "datepicker" } })
+            @Html.ValidationMessageFor(m => m.Deadline)
         </div>
-        <div class="form-group" style="padding-left:540px">
-            @Html.LabelFor(m => m.Deadline, new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
-                @Html.EditorFor(m => m.Deadline, new { htmlAttributes = new { @class = "datepicker" } })
-                @Html.ValidationMessageFor(m => m.Deadline)
-            </div>
+    </div>
+    <div class="form-group" style="padding-left:540px">
+        @Html.LabelFor(m => m.ReqTime, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.ReqTime, new { htmlAttributes = new { @class = "datepicker" } })
+            @Html.ValidationMessageFor(m => m.ReqTime)
         </div>
-        <div class="form-group" style="padding-left:540px">
-            @Html.LabelFor(m => m.ReqTime, new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
-                @Html.EditorFor(m => m.ReqTime, new { htmlAttributes = new { @class = "datepicker" } })
-                @Html.ValidationMessageFor(m => m.ReqTime)
-            </div>
-        </div>
-        <div class="form-group" style="padding-left:750px">
-            <input type="submit" value="Submit" class="btn-primary" />
-            <input type="reset" value="Reset" class="btn-danger" />
-        </div>
-    
+    </div>
+    <div class="form-group" style="padding-left:700px">
+        <input type="submit" value="Update" class="btn-primary" />
+        <input type="reset" value="Reset" class="btn-danger" />
+        <button class="btn btn-primary " style="margin-right:1%; color:white">
+            @Html.ActionLink("Back to Homework", "ViewHomeworks", "Homework", null, new { @style = "color:White;" })
+        </button>
+    </div>
+
 }
 <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
 @section scripts{
