@@ -673,7 +673,7 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
-        [Authorize(Roles = "teacher")]
+        [Authorize(Roles = "teacher,admin")]
         // GET: Teacher/ViewCourses
         public async Task<ActionResult> ViewCoursesForTeaching()  
         {

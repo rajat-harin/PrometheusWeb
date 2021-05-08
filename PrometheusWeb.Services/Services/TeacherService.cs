@@ -165,7 +165,15 @@ namespace PrometheusWeb.Services.Services
 
         public int GetTeacherID(string UserID)
         {
-            return db.Teachers.Where(item => item.UserID.Equals(UserID)).FirstOrDefault().TeacherID;
+            try
+            {
+                int id = db.Teachers.Where(item => item.UserID.Equals(UserID)).FirstOrDefault().TeacherID;
+                return id;
+            }
+            catch
+            {
+                throw new PrometheusWebException("User Not Found!");
+            }
         }
 
         public bool IsTeacherExists(int id)
