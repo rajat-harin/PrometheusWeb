@@ -587,7 +587,7 @@ namespace PrometheusWeb.MVC.Controllers
             List<AssignedHomework> assignedHomeWord = new List<AssignedHomework>();
             List<AssignmentUserModel> assignments = new List<AssignmentUserModel>();
             List<HomeworkUserModel> homeworks = new List<HomeworkUserModel>();
-            List<CourseUserModel> courses = new List<CourseUserModel>();
+            CourseUserModel course = new CourseUserModel();
             using (var client = new HttpClient())
             {
                 //Passing service base url  
@@ -598,25 +598,26 @@ namespace PrometheusWeb.MVC.Controllers
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 //Sending request to find web api REST service resource Get:Courses & Get:Homework using HttpClient 
+                //HttpResponseMessage ResFromCourses = await client.GetAsync("api/Courses/"+ courseid.ToString());
                 HttpResponseMessage ResFromAssignment = await client.GetAsync("api/Assignments/");
                 HttpResponseMessage ResFromHomework = await client.GetAsync("api/Homework/");
                 //Checking the response is successful or not which is sent using HttpClient  
                 if (ResFromAssignment.IsSuccessStatusCode && ResFromHomework.IsSuccessStatusCode)
                 {
                     //Storing the response details recieved from web api   
-
+                    //var courseResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
                     var AssignmentResponse = ResFromAssignment.Content.ReadAsStringAsync().Result;
                     var HomeworkResponse = ResFromHomework.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the list  
+                    course = JsonConvert.DeserializeObject<CourseUserModel>(AssignmentResponse);
                     assignments = JsonConvert.DeserializeObject<List<AssignmentUserModel>>(AssignmentResponse);
                     homeworks = JsonConvert.DeserializeObject<List<HomeworkUserModel>>(HomeworkResponse);
 
                     try
                     {
 
-                        var result = from course in courses
-                                     join assignment in assignments
-                                     on course.CourseID equals assignment.CourseID
+                        var result = from assignment in assignments
+                                     where assignment.CourseID == courseid
                                      join homework in homeworks
                                      on assignment.HomeWorkID equals homework.HomeWorkID
                                      select new AssignedHomework
@@ -625,7 +626,7 @@ namespace PrometheusWeb.MVC.Controllers
                                          Deadline = (System.DateTime)homework.Deadline,
                                          ReqTime = (System.DateTime)homework.ReqTime,
                                          LongDescription = homework.LongDescription,
-                                         CourseName = course.Name,
+                                         //CourseName = course.Name,  get course data and do join if you really need course Name
                                          HomeWorkID = homework.HomeWorkID
                                      };
                         
