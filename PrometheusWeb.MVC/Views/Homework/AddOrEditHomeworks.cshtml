@@ -174,7 +174,6 @@
             <h2>Create a new Homework.</h2>
         </div>
         <hr />
-        @Html.ValidationSummary("", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.HomeWorkID)
         <div class="form-group" style="padding-left:540px">
             @Html.LabelFor(m => m.Description, new { @class = "col-md-2 control-label" })
@@ -193,14 +192,14 @@
         <div class="form-group" style="padding-left:540px">
             @Html.LabelFor(m => m.Deadline, new { @class = "col-md-2 control-label" })
             <div class="col-md-10">
-                @Html.EditorFor(m => m.Deadline)
+                @Html.EditorFor(m => m.Deadline, new { htmlAttributes = new { @class = "datepicker" } })
                 @Html.ValidationMessageFor(m => m.Deadline)
             </div>
         </div>
         <div class="form-group" style="padding-left:540px">
             @Html.LabelFor(m => m.ReqTime, new { @class = "col-md-2 control-label" })
             <div class="col-md-10">
-                @Html.EditorFor(m => m.ReqTime)
+                @Html.EditorFor(m => m.ReqTime, new { htmlAttributes = new { @class = "datepicker" } })
                 @Html.ValidationMessageFor(m => m.ReqTime)
             </div>
         </div>

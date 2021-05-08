@@ -82,6 +82,8 @@
                 <td>
                     <a href="@Url.Action("EnrolledStudents","Student",new {courseId=item.CourseID
                 })" class="btn btn-primary">View My Students For this Subject</a>
+                    <a href="@Url.Action("ViewAssignedHomework","Homework",new {courseId=item.CourseID
+                })" class="btn btn-primary">View Assigned Homework</a>
                 </td>
             </tr>
         }
@@ -92,14 +94,6 @@
     @Scripts.Render("~/bundles/jqueryval");
     <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
     <script>
-        $(function () {
-            $(".datepicker").datepicker({
-                dateFormat: "yy-mm-dd",
-                changeMonth: true,
-                changeYear: true,
-                yearRange: "1990:2021"
-            });
-        });
         $(function () {
             var errorMessage = '@TempData["ErrorMessage"]'
             if (errorMessage != '')

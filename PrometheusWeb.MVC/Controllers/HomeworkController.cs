@@ -78,10 +78,8 @@ namespace PrometheusWeb.MVC.Controllers
                     //Storing the response details recieved from web api   
                     var homeworkResponse = ResFromHomeworks.Content.ReadAsStringAsync().Result;
 
-
                     //Deserializing the response recieved from web api and storing into the list  
                     homeworks = JsonConvert.DeserializeObject<List<HomeworkUserModel>>(homeworkResponse);
-
                 }
                 //returning the employee list to view  
                 return View(homeworks);
@@ -332,8 +330,6 @@ namespace PrometheusWeb.MVC.Controllers
 
         public async Task<ActionResult> GenerateHomeworkPlan(int id = 1)  //@TODO: change default to 0 after auth
         {
-
-
             List<HomeworkPlanUserModel> homeworkPlans = new List<HomeworkPlanUserModel>();
             List<EnrollmentUserModel> enrollments = new List<EnrollmentUserModel>();
             List<AssignmentUserModel> assignments = new List<AssignmentUserModel>();
@@ -483,6 +479,13 @@ namespace PrometheusWeb.MVC.Controllers
             int TeacherId = 1;
             List<CourseUserModel> courses = new List<CourseUserModel>();
             List<TeacherCourseUserModel> teachingCourses = new List<TeacherCourseUserModel>();
+
+            AssignmentUserModel assignment = new AssignmentUserModel
+            {
+                TeacherID = TeacherId,
+                HomeWorkID = HomeworkID
+            };
+
             using (var client = new HttpClient())
             {
                 //Passing service base url  
@@ -531,7 +534,7 @@ namespace PrometheusWeb.MVC.Controllers
                     }
                 }
             }
-            return View();
+            return View(assignment);
         }
 
         [HttpPost]
@@ -545,5 +548,72 @@ namespace PrometheusWeb.MVC.Controllers
             return RedirectToAction("ViewHomeworks");
         }
 
+        public async Task<ActionResult> ViewAssignedHomework(int courseid)
+        {
+            List<AssignedHomework> assignedHomeWord = new List<AssignedHomework>();
+            List<AssignmentUserModel> assignments = new List<AssignmentUserModel>();
+            List<HomeworkUserModel> homeworks = new List<HomeworkUserModel>();
+            List<CourseUserModel> courses = new List<CourseUserModel>();
+            using (var client = new HttpClient())
+            {
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+                client.DefaultRequestHeaders.Clear();
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                //Sending request to find web api REST service resource Get:Courses & Get:Homework using HttpClient 
+                HttpResponseMessage ResFromAssignment = await client.GetAsync("api/Assignments/");
+                HttpResponseMessage ResFromHomework = await client.GetAsync("api/Homework/");
+                //Checking the response is successful or not which is sent using HttpClient  
+                if (ResFromAssignment.IsSuccessStatusCode && ResFromHomework.IsSuccessStatusCode)
+                {
+                    //Storing the response details recieved from web api   
+
+                    var AssignmentResponse = ResFromAssignment.Content.ReadAsStringAsync().Result;
+                    var HomeworkResponse = ResFromHomework.Content.ReadAsStringAsync().Result;
+                    //Deserializing the response recieved from web api and storing into the list  
+                    assignments = JsonConvert.DeserializeObject<List<AssignmentUserModel>>(AssignmentResponse);
+                    homeworks = JsonConvert.DeserializeObject<List<HomeworkUserModel>>(HomeworkResponse);
+
+                    try
+                    {
+
+                        var result = from course in courses
+                                     join assignment in assignments
+                                     on course.CourseID equals assignment.CourseID
+                                     join homework in homeworks
+                                     on assignment.HomeWorkID equals homework.HomeWorkID
+                                     select new AssignedHomework
+                                     {
+                                         Description = homework.Description,
+                                         Deadline = (System.DateTime)homework.Deadline,
+                                         ReqTime = (System.DateTime)homework.ReqTime,
+                                         LongDescription = homework.LongDescription,
+                                         CourseName = course.Name,
+                                         HomeWorkID = homework.HomeWorkID
+                                     };
+                        
+                        //returning the employee list to view  if list is not empty
+                        if (result.Any())
+                        {
+                            return View(result);
+                        }
+                        else
+                        {
+                            return new HttpStatusCodeResult(404);
+                        }
+                    }
+                    catch
+                    {
+                        return new HttpStatusCodeResult(500);
+                    }
+
+                }
+
+                return new HttpStatusCodeResult(404);
+            }
+        }
     }
 }

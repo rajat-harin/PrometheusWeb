@@ -105,8 +105,6 @@ namespace PrometheusWeb.Services.Controllers
             {
                 return StatusCode(HttpStatusCode.InternalServerError);
             }
-            
-            
         }
 
         // DELETE: api/Enrollments/5
