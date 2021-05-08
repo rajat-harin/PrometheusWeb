@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -28,22 +29,42 @@ namespace PrometheusWeb.MVC.Controllers
         }
 
         // POST: Admin/AddStudent
+        [Authorize(Roles = "admin")]
         public ActionResult AddStudent(int id = 0)
         {
-            if (id == 0)
+            using (var client = new HttpClient())
             {
-                var list = new List<string>() { "What is your Pet Name?", "What is your Nick Name", "What is your School Name?" };
-                ViewBag.list = list;
-                return View(new AdminUserModel());
-            }
-            else
-            {
-                //Sending request to find web api REST service resource Get:Students using HttpClient
-                HttpResponseMessage responseStudent = GlobalVariables.WebApiClient.GetAsync("api/Students/" + id.ToString()).Result;
-                //Sending request to find web api REST service resource Get:Users using HttpClient
-                HttpResponseMessage responseUser = GlobalVariables.WebApiClient.GetAsync("api/Users/" + id.ToString()).Result;
-                //Storing the response details recieved from web api   
-                return View(responseUser.Content.ReadAsAsync<AdminUserModel>().Result);
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+
+                client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
+                {
+                    if (id == 0)
+                    {
+                        var list = new List<string>() { "What is your Pet Name?", "What is your Nick Name", "What is your School Name?" };
+                        ViewBag.list = list;
+                        return View(new AdminUserModel());
+                    }
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+
+                return View();
             }
         }
 
@@ -120,56 +141,131 @@ namespace PrometheusWeb.MVC.Controllers
         }
 
         // GET: Admin/ViewStudents
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> ViewStudents()
         {
             List<StudentUserModel> students = new List<StudentUserModel>();
 
             using (var client = new HttpClient())
             {
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
                 //Passing service base url  
                 client.BaseAddress = new Uri(Baseurl);
 
+
                 client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
                 //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                //Sending request to find web api REST service resource Get:Students using HttpClient  
-                HttpResponseMessage ResFromCourses = await client.GetAsync("api/Students/");
-
-
-                //Checking the response is successful or not which is sent using HttpClient  
-                if (ResFromCourses.IsSuccessStatusCode)
+                try
                 {
-                    //Storing the response details recieved from web api   
-                    var studentResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
+                    //Sending request to find web api REST service resource Get:Students using HttpClient  
+                    HttpResponseMessage ResFromCourses = await client.GetAsync("api/Students/");
 
 
-                    //Deserializing the response recieved from web api and storing into the list  
-                    students = JsonConvert.DeserializeObject<List<StudentUserModel>>(studentResponse);
+                    //Checking the response is successful or not which is sent using HttpClient  
+                    if (ResFromCourses.IsSuccessStatusCode)
+                    {
+                        //Storing the response details recieved from web api   
+                        var studentResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
 
+
+                        //Deserializing the response recieved from web api and storing into the list  
+                        students = JsonConvert.DeserializeObject<List<StudentUserModel>>(studentResponse);
+
+                    }
                 }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+                
                 //returning the employee list to view  
                 return View(students);
             }
         }
 
         // DELETE: Admin/DeleteStudent
+        [Authorize(Roles = "admin")]
         public ActionResult DeleteStudent(int id)
         {
-            HttpResponseMessage response = GlobalVariables.WebApiClient.DeleteAsync("api/Students/" + id.ToString()).Result;
-            TempData["SuccessMessage"] = "Student Deleted Successfully";
-            return RedirectToAction("ViewStudents");
+            using (var client = new HttpClient())
+            {
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+
+                client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
+                {
+                    HttpResponseMessage response = GlobalVariables.WebApiClient.DeleteAsync("api/Students/" + id.ToString()).Result;
+                    TempData["SuccessMessage"] = "Student Deleted Successfully";
+                    
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+                return RedirectToAction("ViewStudents");
+            }  
         }
 
-        // POST: Admin/EditStudentProfile
+        // POST: Admin/EditStudent
+        [Authorize(Roles = "admin")]
         public ActionResult UpdateStudent(int id = 0)
         {
-            if (id != 0)
+            using (var client = new HttpClient())
             {
-                HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("api/Students/" + id.ToString()).Result;
-                return View(response.Content.ReadAsAsync<StudentUserModel>().Result);
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+
+                client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
+                {
+                    if (id != 0)
+                    {
+                        HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("api/Students/" + id.ToString()).Result;
+                        return View(response.Content.ReadAsAsync<StudentUserModel>().Result);
+                    }
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+
+                return RedirectToAction("ViewStudents");
             }
-            return RedirectToAction("ViewStudents");
         }
 
         [HttpPost]
@@ -200,34 +296,52 @@ namespace PrometheusWeb.MVC.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> SearchStudent(string search)
         {
             List<StudentUserModel> students = new List<StudentUserModel>();
 
             using (var client = new HttpClient())
             {
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
                 //Passing service base url  
                 client.BaseAddress = new Uri(Baseurl);
 
+
                 client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
                 //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                //Sending request to find web api REST service resource Get:Students using HttpClient  
-                HttpResponseMessage ResFromCourses = await client.GetAsync("api/Students/");
-
-
-                //Checking the response is successful or not which is sent using HttpClient  
-                if (ResFromCourses.IsSuccessStatusCode)
+                try
                 {
-                    //Storing the response details recieved from web api   
-                    var studentResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
+                    //Sending request to find web api REST service resource Get:Students using HttpClient  
+                    HttpResponseMessage ResFromCourses = await client.GetAsync("api/Students/");
 
 
-                    //Deserializing the response recieved from web api and storing into the list  
-                    students = JsonConvert.DeserializeObject<List<StudentUserModel>>(studentResponse);
+                    //Checking the response is successful or not which is sent using HttpClient  
+                    if (ResFromCourses.IsSuccessStatusCode)
+                    {
+                        //Storing the response details recieved from web api   
+                        var studentResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
 
+
+                        //Deserializing the response recieved from web api and storing into the list  
+                        students = JsonConvert.DeserializeObject<List<StudentUserModel>>(studentResponse);
+
+                    }
                 }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+                
                 //returning the employee list to view  
                 return View(students.Where(x => x.FName.StartsWith(search) | search == null).ToList());
             }

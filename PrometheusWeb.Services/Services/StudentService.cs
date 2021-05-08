@@ -157,10 +157,12 @@ namespace PrometheusWeb.Services.Services
 
             return true;
         }
+
         public int GetStudentID(string UserID)
         {
             return db.Students.Where(item => item.UserID.Equals(UserID)).FirstOrDefault().StudentID;
         }
+
         public bool IsStudentExists(int id)
         {
             return db.Students.Count(e => e.StudentID == id) > 0;
