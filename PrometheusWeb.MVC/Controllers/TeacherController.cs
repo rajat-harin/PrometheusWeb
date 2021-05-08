@@ -312,9 +312,9 @@ namespace PrometheusWeb.MVC.Controllers
             if (teacher.TeacherID != 0)
             {
                 HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Teachers/" + teacher.TeacherID, teacher).Result;
-                TempData["SuccessMessage"] = "Teacher Updated Successfully";
+                TempData["SuccessMessage"] = "Profile Updated Successfully";
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("UpdateTeacherProfile");
         }
 
         [HttpGet]

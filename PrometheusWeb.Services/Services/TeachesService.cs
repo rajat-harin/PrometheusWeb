@@ -33,6 +33,17 @@ namespace PrometheusWeb.Services.Services
 
                 return true;
             }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException.InnerException.Message.Contains("UQ__Teaches__81608E5DCC26D197"))
+                {
+                    throw new PrometheusWebException("Course Already Selected For Teaching!");
+                }
+                else
+                {
+                    throw;
+                }
+            }
             catch (Exception)
             {
                 throw;
@@ -93,7 +104,6 @@ namespace PrometheusWeb.Services.Services
         {
             Teach teach = new Teach
             {
-
                 TeacherCourseID = teacherCourseModel.TeacherCourseID,
                 CourseID = teacherCourseModel.CourseID,
                 TeacherID = teacherCourseModel.TeacherID

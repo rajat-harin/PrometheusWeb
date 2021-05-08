@@ -382,6 +382,7 @@
     <Content Include="Views\Teacher\UpdateTeacherProfile.cshtml" />
     <Content Include="Views\Student\UpdateStudentProfile.cshtml" />
     <Content Include="Views\Homework\AssignHomework.cshtml" />
+    <Content Include="Views\Homework\ViewAssignedHomework.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

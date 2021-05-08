@@ -574,10 +574,47 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
+        [Authorize]
         // GET: Teacher/MyCourses
-        public async Task<ActionResult> TeacherCourses(int TeacherId = 1)  //@TODO: change default to 0 after auth
+        public async Task<ActionResult> TeacherCourses(int id = 0)  //@TODO: change default to 0 after auth
         {
+            int TeacherId;
+            var identity = (ClaimsIdentity)User.Identity;
+
+            if (id == 0)
+            {
+
+
+                var ID = identity.Claims.Where(c => c.Type == "ID")
+                            .Select(c => c.Value).FirstOrDefault();
+
+                try
+                {
+                    if (ID != null)
+                    {
+                        TeacherId = Int32.Parse(ID);
+                    }
+                    else
+                    {
+                        throw new PrometheusWebException("Failed to retrieve ID");
+                    }
+                }
+                catch (Exception)
+                {
+                    return new HttpStatusCodeResult(500);
+                }
+            }
+            else
+            {
+                TeacherId = id;
+            }
+            var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                        .Select(c => c.Value).FirstOrDefault();
+
+            //List of all courses
             List<CourseUserModel> courses = new List<CourseUserModel>();
+
+            //list of teachercourses
             List<TeacherCourseUserModel> teachingCourses = new List<TeacherCourseUserModel>();
 
             using (var client = new HttpClient())
@@ -586,6 +623,7 @@ namespace PrometheusWeb.MVC.Controllers
                 client.BaseAddress = new Uri(Baseurl);
 
                 client.DefaultRequestHeaders.Clear();
+
                 //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -630,41 +668,56 @@ namespace PrometheusWeb.MVC.Controllers
                     }
 
                 }
-                //returning the Courses list to view  
+                //returning the StatusCode 
                 return new HttpStatusCodeResult(404);
             }
         }
 
+        [Authorize(Roles = "teacher")]
         // GET: Teacher/ViewCourses
-        public async Task<ActionResult> ViewCoursesForTeaching()  //@TODO: Id to be changed default to 0 after auth
+        public async Task<ActionResult> ViewCoursesForTeaching()  
         {
             List<CourseUserModel> courses = new List<CourseUserModel>();
 
             using (var client = new HttpClient())
             {
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
+
+
                 //Passing service base url  
                 client.BaseAddress = new Uri(Baseurl);
 
                 client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
                 //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                //Sending request to find web api REST service resource using HTTP Client
-                HttpResponseMessage ResFromCourses = await client.GetAsync("api/Courses/");
-
-
-                //Checking the response is successful or not which is sent using HttpClient  
-                if (ResFromCourses.IsSuccessStatusCode)
+                try
                 {
-                    //Storing the response details recieved from web api   
-                    var courseResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
+                    //Sending request to find web api REST service resource Get:Courses & Get:Enrollemnts using HttpClient  
+                    HttpResponseMessage ResFromCourses = await client.GetAsync("api/Courses/");
+                    //Checking the response is successful or not which is sent using HttpClient  
+                    if (ResFromCourses.IsSuccessStatusCode)
+                    {
+                        //Storing the response details recieved from web api   
+                        var courseResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
 
 
-                    //Deserializing the response recieved from web api and storing into the list  
-                    courses = JsonConvert.DeserializeObject<List<CourseUserModel>>(courseResponse);
+                        //Deserializing the response recieved from web api and storing into the list  
+                        courses = JsonConvert.DeserializeObject<List<CourseUserModel>>(courseResponse);
 
+                    }
                 }
-                //returning the Courses list to view  
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
                 return View(courses);
             }
         }
@@ -692,8 +745,23 @@ namespace PrometheusWeb.MVC.Controllers
 
         //POST : Teacher/SaveCourses
         [HttpPost]
-        public async Task<ActionResult> SaveCourses(TeacherCourses courses)
+        public async Task<ActionResult> SaveCourses(CourseUserModel courseModel)
         {
+            int TeacherID = 1;
+            if (courseModel.StartDate.HasValue)
+            {
+                TimeSpan diff = DateTime.Now - (DateTime)courseModel.StartDate;
+                if (diff.Days > 7)
+                {
+                    TempData["ErrorMessage"] = "Course Cannot be Selected!";
+                    return View();
+                }
+            }
+            TeacherCourseUserModel teaches = new TeacherCourseUserModel
+            {
+                CourseID = courseModel.CourseID,
+                TeacherID = TeacherID
+            };
             using (var client = new HttpClient())
             {
                 //Passing service base url  
@@ -704,16 +772,22 @@ namespace PrometheusWeb.MVC.Controllers
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 //Sending request to Post web api REST service resource using HttpClient  
-                HttpResponseMessage ResFromTeaches = await client.PostAsJsonAsync("api/Teaches/", courses);
+                HttpResponseMessage ResFromTeaches = await client.PostAsJsonAsync("api/Teaches/", teaches);
 
                 //Checking the response is successful or not which is sent using HttpClient  
                 if (ResFromTeaches.IsSuccessStatusCode)
                 {
-                    //Storing the response details recieved from web api   
-                    var teacherCourseResponse = ResFromTeaches.Content.ReadAsStringAsync().Result;
+                    TempData["SuccessMessage"] = "Courses Selected Successfully For Teaching";
+                }
+                else if (ResFromTeaches.StatusCode == HttpStatusCode.Conflict)
+                {
+                    TempData["ErrorMessage"] = "Already Selected!";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "There was error Selecting Course for Teaching!";
                 }
             }
-            //returning the Courses list to view  
             return RedirectToAction("TeacherCourses");
         }
     }
