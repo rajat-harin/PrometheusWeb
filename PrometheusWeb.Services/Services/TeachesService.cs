@@ -35,7 +35,7 @@ namespace PrometheusWeb.Services.Services
             }
             catch (DbUpdateException ex)
             {
-                if (ex.InnerException.InnerException.Message.Contains("UQ__Teaches__81608E5DCC26D197"))
+                if (ex.InnerException.InnerException.Message.Contains("UQ__Teaches__"))
                 {
                     throw new PrometheusWebException("Course Already Selected For Teaching!");
                 }

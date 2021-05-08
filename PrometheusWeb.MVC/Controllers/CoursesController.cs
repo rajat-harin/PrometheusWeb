@@ -872,14 +872,17 @@ namespace PrometheusWeb.MVC.Controllers
                 if (ResFromTeaches.IsSuccessStatusCode)
                 {
                     TempData["SuccessMessage"] = "Courses Selected Successfully For Teaching";
+                    ViewBag.Message = "Courses Selected Successfully For Teaching";
                 }
                 else if (ResFromTeaches.StatusCode == HttpStatusCode.Conflict)
                 {
                     TempData["ErrorMessage"] = "Already Selected!";
+                    ViewBag.Message = "Already Selected";
                 }
                 else
                 {
                     TempData["ErrorMessage"] = "There was error Selecting Course for Teaching!";
+                    ViewBag.Message = "There was error Selecting Course for Teaching!";
                 }
             }
             return RedirectToAction("TeacherCourses");
