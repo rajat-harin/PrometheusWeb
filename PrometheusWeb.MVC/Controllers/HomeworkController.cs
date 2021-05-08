@@ -54,6 +54,7 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
+        [Authorize]
         // GET: Homework/ViewHomeworks
         public async Task<ActionResult> ViewHomeworks()
         {
@@ -61,45 +62,79 @@ namespace PrometheusWeb.MVC.Controllers
 
             using (var client = new HttpClient())
             {
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
                 //Passing service base url  
                 client.BaseAddress = new Uri(Baseurl);
 
                 client.DefaultRequestHeaders.Clear();
                 //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                //Sending request to find web api REST service resource Get:Courses & Get:Enrollemnts using HttpClient  
-                HttpResponseMessage ResFromHomeworks = await client.GetAsync("api/Homework/");
-
-
-                //Checking the response is successful or not which is sent using HttpClient  
-                if (ResFromHomeworks.IsSuccessStatusCode)
+                try
                 {
-                    //Storing the response details recieved from web api   
-                    var homeworkResponse = ResFromHomeworks.Content.ReadAsStringAsync().Result;
+                    //Sending request to find web api REST service resource Get:Courses & Get:Enrollemnts using HttpClient  
+                    HttpResponseMessage ResFromHomeworks = await client.GetAsync("api/Homework/");
 
-                    //Deserializing the response recieved from web api and storing into the list  
-                    homeworks = JsonConvert.DeserializeObject<List<HomeworkUserModel>>(homeworkResponse);
+
+                    //Checking the response is successful or not which is sent using HttpClient  
+                    if (ResFromHomeworks.IsSuccessStatusCode)
+                    {
+                        //Storing the response details recieved from web api   
+                        var homeworkResponse = ResFromHomeworks.Content.ReadAsStringAsync().Result;
+
+                        //Deserializing the response recieved from web api and storing into the list  
+                        homeworks = JsonConvert.DeserializeObject<List<HomeworkUserModel>>(homeworkResponse);
+                    }
                 }
-                //returning the employee list to view  
+                catch(Exception)
+                {
+                    throw;
+                }
+                //returning the Homework list to view  
                 return View(homeworks);
             }
         }
 
-        public ActionResult AddOrEditHomeworks(int id = 0)
+        [Authorize(Roles = "admin,teacher")]
+        public ActionResult AddHomeworks(int id = 0)
         {
-            if (id == 0)
-
-                return View(new HomeworkUserModel());
-            else
+            using (var client = new HttpClient())
             {
-                HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("api/Homework/" + id.ToString()).Result;
-                return View(response.Content.ReadAsAsync<HomeworkUserModel>().Result);
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+
+                client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                try
+                {
+                    if (id == 0)
+                        return View(new HomeworkUserModel());
+                }
+                catch(Exception)
+                {
+                    throw;
+                }
+                return View();
             }
         }
 
+        
         [HttpPost]
-        public ActionResult AddOrEditHomeworks(HomeworkUserModel homework)
+        public ActionResult AddHomeworks(HomeworkUserModel homework)
         {
             if (homework.HomeWorkID == 0)
             {
@@ -124,7 +159,51 @@ namespace PrometheusWeb.MVC.Controllers
                 HttpResponseMessage response = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Homework/", homework).Result;
                 TempData["SuccessMessage"] = "Homework Added Successfully";
             }
-            else
+            
+            return RedirectToAction("ViewHomeworks");
+        }
+
+
+
+        [Authorize(Roles = "admin,teacher")]
+        public ActionResult UpdateHomeworks(int id = 0)
+        {
+            using (var client = new HttpClient())
+            {
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+
+                client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                try
+                {
+                    if (id != 0)
+                    {
+                        HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("api/Homework/" + id.ToString()).Result;
+                        return View(response.Content.ReadAsAsync<HomeworkUserModel>().Result);
+                    }
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                return View();
+            }
+        }
+
+       
+        [HttpPost]
+        public ActionResult UpdateHomeworks(HomeworkUserModel homework)
+        {
+            if(homework.HomeWorkID != 0)
             {
                 if (homework.Deadline.HasValue)
                 {
@@ -149,6 +228,8 @@ namespace PrometheusWeb.MVC.Controllers
             }
             return RedirectToAction("ViewHomeworks");
         }
+
+
 
         public ActionResult Delete(int id)
         {

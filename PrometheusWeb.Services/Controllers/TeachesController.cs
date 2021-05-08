@@ -82,7 +82,9 @@ namespace PrometheusWeb.Services.Controllers
             {
                 var result = _teachesService.AddTeacherCourse(teachModel);
                 if (result)
-                    return CreatedAtRoute("DefaultApi", new { id = teachModel.TeacherCourseID }, teachModel);
+                    return CreatedAtRoute("DefaultApi", new { courseId = teachModel.CourseID,
+                    teacherId = teachModel.TeacherID
+                    }, teachModel);
                 else
                     return StatusCode(HttpStatusCode.InternalServerError);
             }
