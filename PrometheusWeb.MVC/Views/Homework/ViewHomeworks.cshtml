@@ -38,12 +38,13 @@
 <body style="background:#d9d9dad9">
 </body>
 <div class="container" style="background:#f8f8f6">
-    <button class="btn btn-primary ">
-     @Html.ActionLink("Create New", "AddHomeworks",null, //   Route args if needed; null if not.
-            new { @style = "color:White;" })
-    </button>
+    
     <table class="table">
         <h2 style="padding-left:35%">List of all Homeworks</h2>
+        <button class="btn btn-primary ">
+            @Html.ActionLink("Create New", "AddHomeworks", null, //   Route args if needed; null if not.
+                   new { @style = "color:White;" })
+        </button>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.HomeWorkID)
@@ -102,7 +103,7 @@
         });
 
         function Delete(id) {
-            alertify.confirm('Homeworks register','Are You Sure to Delete this Record ?',function(){
+            alertify.confirm('Homeworks Delete','Are You Sure to Delete this Record ?',function(){
                 window.location.href  = '@Url.Action("Delete","Homework")/'+id;
             },null );
         }

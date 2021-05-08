@@ -12,6 +12,7 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
+using PrometheusWeb.Exceptions;
 using System.Web.Mvc;
 
 namespace PrometheusWeb.MVC.Controllers
@@ -347,7 +348,7 @@ namespace PrometheusWeb.MVC.Controllers
 
         //View My Students
         [Authorize(Roles = "admin,teacher")]
-        public async Task<ActionResult> EnrolledStudents(int courseId=1)  //@TODO: change default to 0 after auth
+        public async Task<ActionResult> EnrolledStudents(int courseId)  //@TODO: change default to 0 after auth
         {
             List<StudentUserModel> students = new List<StudentUserModel>();
             List<EnrollmentUserModel> enrollments = new List<EnrollmentUserModel>();
@@ -407,6 +408,12 @@ namespace PrometheusWeb.MVC.Controllers
                             if (result.Any())
                             {
                                 return View(result);
+                            }
+                            else
+                            {
+                                throw new PrometheusWebException("No Students Enrolled in this Course");
+                                ViewBag.Message = "No Students Enrolled in this Course";
+                                return ViewBag.Message;
                             }
                         }
                         catch

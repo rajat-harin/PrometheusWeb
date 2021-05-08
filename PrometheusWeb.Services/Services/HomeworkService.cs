@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using PrometheusWeb.Data;
 using System.Data.Entity;
+using System.Web.Http;
 
 namespace PrometheusWeb.Services.Services
 {
@@ -18,6 +19,9 @@ namespace PrometheusWeb.Services.Services
         {
             db = new PrometheusEntities();
         }
+
+        //add homework
+        [Authorize(Roles="admin,teacher")]
         public bool AddHomework(HomeworkUserModel homeworkModel)
         {
             try
@@ -41,6 +45,7 @@ namespace PrometheusWeb.Services.Services
             
         }
 
+        [Authorize(Roles = "admin,teacher")]
         public HomeworkUserModel DeleteHomework(int id)
         {
             Homework homework = db.Homework.Find(id);
@@ -103,6 +108,7 @@ namespace PrometheusWeb.Services.Services
             return db.Homework.Count(e => e.HomeWorkID == id) > 0;
         }
 
+        [Authorize(Roles = "admin,teacher")]
         public bool UpdateHomework(int id, HomeworkUserModel homeworkModel)
         {
             Homework homework = new Homework

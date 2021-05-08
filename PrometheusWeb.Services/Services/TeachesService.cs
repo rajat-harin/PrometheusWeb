@@ -8,6 +8,7 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Web;
+using System.Web.Http;
 
 namespace PrometheusWeb.Services.Services
 {
@@ -18,6 +19,8 @@ namespace PrometheusWeb.Services.Services
         {
             db = new PrometheusEntities();
         }
+
+        [Authorize(Roles = "admin,teacher")]
         public bool AddTeacherCourse(TeacherCourseUserModel teacherCourseModel)
         {
             try
