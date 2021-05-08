@@ -2,10 +2,22 @@
     ViewBag.Title = "AssignHomework";
 }
 <style>
+
+    .btn:hover {
+        background-color: lightgreen;
+        right: 0px;
+    }
+
+    p {
+        color: gray;
+        font-weight: bold;
+    }
+
+
     .column {
         float: left;
         width: 19%;
-        padding: 0 10px;
+        margin: 3%;
     }
 
     /* Remove extra left and right margins, due to padding in columns */
@@ -21,7 +33,11 @@
         }
 
     /* Style the counter cards */
+<<<<<<< HEAD
+    .card {
+=======
      .card {
+>>>>>>> adbf26d3ad58463b535e33c2f03ca94a81d0a1d5
         border: groove;
         border-color: #027dc5;
         border-radius: 10%;
@@ -29,17 +45,23 @@
         padding: 16px;
         text-align: center;
         background: linear-gradient(-45deg, #36d1dc, #5b86e5);
+<<<<<<< HEAD
+=======
        
+>>>>>>> adbf26d3ad58463b535e33c2f03ca94a81d0a1d5
     }
 
         .card:hover {
             transform: scale(1.1);
         }
+<<<<<<< HEAD
+=======
 
     card text-center {
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
         background-color: #f1f1f1;
     }
+>>>>>>> adbf26d3ad58463b535e33c2f03ca94a81d0a1d5
 </style>
 @using (Html.BeginForm("AssignHomework", "Homework", new { homeworkID = Model.HomeWorkID, CourseID = Model.CourseID, TeacherID = Model.TeacherID }, FormMethod.Post ,new { @class = "form-horizontal", role = "form" }))
 {
@@ -47,8 +69,13 @@
         <h2 style="padding-left:3%">Assign Homework For Course</h2>
         <div class="row">
             <div class="column">
+<<<<<<< HEAD
+                <div class="card text-center" style="width: 30rem;">
+
+=======
                 <div class="card text-center" style="width: 45rem;">
                     
+>>>>>>> adbf26d3ad58463b535e33c2f03ca94a81d0a1d5
                     <div class="card-body">
                         <div>
                             <h4 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">
@@ -60,11 +87,18 @@
                         </div>
                         <div>
                             <h4 class="card-text" style="color:black; font-weight:bold">
+<<<<<<< HEAD
+                                <label class="control-label col-md-4" style="padding:20px; margin-left:30%;">Select Course</label>
+
+                                @Html.DropDownListFor(model => model.CourseID, ViewBag.CourseList as SelectList, "---Select Course--", new { @class = "form-control" })
+
+=======
                                 <label class="control-label col-md-2">Select Course</label>
                                
                                 <div class="col-md-10" style="padding-bottom:10%; margin-bottom:5%; padding-top:3%">
                                     @Html.DropDownListFor(model => model.CourseID, ViewBag.CourseList as SelectList, "---Select Course--", new { @class = "form-control" })
                                 </div>
+>>>>>>> adbf26d3ad58463b535e33c2f03ca94a81d0a1d5
                             </h4>
                         </div>
                         <div class="form-group">

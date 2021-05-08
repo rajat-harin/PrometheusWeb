@@ -71,8 +71,7 @@ namespace PrometheusWeb.MVC.Controllers
                 }
                 catch (Exception)
                 {
-
-                    throw;
+                    return new HttpStatusCodeResult(500);
                 }
                 
                 //returning the employee list to view  
@@ -113,86 +112,116 @@ namespace PrometheusWeb.MVC.Controllers
                 catch (Exception)
                 {
 
-                    throw;
+                    return new HttpStatusCodeResult(500);
                 }
             }
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public ActionResult AddTeacher(AdminUserModel user)
         {
-            if (user.TeacherID == 0)
+            using (var client = new HttpClient())
             {
-                if (user.IsAdmin == true)
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+
+                client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                try
                 {
-                    user.Role = "admin";
-                }
-                else
-                {
-                    user.Role = "teacher";
-                }
-                var list = new List<string>() { "What is your Pet Name?", "What is your Nick Name", "What is your School Name?" };
-                ViewBag.list = list;
-                if (user.DOB.HasValue)
-                {
-                    TimeSpan diff = DateTime.Now - (DateTime)user.DOB;
-                    if (diff.Days == 0)
+                    if (user.TeacherID == 0)
                     {
-                        TempData["ErrorMessage"] = "DOB cannot be same with CurrentDate";
-                        ViewBag.Message = "DOB cannot be same with CurrentDate";
-                        return View();
-                    }
-                    if (user.DOB > DateTime.Now)
-                    {
-                        TempData["ErrorMessage"] = "DOB cannot be CurrentDate or after CurrentDate";
-                        ViewBag.Message = "DOB cannot be same with CurrentDate";
-                        return View();
+                        if (user.IsAdmin == true)
+                        {
+                            user.Role = "admin";
+                        }
+                        else
+                        {
+                            user.Role = "teacher";
+                        }
+                        var list = new List<string>() { "What is your Pet Name?", "What is your Nick Name", "What is your School Name?" };
+                        ViewBag.list = list;
+                        if (user.DOB.HasValue)
+                        {
+                            TimeSpan diff = DateTime.Now - (DateTime)user.DOB;
+                            if (diff.Days == 0)
+                            {
+                                TempData["ErrorMessage"] = "DOB cannot be same with CurrentDate";
+                                ViewBag.Message = "DOB cannot be same with CurrentDate";
+                                return View();
+                            }
+                            if (user.DOB > DateTime.Now)
+                            {
+                                TempData["ErrorMessage"] = "DOB cannot be CurrentDate or after CurrentDate";
+                                ViewBag.Message = "DOB cannot be same with CurrentDate";
+                                return View();
+                            }
+                        }
+                        HttpResponseMessage responseUser = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Users/", user).Result;
+
+                        HttpResponseMessage responseStudent = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Teachers/", user).Result;
+
+                        if (responseUser.IsSuccessStatusCode)
+                        {
+
+
+                            if (responseStudent.IsSuccessStatusCode)
+                            {
+                                TempData["SuccessMessage"] = "Teacher Added Successfully";
+                                ViewBag.Message = "Teacher Added Successfully";
+
+                                TempData["SuccessMessage"] = "Teacher Added Successfully";
+                                ViewBag.Message = "Teacher Added Successfully";
+
+                            }
+                            else if (responseStudent.StatusCode == HttpStatusCode.Conflict)
+                            {
+                                TempData["ErrorMessage"] = "Phone No Already Taken try another Phone No";
+                                ViewBag.Message = "Phone No Already Taken try another Phone No";
+                            }
+
+                            else
+                            {
+                                TempData["ErrorMessage"] = "There was error registering a Teacher!";
+                                ViewBag.Message = "There was error registering a Teacher!";
+                            }
+
+                        }
+                        else if (responseUser.StatusCode == HttpStatusCode.Conflict)
+                        {
+                            TempData["ErrorMessage"] = "UserID Already Taken";
+                            ViewBag.Message = "UserID Already Taken";
+                        }
+
+                        else
+                        {
+                            TempData["ErrorMessage"] = "There was error registering a Teacher!";
+                            ViewBag.Message = "There was error registering a Teacher!";
+                        }
                     }
                 }
-                HttpResponseMessage responseUser = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Users/", user).Result;
-
-                HttpResponseMessage responseStudent = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Teachers/", user).Result;
-
-                if (responseUser.IsSuccessStatusCode)
+                catch (Exception)
                 {
 
-
-                    if (responseStudent.IsSuccessStatusCode)
-                    {
-                        TempData["SuccessMessage"] = "Teacher Added Successfully";
-                        ViewBag.Message = "Teacher Added Successfully";
-
-                        TempData["SuccessMessage"] = "Teacher Added Successfully";
-                        ViewBag.Message = "Teacher Added Successfully";
-
-                    }
-                    else if (responseStudent.StatusCode == HttpStatusCode.Conflict)
-                    {
-                        TempData["ErrorMessage"] = "Phone No Already Taken try another Phone No";
-                        ViewBag.Message = "Phone No Already Taken try another Phone No";
-                    }
-
-                    else
-                    {
-                        TempData["ErrorMessage"] = "There was error registering a Teacher!";
-                        ViewBag.Message = "There was error registering a Teacher!";
-                    }
-
-                }
-                else if (responseUser.StatusCode == HttpStatusCode.Conflict)
-                {
-                    TempData["ErrorMessage"] = "UserID Already Taken";
-                    ViewBag.Message = "UserID Already Taken";
+                    return new HttpStatusCodeResult(500);
                 }
 
-                else
-                {
-                    TempData["ErrorMessage"] = "There was error registering a Teacher!";
-                    ViewBag.Message = "There was error registering a Teacher!";
-                }
-            }
                 return RedirectToAction("AddTeacher");
+            }
+
         }
 
         // DELETE: Admin/DeleteTeacher
@@ -225,7 +254,7 @@ namespace PrometheusWeb.MVC.Controllers
                 catch (Exception)
                 {
 
-                    throw;
+                    return new HttpStatusCodeResult(500);
                 }
 
                 return RedirectToAction("ViewTeachers");
@@ -264,14 +293,14 @@ namespace PrometheusWeb.MVC.Controllers
                 catch (Exception)
                 {
 
-                    throw;
+                    return new HttpStatusCodeResult(500);
                 }
-
                 return RedirectToAction("ViewTeachers");
             }
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public ActionResult UpdateTeacher(TeacherUserModel teacher)
         {
             if (teacher.TeacherID != 0)
@@ -457,12 +486,33 @@ namespace PrometheusWeb.MVC.Controllers
                 catch (Exception)
                 {
 
-                    throw;
+                    return new HttpStatusCodeResult(500);
                 }
-                
+
                 //returning the employee list to view  
                 return View(teachers.Where(x => x.FName.StartsWith(search) | search == null).ToList());
             }
         }
+
+        /*public ActionResult UpdateTeacherProfile(int id = 1)
+        {
+            if (id != 0)
+            {
+                HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("api/Teachers/" + id.ToString()).Result;
+                return View(response.Content.ReadAsAsync<TeacherUserModel>().Result);
+            }
+            return RedirectToAction("Index");
+        }*/
+
+        /*[HttpPost]
+        public ActionResult UpdateTeacherProfile(TeacherUserModel teacher)
+        {
+            if (teacher.TeacherID != 0)
+            {
+                HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Teachers/" + teacher.TeacherID, teacher).Result;
+                TempData["SuccessMessage"] = "Profile Updated Successfully";
+            }
+            return RedirectToAction("UpdateTeacherProfile");
+        }*/
     }
 }
