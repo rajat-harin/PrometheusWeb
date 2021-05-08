@@ -527,6 +527,7 @@ namespace PrometheusWeb.MVC.Controllers
                         ).ToList();
                         var CourseList = result;
                         ViewBag.CourseList = new SelectList(CourseList, "CourseID", "Name");
+                        ViewBag.HomeworkID = HomeworkID;
                     }
                     catch
                     {
@@ -536,17 +537,50 @@ namespace PrometheusWeb.MVC.Controllers
             }
             return View(assignment);
         }
-
         [HttpPost]
+        public ActionResult AssignHomework(int homeworkID, int courseID, int teacherID)
+        {
+            AssignmentUserModel assignment = new AssignmentUserModel()
+            {
+                CourseID = courseID,
+                HomeWorkID = homeworkID,
+                TeacherID = teacherID
+            };
+            if (assignment.AssignmentID == 0)
+            {
+                try
+                {
+                    HttpResponseMessage response = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Assignments/", assignment).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        TempData["SuccessMessage"] = "Assignment Assigned Successfully!";
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "Assignment Failed!";
+                    }
+                }
+                catch(Exception)
+                {
+                    return new HttpStatusCodeResult(500);
+                }
+            }
+
+
+            return RedirectToAction("ViewHomeworks");
+        }
+        //old method to be deleted
+        /*[HttpPost]
         public ActionResult AssignHomework(AssignmentUserModel assignment)
         {
             if (assignment.AssignmentID == 0)
             {
+                assignment.HomeWorkID = (int)RouteData.Values["HomeworkID"];
                 HttpResponseMessage response = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Assignments/", assignment).Result;
                 TempData["SuccessMessage"] = "Assignment Assigned Successfully";
             }
             return RedirectToAction("ViewHomeworks");
-        }
+        }*/
 
         public async Task<ActionResult> ViewAssignedHomework(int courseid)
         {

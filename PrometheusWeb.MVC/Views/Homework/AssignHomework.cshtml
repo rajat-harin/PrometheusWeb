@@ -33,7 +33,7 @@
         background-color: #f1f1f1;
     }
 </style>
-@using (Html.BeginForm("AssignHomework", "Homework", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("AssignHomework", "Homework", new { homeworkID = Model.HomeWorkID, CourseID = Model.CourseID, TeacherID = Model.TeacherID }, FormMethod.Post ,new { @class = "form-horizontal", role = "form" }))
 {
     <div class="container" style="padding-left:27%; padding-top:7%">
         <h2>Assign Homework For Course</h2>
@@ -44,7 +44,7 @@
                     <div class="card-body">
                         <div>
                             <h4 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">
-                                HomeworkID: # @Html.DisplayFor(model => model.HomeWorkID, new { disabled = "disabled", @readonly = "readonly" })
+                                HomeworkID: # @Html.DisplayFor(model => model.HomeWorkID, new { disabled = "disabled" })
                             </h4>
                         </div>
                         <div>
