@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using PrometheusWeb.Data;
 using System.Data.Entity;
+using PrometheusWeb.Exceptions;
 
 namespace PrometheusWeb.Services.Services
 {
@@ -145,7 +146,15 @@ namespace PrometheusWeb.Services.Services
 
         public int GetTeacherID(string UserID)
         {
-            return db.Teachers.Where(item => item.UserID.Equals(UserID)).FirstOrDefault().TeacherID;
+            try
+            {
+                int id = db.Teachers.Where(item => item.UserID.Equals(UserID)).FirstOrDefault().TeacherID;
+                return id;
+            }
+            catch
+            {
+                throw new PrometheusWebException("User Not Found!");
+            }
         }
 
         public bool IsTeacherExists(int id)
