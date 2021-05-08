@@ -58,6 +58,7 @@ namespace PrometheusWeb.MVC.Controllers
         // GET: Homework/ViewHomeworks
         public async Task<ActionResult> ViewHomeworks()
         {
+            //list to store homeworks
             List<HomeworkUserModel> homeworks = new List<HomeworkUserModel>();
 
             using (var client = new HttpClient())
@@ -91,10 +92,14 @@ namespace PrometheusWeb.MVC.Controllers
                         //Deserializing the response recieved from web api and storing into the list  
                         homeworks = JsonConvert.DeserializeObject<List<HomeworkUserModel>>(homeworkResponse);
                     }
+                    else
+                    {
+                        throw new PrometheusWebException("No Homeworks Found");
+                    }
                 }
                 catch(Exception)
                 {
-                    throw;
+                    return new HttpStatusCodeResult(500);
                 }
                 //returning the Homework list to view  
                 return View(homeworks);
@@ -114,7 +119,7 @@ namespace PrometheusWeb.MVC.Controllers
                 //Passing service base url  
                 client.BaseAddress = new Uri(Baseurl);
 
-
+                //clear the default request headers
                 client.DefaultRequestHeaders.Clear();
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -126,45 +131,82 @@ namespace PrometheusWeb.MVC.Controllers
                 }
                 catch(Exception)
                 {
-                    throw;
+                    return new HttpStatusCodeResult(500);
                 }
-                return View();
+                return new HttpStatusCodeResult(404);
             }
         }
 
         
         [HttpPost]
+        [Authorize(Roles = "admin,teacher")]
         public ActionResult AddHomeworks(HomeworkUserModel homework)
         {
-            if (homework.HomeWorkID == 0)
+            using (var client = new HttpClient())
             {
-                if (homework.Deadline.HasValue)
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+                client.DefaultRequestHeaders.Clear();
+
+                //check the authorization
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                try
                 {
-                    TimeSpan diff = (DateTime)homework.Deadline - System.DateTime.Now;
-                    if (diff.Days == 0)
+                    //if no homework id then perform add operation
+                    if (homework.HomeWorkID == 0)
                     {
-                        TempData["ErrorMessage"] = "Course StartDate cannot be Current Date";
-                        return View();
+                        if (homework.Deadline.HasValue)
+                        {
+                            //deadline validation
+                            TimeSpan diff = (DateTime)homework.Deadline - System.DateTime.Now;
+                            if (diff.Days == 0)
+                            {
+                                TempData["ErrorMessage"] = "Deadline cannot be Current Date";
+                                return View();
+                            }
+                        }
+                        if (homework.ReqTime.HasValue)
+                        {
+                            //Required Time Validation
+                            TimeSpan diff = (DateTime)homework.ReqTime - (DateTime)homework.Deadline;
+                            if (diff.Days > 0)
+                            {
+                                TempData["ErrorMessage"] = "Required DateTime cannot be beyond Deadline";
+                                return View();
+                            }
+                        }
                     }
+                    HttpResponseMessage response = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Homework/", homework).Result;
+                    if(response.IsSuccessStatusCode)
+                    {
+                        TempData["SuccessMessage"] = "Homework Added Successfully";
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "Homework Not Added";
+                    }
+                    
                 }
-                if (homework.ReqTime.HasValue)
+                catch (Exception)
                 {
-                    TimeSpan diff = (DateTime)homework.ReqTime - (DateTime)homework.Deadline;
-                    if (diff.Days > 0)
-                    {
-                        TempData["ErrorMessage"] = "Course Required DateTime cannot be beyond Deadline";
-                        return View();
-                    }
+                    return new HttpStatusCodeResult(500);
                 }
-                HttpResponseMessage response = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Homework/", homework).Result;
-                TempData["SuccessMessage"] = "Homework Added Successfully";
+
+                return RedirectToAction("ViewHomeworks");
             }
-            
-            return RedirectToAction("ViewHomeworks");
+
+                
         }
 
 
-
+        [HttpGet]
         [Authorize(Roles = "admin,teacher")]
         public ActionResult UpdateHomeworks(int id = 0)
         {
@@ -188,52 +230,114 @@ namespace PrometheusWeb.MVC.Controllers
                     if (id != 0)
                     {
                         HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("api/Homework/" + id.ToString()).Result;
+                        
                         return View(response.Content.ReadAsAsync<HomeworkUserModel>().Result);
                     }
                 }
                 catch (Exception)
                 {
-                    throw;
+                    return new HttpStatusCodeResult(500);
                 }
-                return View();
+                return new HttpStatusCodeResult(404);
             }
         }
 
        
         [HttpPost]
+        [Authorize(Roles = "admin,teacher")]
         public ActionResult UpdateHomeworks(HomeworkUserModel homework)
         {
-            if(homework.HomeWorkID != 0)
+            using (var client = new HttpClient())
             {
-                if (homework.Deadline.HasValue)
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+
+                client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+
+                try
                 {
-                    TimeSpan diff = (DateTime)homework.Deadline - System.DateTime.Now;
-                    if (diff.Days == 0)
+                    if (homework.HomeWorkID != 0)
                     {
-                        TempData["ErrorMessage"] = "Course StartDate cannot be Current Date";
-                        return View();
+                        if (homework.Deadline.HasValue)
+                        {
+                            TimeSpan diff = (DateTime)homework.Deadline - System.DateTime.Now;
+                            if (diff.Days == 0)
+                            {
+                                TempData["ErrorMessage"] = "Deadline cannot be Current Date";
+                                return View();
+                            }
+                        }
+                        if (homework.ReqTime.HasValue)
+                        {
+                            TimeSpan diff = (DateTime)homework.ReqTime - (DateTime)homework.Deadline;
+                            if (diff.Days > 0)
+                            {
+                                TempData["ErrorMessage"] = "Required DateTime cannot be beyond Deadline";
+                                return View();
+                            }
+                        }
+                        //Get Response from HTTP Client
+                        HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Homework/" + homework.HomeWorkID, homework).Result;
+                        if(response.IsSuccessStatusCode)
+                        {
+                            TempData["SuccessMessage"] = "Homework Updated Successfully";
+                        }
+
+                        
                     }
+
                 }
-                if (homework.ReqTime.HasValue)
+                catch (Exception)
                 {
-                    TimeSpan diff = (DateTime)homework.ReqTime - (DateTime)homework.Deadline;
-                    if (diff.Days > 0)
-                    {
-                        TempData["ErrorMessage"] = "Course Required DateTime cannot be beyond Deadline";
-                        return View();
-                    }
+                    return new HttpStatusCodeResult(500);
                 }
-                HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Homework/" + homework.HomeWorkID, homework).Result;
-                TempData["SuccessMessage"] = "Homework Updated Successfully";
             }
             return RedirectToAction("ViewHomeworks");
         }
 
 
-
+        [Authorize(Roles ="admin,teacher")]
         public ActionResult Delete(int id)
         {
-            HttpResponseMessage response = GlobalVariables.WebApiClient.DeleteAsync("api/Homework/" + id.ToString()).Result;
+            using(var client = new HttpClient())
+            {
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+
+                client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                try
+                {
+                    HttpResponseMessage response = GlobalVariables.WebApiClient.DeleteAsync("api/Homework/" + id.ToString()).Result;
+                   if(response.IsSuccessStatusCode)
+                    {
+                        TempData["SuccessMessage"] = "Homework Deleted Successfully";
+                    }
+                   
+                 }
+                catch (Exception)
+                {
+                    return new HttpStatusCodeResult(500);
+                }
+            }
+            
             return RedirectToAction("ViewHomeworks");
         }
 
@@ -614,15 +718,43 @@ namespace PrometheusWeb.MVC.Controllers
 
         }
 
+        [Authorize(Roles ="admin,teacher")]
         public async Task<ActionResult> AssignHomework(int HomeworkID)  //@TODO: change default to 0 after auth
         {
-            int TeacherId = 1;
+            //Getting Required Data from Identity(App Cookie)
+            var identity = (ClaimsIdentity)User.Identity;
+            var ID = identity.Claims.Where(c => c.Type == "ID")
+                        .Select(c => c.Value).FirstOrDefault();
+            int teacherID;
+            try
+            {
+                if (ID != null)
+                {
+                    teacherID = Int32.Parse(ID);
+                }
+                else
+                {
+                    throw new PrometheusWebException("Failed to retrieve ID");
+                }
+            }
+            catch (Exception)
+            {
+                return new HttpStatusCodeResult(500);
+            }
+           
+            var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                        .Select(c => c.Value).FirstOrDefault();
+            
+            //store the course list
             List<CourseUserModel> courses = new List<CourseUserModel>();
+            
+            //store the TeachercoursesList
             List<TeacherCourseUserModel> teachingCourses = new List<TeacherCourseUserModel>();
 
+            //save the data in UserModel
             AssignmentUserModel assignment = new AssignmentUserModel
             {
-                TeacherID = TeacherId,
+                TeacherID = teacherID,
                 HomeWorkID = HomeworkID
             };
 
@@ -632,6 +764,10 @@ namespace PrometheusWeb.MVC.Controllers
                 client.BaseAddress = new Uri(Baseurl);
 
                 client.DefaultRequestHeaders.Clear();
+
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
                 //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -652,7 +788,7 @@ namespace PrometheusWeb.MVC.Controllers
 
                     try
                     {
-                        var result = teachingCourses.Where(item => item.TeacherID == TeacherId).Join(
+                        var result = teachingCourses.Where(item => item.TeacherID == teacherID).Join(
                         courses,
                         teachingCourse => teachingCourse.CourseID,
                         course => course.CourseID,
@@ -677,6 +813,8 @@ namespace PrometheusWeb.MVC.Controllers
             }
             return View(assignment);
         }
+
+        [Authorize(Roles = "admin,teacher")]
         [HttpPost]
         public ActionResult AssignHomework(int homeworkID, int courseID, int teacherID)
         {

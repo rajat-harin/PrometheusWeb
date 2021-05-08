@@ -11,6 +11,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using PrometheusWeb.Exceptions;
+
 
 namespace PrometheusWeb.MVC.Controllers
 {
@@ -301,11 +303,112 @@ namespace PrometheusWeb.MVC.Controllers
         [Authorize(Roles = "admin")]
         public ActionResult UpdateTeacher(TeacherUserModel teacher)
         {
+            if (teacher.TeacherID != 0)
+            {
+                if (teacher.DOB.HasValue)
+                {
+                    TimeSpan diff = DateTime.Now - (DateTime)teacher.DOB;
+                    if (diff.Days == 0)
+                    {
+                        TempData["ErrorMessage"] = "DOB cannot be same with CurrentDate";
+                        ViewBag.Message = "DOB cannot be same with CurrentDate";
+                        return View();
+                    }
+                    if (teacher.DOB > DateTime.Now)
+                    {
+                        TempData["ErrorMessage"] = "DOB cannot be CurrentDate or after CurrentDate";
+                        ViewBag.Message = "DOB cannot be same with CurrentDate";
+                        return View();
+                    }
+                }
+                HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Teachers/" + teacher.TeacherID, teacher).Result;
+                TempData["SuccessMessage"] = "Teacher Updated Successfully";
+            }
+            return RedirectToAction("ViewTeachers");
+        }
+
+        [HttpGet]
+        [Authorize(Roles ="admin,teacher")]
+        public ActionResult UpdateTeacherProfile(int id = 1)
+        {
             using (var client = new HttpClient())
             {
                 //Getting Required Data from Identity(App Cookie)
                 var identity = (ClaimsIdentity)User.Identity;
+                var ID = identity.Claims.Where(c => c.Type == "ID")
+                            .Select(c => c.Value).FirstOrDefault();
+                int teacherID;
+                try
+                {
+                    if (ID != null)
+                    {
+                        teacherID = Int32.Parse(ID);
+                    }
+                    else
+                    {
+                        throw new PrometheusWebException("Failed to retrieve ID");
+                    }
+                }
+                catch (Exception)
+                {
+                    return new HttpStatusCodeResult(500);
+                }
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
 
+
+                client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
+                {
+                    if (id != 0)
+                    {
+
+                        HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("api/Teachers/" + teacherID.ToString()).Result;
+                        return View(response.Content.ReadAsAsync<TeacherUserModel>().Result);
+                    }
+                }
+                catch (Exception)
+                {
+                    return new HttpStatusCodeResult(500);
+                }
+
+                return RedirectToAction("Index"); 
+            }
+            
+        }
+
+        [HttpPost]
+        public ActionResult UpdateTeacherProfile(TeacherUserModel teacher)
+        {
+            using (var client = new HttpClient())
+            {
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+                var ID = identity.Claims.Where(c => c.Type == "ID")
+                            .Select(c => c.Value).FirstOrDefault();
+                int teacherID;
+                try
+                {
+                    if (ID != null)
+                    {
+                        teacherID = Int32.Parse(ID);
+                    }
+                    else
+                    {
+                        throw new PrometheusWebException("Failed to retrieve ID");
+                    }
+                }
+                catch (Exception)
+                {
+                    return new HttpStatusCodeResult(500);
+                }
                 var token = identity.Claims.Where(c => c.Type == "AcessToken")
                             .Select(c => c.Value).FirstOrDefault();
                 //Passing service base url  
@@ -322,34 +425,20 @@ namespace PrometheusWeb.MVC.Controllers
                 {
                     if (teacher.TeacherID != 0)
                     {
-                        if (teacher.DOB.HasValue)
-                        {
-                            TimeSpan diff = DateTime.Now - (DateTime)teacher.DOB;
-                            if (diff.Days == 0)
-                            {
-                                TempData["ErrorMessage"] = "DOB cannot be same with CurrentDate";
-                                ViewBag.Message = "DOB cannot be same with CurrentDate";
-                                return View();
-                            }
-                            if (teacher.DOB > DateTime.Now)
-                            {
-                                TempData["ErrorMessage"] = "DOB cannot be CurrentDate or after CurrentDate";
-                                ViewBag.Message = "DOB cannot be same with CurrentDate";
-                                return View();
-                            }
-                        }
+                        //Sending request to Post web api REST service resource using WebAPIClient and getting the result  
                         HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Teachers/" + teacher.TeacherID, teacher).Result;
-                        TempData["SuccessMessage"] = "Teacher Updated Successfully";
+                        TempData["SuccessMessage"] = "Profile Updated Successfully";
                     }
                 }
                 catch (Exception)
                 {
-
                     return new HttpStatusCodeResult(500);
                 }
 
-                return RedirectToAction("ViewTeachers");
-            }   
+                return RedirectToAction("UpdateTeacherProfile");
+            }
+            
+            
         }
 
         [HttpGet]
@@ -378,7 +467,7 @@ namespace PrometheusWeb.MVC.Controllers
 
                 try
                 {
-                    //Sending request to find web api REST service resource Get:Students using HttpClient  
+                    //Sending request to find web api REST service resource  
                     HttpResponseMessage ResFromCourses = await client.GetAsync("api/Teachers/");
 
 
@@ -405,7 +494,7 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
-        public ActionResult UpdateTeacherProfile(int id = 1)
+        /*public ActionResult UpdateTeacherProfile(int id = 1)
         {
             if (id != 0)
             {
@@ -413,9 +502,9 @@ namespace PrometheusWeb.MVC.Controllers
                 return View(response.Content.ReadAsAsync<TeacherUserModel>().Result);
             }
             return RedirectToAction("Index");
-        }
+        }*/
 
-        [HttpPost]
+        /*[HttpPost]
         public ActionResult UpdateTeacherProfile(TeacherUserModel teacher)
         {
             if (teacher.TeacherID != 0)
@@ -424,6 +513,6 @@ namespace PrometheusWeb.MVC.Controllers
                 TempData["SuccessMessage"] = "Profile Updated Successfully";
             }
             return RedirectToAction("UpdateTeacherProfile");
-        }
+        }*/
     }
 }

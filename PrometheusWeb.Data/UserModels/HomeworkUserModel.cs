@@ -8,6 +8,7 @@ namespace PrometheusWeb.Data.UserModels
         public int HomeWorkID { get; set; }
 
         [Required]
+        [StringLength(150, ErrorMessage = "The Description can be upto 100 Words.", MinimumLength = 10)]
         [Display(Name = "Description")]
         public string Description { get; set; }
 
@@ -20,6 +21,7 @@ namespace PrometheusWeb.Data.UserModels
         public DateTime? ReqTime { get; set; }
 
         [Required]
+        [StringLength(300, ErrorMessage = "The Long Description can be upto 300 Words.", MinimumLength = 10)]
         [Display(Name = "LongDescription")]
         public string LongDescription { get; set; }
     }

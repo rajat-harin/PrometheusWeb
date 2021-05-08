@@ -116,11 +116,27 @@
                     </td>
                     <td>
                         <a href="@Url.Action("SaveCourses","Courses",new {courseId=item.CourseID,
-                        teacherId = 1})" class="btn btn-primary">Teach Course</a>
+                       })" class="btn btn-primary">Teach Course</a>
                     </td>
                 </tr>
             }
         </table>
     </div>
 }
+</div>
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval");
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script>
+        $(function () {
+            var errorMessage = '@TempData["ErrorMessage"]'
+            if (errorMessage != '')
+                alertify.error(errorMessage);
 
+            var successMessage = '@TempData["SuccessMessage"]'
+            if (successMessage != '')
+                alertify.success(successMessage);
+        });
+    </script>
+}
