@@ -21,7 +21,7 @@ namespace PrometheusWeb.MVC.Controllers
         //Hosted web API REST Service base url  
         const string Baseurl = "https://localhost:44375/";
         // GET: Student
-        
+
         public ActionResult Index()
         {
             ViewBag.Title = "Student Index Page";
@@ -63,80 +63,107 @@ namespace PrometheusWeb.MVC.Controllers
                     return new HttpStatusCodeResult(500);
                 }
 
-                return new HttpStatusCodeResult(404);
+                return View();
             }
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public ActionResult AddStudent(AdminUserModel user)
         {
-            if (user.StudentID == 0)
+            using (var client = new HttpClient())
             {
-                user.Role = "student";
-                var list = new List<string>() { "What is your Pet Name?", "What is your Nick Name", "What is your School Name?" };
-                ViewBag.list = list;
-                if (user.DOB.HasValue)
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+
+                client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
                 {
-                    TimeSpan diff = DateTime.Now - (DateTime)user.DOB;
-                    if (diff.Days == 0)
+                    if (user.StudentID == 0)
                     {
-                        TempData["ErrorMessage"] = "DOB cannot be same with CurrentDate";
-                        ViewBag.Message = "DOB cannot be same with CurrentDate";
-                        return View();
-                    }
-                    if (user.DOB > DateTime.Now)
-                    {
-                        TempData["ErrorMessage"] = "DOB cannot be CurrentDate or after CurrentDate";
-                        ViewBag.Message = "DOB cannot be same with CurrentDate";
-                        return View();
+                        user.Role = "student";
+                        var list = new List<string>() { "What is your Pet Name?", "What is your Nick Name", "What is your School Name?" };
+                        ViewBag.list = list;
+                        if (user.DOB.HasValue)
+                        {
+                            TimeSpan diff = DateTime.Now - (DateTime)user.DOB;
+                            if (diff.Days == 0)
+                            {
+                                TempData["ErrorMessage"] = "DOB cannot be same with CurrentDate";
+                                ViewBag.Message = "DOB cannot be same with CurrentDate";
+                                return View();
+                            }
+                            if (user.DOB > DateTime.Now)
+                            {
+                                TempData["ErrorMessage"] = "DOB cannot be CurrentDate or after CurrentDate";
+                                ViewBag.Message = "DOB cannot be same with CurrentDate";
+                                return View();
+                            }
+                        }
+
+                        //Sending request to find web api REST service resource Post:Users using HttpClient
+                        HttpResponseMessage responseUser = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Users/", user).Result;
+
+                        //Sending request to find web api REST service resource Post: using HttpClient
+                        HttpResponseMessage responseStudent = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Students/", user).Result;
+
+                        if (responseUser.IsSuccessStatusCode)
+                        {
+
+
+                            if (responseStudent.IsSuccessStatusCode)
+                            {
+                                TempData["SuccessMessage"] = "Student Added Successfully";
+                                ViewBag.Message = "Student Added Successfully";
+
+                                TempData["SuccessMessage"] = "Student Added Successfully";
+                                ViewBag.Message = "Student Added Successfully";
+
+                            }
+                            else if (responseStudent.StatusCode == HttpStatusCode.Conflict)
+                            {
+                                TempData["ErrorMessage"] = "Phone No Already Taken try another Phone No";
+                                ViewBag.Message = "Phone No Already Taken try another Phone No";
+                            }
+
+                            else
+                            {
+                                TempData["ErrorMessage"] = "There was error registering a Teacher!";
+                                ViewBag.Message = "There was error registering a Teacher!";
+                            }
+
+                        }
+                        else if (responseUser.StatusCode == HttpStatusCode.Conflict)
+                        {
+                            TempData["ErrorMessage"] = "UserID Already Taken";
+                            ViewBag.Message = "UserID Already Taken";
+                        }
+
+                        else
+                        {
+                            TempData["ErrorMessage"] = "There was error registering a Student!";
+                            ViewBag.Message = "There was error registering a Student!";
+                        }
                     }
                 }
-                
-                //Sending request to find web api REST service resource Post:Users using HttpClient
-                HttpResponseMessage responseUser = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Users/", user).Result;
-                
-                //Sending request to find web api REST service resource Post: using HttpClient
-                HttpResponseMessage responseStudent = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Students/", user).Result;
-
-                if (responseUser.IsSuccessStatusCode)
+                catch (Exception)
                 {
-                   
-
-                    if (responseStudent.IsSuccessStatusCode)
-                    {
-                        TempData["SuccessMessage"] = "Student Added Successfully";
-                        ViewBag.Message = "Student Added Successfully";
-
-                        TempData["SuccessMessage"] = "Student Added Successfully";
-                        ViewBag.Message = "Student Added Successfully";
-
-                    }
-                    else if (responseStudent.StatusCode == HttpStatusCode.Conflict)
-                    {
-                        TempData["ErrorMessage"] = "Phone No Already Taken try another Phone No";
-                        ViewBag.Message = "Phone No Already Taken try another Phone No";
-                    }
-
-                    else
-                    {
-                        TempData["ErrorMessage"] = "There was error registering a Teacher!";
-                        ViewBag.Message = "There was error registering a Teacher!";
-                    }
-
-                }
-                else if (responseUser.StatusCode == HttpStatusCode.Conflict)
-                {
-                    TempData["ErrorMessage"] = "UserID Already Taken";
-                    ViewBag.Message = "UserID Already Taken";
+                    return new HttpStatusCodeResult(500);
                 }
 
-                else
-                {
-                    TempData["ErrorMessage"] = "There was error registering a Student!";
-                    ViewBag.Message = "There was error registering a Student!";
-                }
+                return RedirectToAction("AddStudent");
             }
-            return RedirectToAction("AddStudent");
         }
 
         // GET: Admin/ViewStudents
@@ -178,15 +205,13 @@ namespace PrometheusWeb.MVC.Controllers
 
                         //Deserializing the response recieved from web api and storing into the list  
                         students = JsonConvert.DeserializeObject<List<StudentUserModel>>(studentResponse);
-
                     }
                 }
                 catch (Exception)
                 {
-
-                    throw;
+                    return new HttpStatusCodeResult(500);
                 }
-                
+
                 //returning the employee list to view  
                 return View(students);
             }
@@ -217,15 +242,15 @@ namespace PrometheusWeb.MVC.Controllers
                 {
                     HttpResponseMessage response = GlobalVariables.WebApiClient.DeleteAsync("api/Students/" + id.ToString()).Result;
                     TempData["SuccessMessage"] = "Student Deleted Successfully";
-                    
+
                 }
                 catch (Exception)
                 {
-
-                    throw;
+                    return new HttpStatusCodeResult(500);
                 }
+
                 return RedirectToAction("ViewStudents");
-            }  
+            }
         }
 
         // POST: Admin/EditStudent
@@ -267,30 +292,56 @@ namespace PrometheusWeb.MVC.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public ActionResult UpdateStudent(StudentUserModel student)
         {
-            if (student.StudentID != 0)
+            using (var client = new HttpClient())
             {
-                if (student.DOB.HasValue)
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+
+                client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
                 {
-                    TimeSpan diff = DateTime.Now - (DateTime)student.DOB;
-                    if (diff.Days == 0)
+                    if (student.StudentID != 0)
                     {
-                        TempData["ErrorMessage"] = "DOB cannot be same with CurrentDate";
-                        ViewBag.Message = "DOB cannot be same with CurrentDate";
-                        return View();
-                    }
-                    if (student.DOB > DateTime.Now)
-                    {
-                        TempData["ErrorMessage"] = "DOB cannot be CurrentDate or after CurrentDate";
-                        ViewBag.Message = "DOB cannot be same with CurrentDate";
-                        return View();
+                        if (student.DOB.HasValue)
+                        {
+                            TimeSpan diff = DateTime.Now - (DateTime)student.DOB;
+                            if (diff.Days == 0)
+                            {
+                                TempData["ErrorMessage"] = "DOB cannot be same with CurrentDate";
+                                ViewBag.Message = "DOB cannot be same with CurrentDate";
+                                return View();
+                            }
+                            if (student.DOB > DateTime.Now)
+                            {
+                                TempData["ErrorMessage"] = "DOB cannot be CurrentDate or after CurrentDate";
+                                ViewBag.Message = "DOB cannot be same with CurrentDate";
+                                return View();
+                            }
+                        }
+                        HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Students/" + student.StudentID, student).Result;
+                        TempData["SuccessMessage"] = "Student Updated Successfully";
                     }
                 }
-                HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Students/" + student.StudentID, student).Result;
-                TempData["SuccessMessage"] = "Student Updated Successfully";
+                catch (Exception)
+                {
+                    return new HttpStatusCodeResult(500);
+                }
+                return RedirectToAction("ViewStudents");
             }
-            return RedirectToAction("ViewStudents");
         }
 
         [HttpGet]
@@ -336,8 +387,7 @@ namespace PrometheusWeb.MVC.Controllers
                 }
                 catch (Exception)
                 {
-
-                    throw;
+                    return new HttpStatusCodeResult(500);
                 }
                 
                 //returning the employee list to view  

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -12,6 +13,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Newtonsoft.Json;
 using PrometheusWeb.Data.DataModels;
+using PrometheusWeb.Data.UserModels;
 using PrometheusWeb.MVC.Models;
 using PrometheusWeb.Utilities.Models;
 
@@ -346,8 +348,61 @@ namespace PrometheusWeb.MVC.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        public async Task<ActionResult> ForgotPasswordAsync(string id)
         {
+            string Baseurl = "https://localhost:44375/";
+            List<User> users = new List<User>();
+
+            using (var client = new HttpClient())
+            {
+                var list = new List<string>() { "What is your Pet Name?", "What is your Nick Name", "What is your School Name?" };
+                ViewBag.list = list;
+
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+
+                client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                try
+                {
+                    //Sending request to find web api REST service resource Get:Students using HttpClient  
+                    HttpResponseMessage ResFromUsers = await client.GetAsync("api/Users/");
+
+
+                    //Checking the response is successful or not which is sent using HttpClient  
+                    if (ResFromUsers.IsSuccessStatusCode)
+                    {
+                        //Storing the response details recieved from web api   
+                        var userResponse = ResFromUsers.Content.ReadAsStringAsync().Result;
+
+
+                        //Deserializing the response recieved from web api and storing into the list  
+                        users = JsonConvert.DeserializeObject<List<User>>(userResponse);
+                        //if (users.Where(list.Exists("UserID")))
+                        //{
+
+                        //}
+                    }
+                }
+                catch (Exception)
+                {
+                    return new HttpStatusCodeResult(500);
+                }
+
+                return View();
+            }
+            /*
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByNameAsync(model.Email);
@@ -364,9 +419,7 @@ namespace PrometheusWeb.MVC.Controllers
                 // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
                 // return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
-
-            // If we got this far, something failed, redisplay form
-            return View(model);
+            */
         }
 
         //
