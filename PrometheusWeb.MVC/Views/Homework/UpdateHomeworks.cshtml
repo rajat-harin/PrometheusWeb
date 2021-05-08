@@ -166,7 +166,7 @@
 <div style="padding-left:700px; ">
     <h2>Add Student</h2>
 </div>
-@using (Html.BeginForm("AddOrEditHomeworks", "Homework", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("UpdateHomeworks", "Homework", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
 

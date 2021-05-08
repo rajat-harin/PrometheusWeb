@@ -194,7 +194,8 @@ namespace PrometheusWeb.MVC.Controllers
                 catch (Exception)
                 {
                     throw;
-                } 
+                }
+                return View();
             }
         }
 
@@ -202,7 +203,7 @@ namespace PrometheusWeb.MVC.Controllers
         [HttpPost]
         public ActionResult UpdateHomeworks(HomeworkUserModel homework)
         {
-            if(homework.HomeworkID != 0)
+            if(homework.HomeWorkID != 0)
             {
                 if (homework.Deadline.HasValue)
                 {

@@ -60,11 +60,10 @@ namespace PrometheusWeb.MVC.Controllers
                 }
                 catch (Exception)
                 {
-
-                    throw;
+                    return new HttpStatusCodeResult(500);
                 }
 
-                return View();
+                return new HttpStatusCodeResult(404);
             }
         }
 
@@ -260,8 +259,7 @@ namespace PrometheusWeb.MVC.Controllers
                 }
                 catch (Exception)
                 {
-
-                    throw;
+                    return new HttpStatusCodeResult(500);
                 }
 
                 return RedirectToAction("ViewStudents");
@@ -348,7 +346,8 @@ namespace PrometheusWeb.MVC.Controllers
         }
 
         //View My Students
-        public async Task<ActionResult> EnrolledStudents(int courseId=1, int teacherId = 1)  //@TODO: change default to 0 after auth
+        [Authorize(Roles = "admin,teacher")]
+        public async Task<ActionResult> EnrolledStudents(int courseId=1)  //@TODO: change default to 0 after auth
         {
             List<StudentUserModel> students = new List<StudentUserModel>();
             List<EnrollmentUserModel> enrollments = new List<EnrollmentUserModel>();
@@ -356,56 +355,71 @@ namespace PrometheusWeb.MVC.Controllers
 
             using (var client = new HttpClient())
             {
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
                 //Passing service base url  
                 client.BaseAddress = new Uri(Baseurl);
 
+
                 client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
                 //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                //Sending request to find web api REST service resource using HttpClient  
-                HttpResponseMessage ResFromStudents = await client.GetAsync("api/Students/");
-                HttpResponseMessage ResFromEnrollment = await client.GetAsync("api/Enrollments/");
-
-                //Checking the response is successful or not which is sent using HttpClient  
-                if (ResFromStudents.IsSuccessStatusCode && ResFromEnrollment.IsSuccessStatusCode)
+                try
                 {
-                    //Storing the response details recieved from web api   
-                    var studentResponse = ResFromStudents.Content.ReadAsStringAsync().Result;
-                    var enrollmentResponse = ResFromEnrollment.Content.ReadAsStringAsync().Result;
+                    //Sending request to find web api REST service resource using HttpClient  
+                    HttpResponseMessage ResFromStudents = await client.GetAsync("api/Students/");
+                    HttpResponseMessage ResFromEnrollment = await client.GetAsync("api/Enrollments/");
 
-                    //Deserializing the response recieved from web api and storing into the list  
-                    students = JsonConvert.DeserializeObject<List<StudentUserModel>>(studentResponse);
-                    enrollments = JsonConvert.DeserializeObject<List<EnrollmentUserModel>>(enrollmentResponse);
-
-                    try
+                    //Checking the response is successful or not which is sent using HttpClient  
+                    if (ResFromStudents.IsSuccessStatusCode && ResFromEnrollment.IsSuccessStatusCode)
                     {
-                        var result = enrollments.Where(item => item.CourseID == courseId).Join(
-                        students,
-                        enrollment => enrollment.StudentID,
-                        student => student.StudentID,
-                        (enrollment, student) => new StudentUserModel
-                        {
-                            StudentID = student.StudentID,
-                            FName = student.FName,
-                            LName = student.LName,
-                            MobileNo = student.MobileNo,
-                            Address = student.Address,
-                            City = student.City,
-                            DOB = student.DOB
-                        }
-                        ).ToList();
+                        //Storing the response details recieved from web api   
+                        var studentResponse = ResFromStudents.Content.ReadAsStringAsync().Result;
+                        var enrollmentResponse = ResFromEnrollment.Content.ReadAsStringAsync().Result;
 
-                        if (result.Any())
+                        //Deserializing the response recieved from web api and storing into the list  
+                        students = JsonConvert.DeserializeObject<List<StudentUserModel>>(studentResponse);
+                        enrollments = JsonConvert.DeserializeObject<List<EnrollmentUserModel>>(enrollmentResponse);
+
+                        try
                         {
-                            return View(result);
+                            var result = enrollments.Where(item => item.CourseID == courseId).Join(
+                            students,
+                            enrollment => enrollment.StudentID,
+                            student => student.StudentID,
+                            (enrollment, student) => new StudentUserModel
+                            {
+                                StudentID = student.StudentID,
+                                FName = student.FName,
+                                LName = student.LName,
+                                MobileNo = student.MobileNo,
+                                Address = student.Address,
+                                City = student.City,
+                                DOB = student.DOB
+                            }
+                            ).ToList();
+
+                            if (result.Any())
+                            {
+                                return View(result);
+                            }
                         }
-                    }
-                    catch
-                    {
-                        return new HttpStatusCodeResult(500);
+                        catch
+                        {
+                            return new HttpStatusCodeResult(500);
+                        }
                     }
                 }
+                catch (Exception)
+                {
+                    return new HttpStatusCodeResult(500);
+                }
+
                 //returning the employee list to view  
                 return new HttpStatusCodeResult(404);
             }

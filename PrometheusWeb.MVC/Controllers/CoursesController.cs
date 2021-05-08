@@ -575,7 +575,7 @@ namespace PrometheusWeb.MVC.Controllers
         }
 
         // GET: Teacher/MyCourses
-        [Authorize]
+        [Authorize(Roles = "admin,teacher")]
         public async Task<ActionResult> TeacherCourses(int id = 0)  //@TODO: change default to 0 after auth
         {
             /*
