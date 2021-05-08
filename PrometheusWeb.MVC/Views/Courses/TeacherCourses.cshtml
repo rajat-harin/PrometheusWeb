@@ -82,6 +82,8 @@
                 <td>
                     <a href="@Url.Action("EnrolledStudents","Student",new {courseId=item.CourseID
                 })" class="btn btn-primary">View My Students For this Subject</a>
+                    <a href="@Url.Action("ViewAssignedHomework","Homework",new {courseId=item.CourseID
+                })" class="btn btn-primary">View Assigned Homework</a>
                 </td>
             </tr>
         }
