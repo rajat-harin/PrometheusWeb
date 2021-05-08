@@ -35,9 +35,9 @@ namespace PrometheusWeb.Services.Services
             }
             catch (DbUpdateException ex)
             {
-                if (ex.InnerException.InnerException.Message.Contains("UQ__Teacher__D6D73A8609D4D9F2"))
+                if (ex.InnerException.InnerException.Message.Contains("UQ__Teaches__"))
                 {
-                    throw new PrometheusWebException("Phone No. Already used!");
+                    throw new PrometheusWebException("Course Already Selected For Teaching!");
                 }
                 else
                 {
@@ -104,7 +104,6 @@ namespace PrometheusWeb.Services.Services
         {
             Teach teach = new Teach
             {
-
                 TeacherCourseID = teacherCourseModel.TeacherCourseID,
                 CourseID = teacherCourseModel.CourseID,
                 TeacherID = teacherCourseModel.TeacherID

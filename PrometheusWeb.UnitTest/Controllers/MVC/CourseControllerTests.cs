@@ -223,10 +223,10 @@ namespace PrometheusWeb.UnitTest.Controllers.MVC
         {
             //Arrange 
             CoursesController coursesController = new CoursesController();
-            TeacherCourses teacherCourses = new TeacherCourses();
-
+            CourseUserModel courseUserModel = new CourseUserModel();
+           
             //Act
-            var result = coursesController.SaveCourses(teacherCourses);
+            var result = coursesController.SaveCourses(courseUserModel);
 
             //
             Assert.IsNotNull(result);

@@ -363,7 +363,7 @@
     <Content Include="Views\Teacher\ViewTeachers.cshtml" />
     <Content Include="Views\Teacher\AddTeacher.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Homework\AddOrEditHomeworks.cshtml" />
+    <Content Include="Views\Homework\AddHomeworks.cshtml" />
     <Content Include="Views\Homework\ViewHomeworks.cshtml" />
     <Content Include="Views\Student\AddStudent.cshtml" />
     <Content Include="Views\Student\ViewStudents.cshtml" />
@@ -382,6 +382,8 @@
     <Content Include="Views\Teacher\UpdateTeacherProfile.cshtml" />
     <Content Include="Views\Student\UpdateStudentProfile.cshtml" />
     <Content Include="Views\Homework\AssignHomework.cshtml" />
+    <Content Include="Views\Homework\ViewAssignedHomework.cshtml" />
+    <Content Include="Views\Homework\UpdateHomeworks.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

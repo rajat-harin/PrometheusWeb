@@ -44,5 +44,7 @@ namespace PrometheusWeb.Auth.Controllers
                         .Select(c => c.Value);
             return Ok("Hello " + identity.Name + "; Your role is : " + string.Join(",", roles.ToList()));
         }
+
+        
     }
 }

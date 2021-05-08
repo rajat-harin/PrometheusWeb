@@ -46,7 +46,7 @@ namespace PrometheusWeb.UnitTest.Controllers.MVC
             HomeworkController homeworkController = new HomeworkController();
            
             //Act
-            var result = homeworkController.AddOrEditHomeworks();
+            var result = homeworkController.AddHomeworks();
 
             //
             Assert.IsNotNull(result);
@@ -59,7 +59,7 @@ namespace PrometheusWeb.UnitTest.Controllers.MVC
             HomeworkController homeworkController = new HomeworkController();
             HomeworkUserModel homeworkUserModel = new HomeworkUserModel();
             //Act
-            var result = homeworkController.AddOrEditHomeworks(homeworkUserModel);
+            var result = homeworkController.AddHomeworks(homeworkUserModel);
 
             //
             Assert.IsNotNull(result);
@@ -182,9 +182,9 @@ namespace PrometheusWeb.UnitTest.Controllers.MVC
             //Arrange 
             HomeworkController homeworkController = new HomeworkController();
             AssignmentUserModel assignmentUserModel = new AssignmentUserModel();
-            
+            int id = 10;
             //Act
-            var result = homeworkController.AssignHomework(assignmentUserModel);
+            var result = homeworkController.AssignHomework(id);
 
             //
             Assert.IsNotNull(result);

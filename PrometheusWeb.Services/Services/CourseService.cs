@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using PrometheusWeb.Data;
 using System.Data.Entity;
+using PrometheusWeb.Exceptions;
 
 namespace PrometheusWeb.Services.Services
 {
@@ -20,18 +21,36 @@ namespace PrometheusWeb.Services.Services
         }
         public bool AddCourse(CourseUserModel courseModel)
         {
-            Course course = new Course
+            try
             {
-                CourseID = courseModel.CourseID,
-                Name = courseModel.Name,
-                StartDate = courseModel.StartDate,
-                EndDate = courseModel.EndDate
-            };
+                Course course = new Course
+                {
+                    CourseID = courseModel.CourseID,
+                    Name = courseModel.Name,
+                    StartDate = courseModel.StartDate,
+                    EndDate = courseModel.EndDate
+                };
 
-            db.Courses.Add(course);
-            db.SaveChanges();
+                db.Courses.Add(course);
+                db.SaveChanges();
 
-            return true;
+                return true;
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException.InnerException.Message.Contains("UQ__Course__"))
+                {
+                    throw new PrometheusWebException("Subject Already Added!");
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public CourseUserModel DeleteCourse(int id)

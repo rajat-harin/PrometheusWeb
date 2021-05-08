@@ -1,6 +1,6 @@
-﻿@model PrometheusWeb.Data.UserModels.AdminUserModel
+﻿@model PrometheusWeb.Data.UserModels.HomeworkUserModel
 @{
-    ViewBag.Title = "ForgotPassword";
+    ViewBag.Title = "AddHomeworks";
 }
 <style>
     body {
@@ -41,23 +41,23 @@
         text-align: left;
     }
 
-    datepciker {
+    input[type=datetime] {
+        width: 225px;
         background-color: #f8f8f6;
         border: none;
-        border-bottom: 2px solid #0DB8DE;
         border-top: 0px;
         border-radius: 0px;
         font-weight: bold;
         outline: 0;
-        margin-bottom: 20px;
         padding-left: 0px;
+        margin-bottom: 20px;
         color: black;
     }
 
     input[type=text] {
         background-color: #f8f8f6;
-        width: 225px;
         border: none;
+        width: 225px;
         border-top: 0px;
         border-radius: 0px;
         font-weight: bold;
@@ -80,23 +80,10 @@
         color: black;
     }
 
-    input[type=datetime] {
-        width: 225px;
-        background-color: #f8f8f6;
-        border: none;
-        border-top: 0px;
-        border-radius: 0px;
-        font-weight: bold;
-        outline: 0;
-        padding-left: 0px;
-        margin-bottom: 20px;
-        color: black;
-    }
-
     input[type=password] {
-        width: 225px;
         background-color: #f8f8f6;
         border: none;
+        width: 225px;
         border-top: 0px;
         border-radius: 0px;
         font-weight: bold;
@@ -107,7 +94,7 @@
     }
 
     .form-group {
-        margin-bottom: 2px;
+        margin-bottom: 1px;
         outline: 0px;
     }
 
@@ -177,48 +164,50 @@
     }
 </style>
 <div style="padding-left:700px; ">
-    <h2>Add or Edit Course</h2>
+    <h2>Add Student</h2>
 </div>
-@using (Html.BeginForm("ForgotPassword", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("AddHomeworks", "Homework", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
-    <div style="padding-left:665px; ">
-        <h4>Create a new course.</h4>
-    </div>
-    <hr />
-    @*@Html.ValidationSummary("", new { @class = "text-danger" })*@
-    <div class="form-group" style="padding-left:540px">
-        @Html.LabelFor(m => m.UserID, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.EditorFor(m => m.UserID)
-            @Html.ValidationMessageFor(m => m.UserID)
+    
+        <div style="padding-left:665px; ">
+            <h2>Create or Edit a Homework.</h2>
         </div>
-    </div>
-    <div class="form-group" style="padding-left:540px">
-        @Html.LabelFor(m => m.SecurityQuestion, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.DropDownListFor(m => m.SecurityQuestion, new SelectList(ViewBag.list), "Select Your Security Question")
-            @Html.ValidationMessageFor(m => m.SecurityQuestion)
+        <hr />
+        @Html.HiddenFor(model => model.HomeWorkID)
+        <div class="form-group" style="padding-left:540px">
+            @Html.LabelFor(m => m.Description, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.Description)
+                @Html.ValidationMessageFor(m => m.Description)
+            </div>
         </div>
-    </div>
-    <div class="form-group" style="padding-left:540px">
-        @Html.LabelFor(m => m.SecurityAnswer, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.EditorFor(m => m.SecurityAnswer, new { htmlAttributes = new { @class = "datepicker" } })
-            @Html.ValidationMessageFor(m => m.SecurityAnswer)
+        <div class="form-group" style="padding-left:540px">
+            @Html.LabelFor(m => m.LongDescription, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.LongDescription)
+                @Html.ValidationMessageFor(m => m.LongDescription)
+            </div>
         </div>
-    </div>
-    <div class="form-group" style="padding-left:540px">
-        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.PasswordFor(m => m.Password, new { htmlAttributes = new { @class = "datepicker" } })
-            @Html.ValidationMessageFor(m => m.Password)
+        <div class="form-group" style="padding-left:540px">
+            @Html.LabelFor(m => m.Deadline, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.Deadline, new { htmlAttributes = new { @class = "datepicker" } })
+                @Html.ValidationMessageFor(m => m.Deadline)
+            </div>
         </div>
-    </div>
-    <div class="form-group" style="padding-left:750px">
-        <input type="submit" value="Submit" class="btn-primary" />
-        <input type="reset" value="Reset" class="btn-danger" />
-    </div>
+        <div class="form-group" style="padding-left:540px">
+            @Html.LabelFor(m => m.ReqTime, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.ReqTime, new { htmlAttributes = new { @class = "datepicker" } })
+                @Html.ValidationMessageFor(m => m.ReqTime)
+            </div>
+        </div>
+        <div class="form-group" style="padding-left:750px">
+            <input type="submit" value="Submit" class="btn-primary" />
+            <input type="reset" value="Reset" class="btn-danger" />
+        </div>
+    
 }
 <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
 @section scripts{
@@ -237,6 +226,11 @@
             var errorMessage = '@TempData["ErrorMessage"]'
             if (errorMessage != '')
                 alertify.error(errorMessage);
+
+            var successMessage = '@TempData["SuccessMessage"]'
+            if (successMessage != '')
+                alertify.success(successMessage);
         });
     </script>
 }
+

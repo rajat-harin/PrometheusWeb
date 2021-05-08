@@ -42,7 +42,7 @@ namespace PrometheusWeb.Services.Services
             }
             catch (DbUpdateException ex)
             {
-                if (ex.InnerException.InnerException.Message.Contains("UQ__Student__D6D73A8697C9A7ED"))
+                if (ex.InnerException.InnerException.Message.Contains("UQ__Student__"))
                 {
                     throw new PrometheusWebException("Phone No. Already used!");
                 }
@@ -157,10 +157,12 @@ namespace PrometheusWeb.Services.Services
 
             return true;
         }
+
         public int GetStudentID(string UserID)
         {
             return db.Students.Where(item => item.UserID.Equals(UserID)).FirstOrDefault().StudentID;
         }
+
         public bool IsStudentExists(int id)
         {
             return db.Students.Count(e => e.StudentID == id) > 0;

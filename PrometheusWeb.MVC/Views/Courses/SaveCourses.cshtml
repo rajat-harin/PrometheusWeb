@@ -44,7 +44,7 @@
         <div class="row">
             <div class="column">
                 <div class="card text-center" style="width: 30rem;">
-                   
+
                     <div class="card-body">
                         <h2 class="card-title" style="color:black; font-weight:bold">
                             @Html.DisplayFor(model => model.Name, new { disabled = "disabled", @readonly = "readonly" })
@@ -68,4 +68,19 @@
 
         </div>
     </div>
+}
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval");
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script>
+        $(function () {
+            var errorMessage = '@TempData["ErrorMessage"]'
+            if (errorMessage != '')
+                alertify.error(errorMessage);
+
+            var successMessage = '@TempData["SuccessMessage"]'
+            if (successMessage != '')
+                alertify.success(successMessage);
+        });
+    </script>
 }

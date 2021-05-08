@@ -176,9 +176,9 @@ namespace PrometheusWeb.UnitTest.Controllers.MVC
             //Arrange
             AccountController accountController = new AccountController();
             ForgotPasswordViewModel forgotPasswordViewModel = new ForgotPasswordViewModel();
-
+            string id = "TestId";
             //Act
-            var result = accountController.ForgotPassword(forgotPasswordViewModel);
+            var result = accountController.ForgotPasswordAsync(id);
             //Assert
             Assert.IsNotNull(result);
         }

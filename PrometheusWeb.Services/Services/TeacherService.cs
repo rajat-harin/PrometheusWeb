@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using PrometheusWeb.Data;
 using System.Data.Entity;
+using PrometheusWeb.Exceptions;
 
 namespace PrometheusWeb.Services.Services
 {
@@ -20,23 +21,42 @@ namespace PrometheusWeb.Services.Services
         }
         public bool AddTeacher(TeacherUserModel teacherModel)
         {
-            Teacher teacher = new Teacher
+            try
             {
-                TeacherID = teacherModel.TeacherID,
-                FName = teacherModel.FName,
-                LName = teacherModel.LName,
-                UserID = teacherModel.UserID,
-                DOB = teacherModel.DOB,
-                Address = teacherModel.Address,
-                City = teacherModel.City,
-                MobileNo = teacherModel.MobileNo,
-                IsAdmin = teacherModel.IsAdmin
-            };
+                Teacher teacher = new Teacher
+                {
+                    TeacherID = teacherModel.TeacherID,
+                    FName = teacherModel.FName,
+                    LName = teacherModel.LName,
+                    UserID = teacherModel.UserID,
+                    DOB = teacherModel.DOB,
+                    Address = teacherModel.Address,
+                    City = teacherModel.City,
+                    MobileNo = teacherModel.MobileNo,
+                    IsAdmin = teacherModel.IsAdmin
+                };
 
-            db.Teachers.Add(teacher);
-            db.SaveChanges();
+                db.Teachers.Add(teacher);
+                db.SaveChanges();
 
-            return true;
+                return true;
+            }
+
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException.InnerException.Message.Contains("UQ__Teacher__"))
+                {
+                    throw new PrometheusWebException("Phone No. Already used!");
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public TeacherUserModel DeleteTeacher(int id)
@@ -145,7 +165,15 @@ namespace PrometheusWeb.Services.Services
 
         public int GetTeacherID(string UserID)
         {
-            return db.Teachers.Where(item => item.UserID.Equals(UserID)).FirstOrDefault().TeacherID;
+            try
+            {
+                int id = db.Teachers.Where(item => item.UserID.Equals(UserID)).FirstOrDefault().TeacherID;
+                return id;
+            }
+            catch
+            {
+                throw new PrometheusWebException("User Not Found!");
+            }
         }
 
         public bool IsTeacherExists(int id)
