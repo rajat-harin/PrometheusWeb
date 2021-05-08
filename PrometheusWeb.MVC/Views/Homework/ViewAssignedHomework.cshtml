@@ -42,6 +42,9 @@
     
     <table class="table">
         <h2 style="padding-left:35%">List of Assigned Homeworks</h2>
+        <button class="btn btn-primary " style="margin-right:1%; color:white">
+            @Html.ActionLink("Go Back", "TeacherCourses", "Courses", null, new { @style = "color:White;" })
+        </button>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.HomeWorkID)
@@ -58,7 +61,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.LongDescription)
             </th>
-            <th></th>
+           
         </tr>
 
         @foreach (var item in Model)

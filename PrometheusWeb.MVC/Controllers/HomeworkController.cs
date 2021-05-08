@@ -188,10 +188,10 @@ namespace PrometheusWeb.MVC.Controllers
                     {
                         TempData["SuccessMessage"] = "Homework Added Successfully";
                     }
-                    else
-                    {
-                        TempData["ErrorMessage"] = "Homework Not Added";
-                    }
+                    //else
+                    //{
+                    //    TempData["ErrorMessage"] = "Homework Not Added";
+                    //}
                     
                 }
                 catch (Exception)

@@ -40,6 +40,9 @@
     <h2>MyStudents</h2>
     <table class="table">
         <h2 style="padding-left:35%">List of my Students</h2>
+        <button class="btn btn-primary " style="margin-right:1%; color:white">
+            @Html.ActionLink("Go Back", "TeacherCourses", "Courses", null, new { @style = "color:White;" })
+        </button>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.StudentID)

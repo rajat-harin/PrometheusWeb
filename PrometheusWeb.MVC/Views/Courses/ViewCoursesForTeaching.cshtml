@@ -78,9 +78,13 @@
         <h2 style="padding-left:35%">List of all the courses</h2>
         <p>
             <a href="@Url.Action("TeacherCourses","Courses")" class="btn btn-primary">Show My Courses</a>
+            <button class="btn btn-primary " style="margin-right:1%; color:white">
+                @Html.ActionLink("Teacher Menu", "Index", "Teacher", null, new { @style = "color:White;" })
+            </button>
         </p>
 
         <table class="table table-striped">
+            
             <tr>
                 <th>
                     @Html.DisplayNameFor(model => model.CourseID)

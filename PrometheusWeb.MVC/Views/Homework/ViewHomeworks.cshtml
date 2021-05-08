@@ -41,10 +41,18 @@
     
     <table class="table">
         <h2 style="padding-left:35%">List of all Homeworks</h2>
+        <div>
+            <button class="btn btn-primary " style="margin-right:1%; color:white">
+                @Html.ActionLink("Teacher Menu", "Index", "Teacher", null, new { @style = "color:White;" })
+        </button>
+
         <button class="btn btn-primary ">
-            @Html.ActionLink("Create New", "AddHomeworks", null, //   Route args if needed; null if not.
+            @Html.ActionLink("Create New Homework", "AddHomeworks", null, //   Route args if needed; null if not.
                    new { @style = "color:White;" })
         </button>
+        </div>
+
+        <br/>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.HomeWorkID)
@@ -61,7 +69,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.LongDescription)
             </th>
-            <th></th>
+            <th>Actions</th>
         </tr>
 
         @foreach (var item in Model)
@@ -83,10 +91,10 @@
                     @Html.DisplayFor(modelItem => item.LongDescription)
                 </td>
                 <td>
-                    <a href="@Url.Action("UpdateHomeworks", "Homework", new { id = item.HomeWorkID})" class="btn btn-primary"><i class="fa fa-pencil"></i>  Edit</a>
+                    <a href="@Url.Action("UpdateHomeworks", "Homework", new { id = item.HomeWorkID})" class="btn btn-primary"><i class="fa fa-pencil"></i>  Edit Homework</a>
 
                     <a href="@Url.Action("AssignHomework","Homework",new {HomeworkID=item.HomeWorkID})" class="btn btn-primary">Assign Homework</a>
-                    <a onclick="Delete(@item.HomeWorkID)" class="btn btn-danger"><i class="fa fa-trash"></i>  Delete</a>
+                    <a onclick="Delete(@item.HomeWorkID)" class="btn btn-danger"><i class="fa fa-trash"></i>  Delete Homework</a>
 
                 </td>
             </tr>
