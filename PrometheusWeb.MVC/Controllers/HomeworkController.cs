@@ -587,7 +587,7 @@ namespace PrometheusWeb.MVC.Controllers
             List<AssignedHomework> assignedHomeWord = new List<AssignedHomework>();
             List<AssignmentUserModel> assignments = new List<AssignmentUserModel>();
             List<HomeworkUserModel> homeworks = new List<HomeworkUserModel>();
-            CourseUserModel course = new CourseUserModel();
+            //CourseUserModel course = new CourseUserModel();
             using (var client = new HttpClient())
             {
                 //Passing service base url  
@@ -609,7 +609,7 @@ namespace PrometheusWeb.MVC.Controllers
                     var AssignmentResponse = ResFromAssignment.Content.ReadAsStringAsync().Result;
                     var HomeworkResponse = ResFromHomework.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the list  
-                    course = JsonConvert.DeserializeObject<CourseUserModel>(AssignmentResponse);
+                    //course = JsonConvert.DeserializeObject<CourseUserModel>(AssignmentResponse);
                     assignments = JsonConvert.DeserializeObject<List<AssignmentUserModel>>(AssignmentResponse);
                     homeworks = JsonConvert.DeserializeObject<List<HomeworkUserModel>>(HomeworkResponse);
 
