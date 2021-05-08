@@ -574,10 +574,11 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
-        [Authorize]
         // GET: Teacher/MyCourses
+        [Authorize]
         public async Task<ActionResult> TeacherCourses(int id = 0)  //@TODO: change default to 0 after auth
         {
+            /*
             int TeacherId;
             var identity = (ClaimsIdentity)User.Identity;
 
@@ -671,10 +672,103 @@ namespace PrometheusWeb.MVC.Controllers
                 //returning the StatusCode 
                 return new HttpStatusCodeResult(404);
             }
+            */
+            //List of all courses
+            List<CourseUserModel> courses = new List<CourseUserModel>();
+
+            //list of teachercourses
+            List<TeacherCourseUserModel> teachingCourses = new List<TeacherCourseUserModel>();
+            var identity = (ClaimsIdentity)User.Identity;
+            int teacherID;
+            if (id == 0)
+            {
+
+
+                var ID = identity.Claims.Where(c => c.Type == "ID")
+                            .Select(c => c.Value).FirstOrDefault();
+
+                try
+                {
+                    if (ID != null)
+                    {
+                        teacherID = Int32.Parse(ID);
+                    }
+                    else
+                    {
+                        throw new PrometheusWebException("Failed to retrieve ID");
+                    }
+                }
+                catch (Exception)
+                {
+                    return new HttpStatusCodeResult(500);
+                }
+            }
+            else
+            {
+                teacherID = id;
+            }
+            var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                        .Select(c => c.Value).FirstOrDefault();
+
+            using (var client = new HttpClient())
+            {
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+                client.DefaultRequestHeaders.Clear();
+
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                //Sending request to find web api REST service resource Get:Courses & Get:Teacher Courses using HttpClient  
+                HttpResponseMessage ResFromCourses = await client.GetAsync("api/Courses/");
+                HttpResponseMessage ResFromTeachingCourses = await client.GetAsync("api/Teaches/");
+
+                //Checking the response is successful or not which is sent using HttpClient  
+                if (ResFromCourses.IsSuccessStatusCode && ResFromTeachingCourses.IsSuccessStatusCode)
+                {
+                    //Storing the response details recieved from web api   
+                    var courseResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
+                    var TeachingCourseResponse = ResFromTeachingCourses.Content.ReadAsStringAsync().Result;
+
+                    //Deserializing the response recieved from web api and storing into the list  
+                    courses = JsonConvert.DeserializeObject<List<CourseUserModel>>(courseResponse);
+                    teachingCourses = JsonConvert.DeserializeObject<List<TeacherCourseUserModel>>(TeachingCourseResponse);
+
+                    try
+                    {
+                        var result = teachingCourses.Where(item => item.TeacherID == teacherID).Join(
+                        courses,
+                        teachingCourse => teachingCourse.CourseID,
+                        course => course.CourseID,
+                        (teachingCourse, course) => new TeacherCourses
+                        {
+                            TeacherID = (int)teachingCourse.TeacherID,
+                            CourseID = (int)teachingCourse.CourseID,
+                            Name = course.Name,
+                            StartDate = (DateTime)course.StartDate,
+                            EndDate = (DateTime)course.EndDate
+                        }
+                        ).ToList();
+                        if (result.Any())
+                        {
+                            return View(result);
+                        }
+                    }
+                    catch
+                    {
+                        return new HttpStatusCodeResult(500);
+                    }
+
+                }
+                //returning the StatusCode 
+                return new HttpStatusCodeResult(404);
+            }
+
         }
 
-        [Authorize(Roles = "teacher")]
         // GET: Teacher/ViewCourses
+        [Authorize(Roles = "admin, teacher")]
         public async Task<ActionResult> ViewCoursesForTeaching()  
         {
             List<CourseUserModel> courses = new List<CourseUserModel>();
