@@ -438,9 +438,43 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
+        [Authorize]
         // GET: Teacher/MyCourses
-        public async Task<ActionResult> TeacherCourses(int TeacherId = 1)  //@TODO: change default to 0 after auth
+        public async Task<ActionResult> TeacherCourses(int id = 0)  //@TODO: change default to 0 after auth
         {
+            int TeacherId;
+            var identity = (ClaimsIdentity)User.Identity;
+
+            if (id == 0)
+            {
+
+
+                var ID = identity.Claims.Where(c => c.Type == "ID")
+                            .Select(c => c.Value).FirstOrDefault();
+
+                try
+                {
+                    if (ID != null)
+                    {
+                        TeacherId = Int32.Parse(ID);
+                    }
+                    else
+                    {
+                        throw new PrometheusWebException("Failed to retrieve ID");
+                    }
+                }
+                catch (Exception)
+                {
+                    return new HttpStatusCodeResult(500);
+                }
+            }
+            else
+            {
+                TeacherId = id;
+            }
+            var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                        .Select(c => c.Value).FirstOrDefault();
+
             //List of all courses
             List<CourseUserModel> courses = new List<CourseUserModel>();
 
@@ -503,17 +537,28 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
+        [Authorize(Roles = "teacher")]
         // GET: Teacher/ViewCourses
-        public async Task<ActionResult> ViewCoursesForTeaching()  //@TODO: Id to be changed default to 0 after auth
+        public async Task<ActionResult> ViewCoursesForTeaching()  
         {
             List<CourseUserModel> courses = new List<CourseUserModel>();
 
             using (var client = new HttpClient())
             {
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
+
+
                 //Passing service base url  
                 client.BaseAddress = new Uri(Baseurl);
 
                 client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
                 //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
