@@ -116,12 +116,10 @@ namespace PrometheusWeb.MVC.Controllers
                         //Sending request to find web api REST service resource Post:Users using HttpClient
                         HttpResponseMessage responseUser = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Users/", user).Result;
 
-                        //Sending request to find web api REST service resource Post: using HttpClient
-                        HttpResponseMessage responseStudent = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Students/", user).Result;
-
                         if (responseUser.IsSuccessStatusCode)
                         {
-
+                            //Sending request to find web api REST service resource Post: using HttpClient
+                            HttpResponseMessage responseStudent = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Students/", user).Result;
 
                             if (responseStudent.IsSuccessStatusCode)
                             {

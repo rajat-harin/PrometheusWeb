@@ -160,28 +160,28 @@ namespace PrometheusWeb.UnitTest.Controllers.MVC
             Assert.IsNotNull(result);
         }
 
-        [TestMethod]
-        public void ForgotPasswordTest()
-        {
-            //Arrange
-            AccountController accountController = new AccountController();
+        //[TestMethod]
+        //public void ForgotPasswordTest()
+        //{
+        //    //Arrange
+        //    AccountController accountController = new AccountController();
            
-            var result = accountController.ForgotPassword();
-            //Assert
-            Assert.IsNotNull(result);
-        }
-        [TestMethod]
-        public void ForgotPasswordTest2()
-        {
-            //Arrange
-            AccountController accountController = new AccountController();
-            ForgotPasswordViewModel forgotPasswordViewModel = new ForgotPasswordViewModel();
-            string id = "TestId";
-            //Act
-            var result = accountController.ForgotPasswordAsync(id);
-            //Assert
-            Assert.IsNotNull(result);
-        }
+        //    var result = accountController.ForgotPassword();
+        //    //Assert
+        //    Assert.IsNotNull(result);
+        //}
+        //[TestMethod]
+        //public void ForgotPasswordTest2()
+        //{
+        //    //Arrange
+        //    AccountController accountController = new AccountController();
+        //    ForgotPasswordViewModel forgotPasswordViewModel = new ForgotPasswordViewModel();
+        //    string id = "TestId";
+        //    //Act
+        //    var result = accountController.ForgotPasswordAsync(id);
+        //    //Assert
+        //    Assert.IsNotNull(result);
+        //}
 
         [TestMethod]
         public void ForgotPasswordConfirmationTest()
@@ -194,15 +194,15 @@ namespace PrometheusWeb.UnitTest.Controllers.MVC
             Assert.IsNotNull(result);
         }
 
-        [TestMethod]
-        public void ResetPasswordTest()
-        {
-            AccountController accountController = new AccountController();
-            ResetPasswordViewModel resetPasswordViewModel = new ResetPasswordViewModel();
-            //Act
-            var result = accountController.ResetPassword(resetPasswordViewModel);
-            //Assert
-            Assert.IsNotNull(result);
-        }
+        //[TestMethod]
+        //public void ResetPasswordTest()
+        //{
+        //    AccountController accountController = new AccountController();
+        //    ResetPasswordViewModel resetPasswordViewModel = new ResetPasswordViewModel();
+        //    //Act
+        //    var result = accountController.ResetPassword(resetPasswordViewModel);
+        //    //Assert
+        //    Assert.IsNotNull(result);
+        //}
     }
 }

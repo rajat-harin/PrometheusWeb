@@ -57,8 +57,6 @@ namespace PrometheusWeb.MVC.Controllers
                 {
                     if (id == 0)
                     {
-                        var list = new List<string>() { "What is your Pet Name?", "What is your Nick Name", "What is your School Name?" };
-                        ViewBag.list = list;
                         return View(new CourseUserModel());
                     }
                 }
@@ -116,47 +114,20 @@ namespace PrometheusWeb.MVC.Controllers
                         HttpResponseMessage responseStudent = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Courses/", course).Result;
                         if (responseStudent.IsSuccessStatusCode)
                         {
-                            TempData["SuccessMessage"] = "Student Added Successfully";
-                            ViewBag.Message = "Student Added Successfully";
-
-                            TempData["SuccessMessage"] = "Student Added Successfully";
-                            ViewBag.Message = "Student Added Successfully";
-
+                            TempData["SuccessMessage"] = "Course Added Successfully";
+                            ViewBag.Message = "Course Added Successfully";
                         }
                         else if (responseStudent.StatusCode == HttpStatusCode.Conflict)
                         {
-                            TempData["ErrorMessage"] = "Phone No Already Taken try another Phone No";
-                            ViewBag.Message = "Phone No Already Taken try another Phone No";
+                            TempData["ErrorMessage"] = "Course already Added";
+                            ViewBag.Message = "Course already Added";
                         }
 
                         else
                         {
-                            TempData["ErrorMessage"] = "There was error registering a Teacher!";
-                            ViewBag.Message = "There was error registering a Teacher!";
+                            TempData["ErrorMessage"] = "There was error registering a Course!";
+                            ViewBag.Message = "There was error registering a Course!";
                         }
-                    }
-                    else
-                    {
-                        if (course.StartDate.HasValue)
-                        {
-                            TimeSpan diff = (DateTime)course.EndDate - (DateTime)course.StartDate;
-                            if (diff.Days == 0)
-                            {
-                                TempData["ErrorMessage"] = "Course StartDate cannot be same with EndDate";
-                                return View();
-                            }
-                        }
-                        if (course.EndDate.HasValue)
-                        {
-                            TimeSpan diff = (DateTime)course.EndDate - (DateTime)course.StartDate;
-                            if (diff.Days < 0)
-                            {
-                                TempData["ErrorMessage"] = "Course EndDate cannot before/same as StartDate";
-                                return View();
-                            }
-                        }
-                        HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Courses/" + course.CourseID, course).Result;
-                        TempData["SuccessMessage"] = "Course Updated Successfully";
                     }
                 }
                 catch (Exception)

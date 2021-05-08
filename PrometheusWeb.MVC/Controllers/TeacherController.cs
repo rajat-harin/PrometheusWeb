@@ -172,22 +172,16 @@ namespace PrometheusWeb.MVC.Controllers
                         }
                         HttpResponseMessage responseUser = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Users/", user).Result;
 
-                        HttpResponseMessage responseStudent = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Teachers/", user).Result;
-
                         if (responseUser.IsSuccessStatusCode)
                         {
+                            HttpResponseMessage responseTeacher = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Teachers/", user).Result;
 
-
-                            if (responseStudent.IsSuccessStatusCode)
+                            if (responseTeacher.IsSuccessStatusCode)
                             {
                                 TempData["SuccessMessage"] = "Teacher Added Successfully";
                                 ViewBag.Message = "Teacher Added Successfully";
-
-                                TempData["SuccessMessage"] = "Teacher Added Successfully";
-                                ViewBag.Message = "Teacher Added Successfully";
-
                             }
-                            else if (responseStudent.StatusCode == HttpStatusCode.Conflict)
+                            else if (responseTeacher.StatusCode == HttpStatusCode.Conflict)
                             {
                                 TempData["ErrorMessage"] = "Phone No Already Taken try another Phone No";
                                 ViewBag.Message = "Phone No Already Taken try another Phone No";
@@ -303,32 +297,112 @@ namespace PrometheusWeb.MVC.Controllers
         [Authorize(Roles = "admin")]
         public ActionResult UpdateTeacher(TeacherUserModel teacher)
         {
-            if (teacher.TeacherID != 0)
+            using (var client = new HttpClient())
             {
-                if (teacher.DOB.HasValue)
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+
+                client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
                 {
-                    TimeSpan diff = DateTime.Now - (DateTime)teacher.DOB;
-                    if (diff.Days == 0)
+                    if (teacher.TeacherID != 0)
                     {
-                        TempData["ErrorMessage"] = "DOB cannot be same with CurrentDate";
-                        ViewBag.Message = "DOB cannot be same with CurrentDate";
-                        return View();
-                    }
-                    if (teacher.DOB > DateTime.Now)
-                    {
-                        TempData["ErrorMessage"] = "DOB cannot be CurrentDate or after CurrentDate";
-                        ViewBag.Message = "DOB cannot be same with CurrentDate";
-                        return View();
+                        if (teacher.DOB.HasValue)
+                        {
+                            TimeSpan diff = DateTime.Now - (DateTime)teacher.DOB;
+                            if (diff.Days == 0)
+                            {
+                                TempData["ErrorMessage"] = "DOB cannot be same with CurrentDate";
+                                ViewBag.Message = "DOB cannot be same with CurrentDate";
+                                return View();
+                            }
+                            if (teacher.DOB > DateTime.Now)
+                            {
+                                TempData["ErrorMessage"] = "DOB cannot be CurrentDate or after CurrentDate";
+                                ViewBag.Message = "DOB cannot be same with CurrentDate";
+                                return View();
+                            }
+                        }
+                        HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Teachers/" + teacher.TeacherID, teacher).Result;
+                        TempData["SuccessMessage"] = "Teacher Updated Successfully";
                     }
                 }
-                HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Teachers/" + teacher.TeacherID, teacher).Result;
-                TempData["SuccessMessage"] = "Teacher Updated Successfully";
+                catch (Exception)
+                {
+
+                    return new HttpStatusCodeResult(500);
+                }
+                
             }
             return RedirectToAction("ViewTeachers");
         }
 
         [HttpGet]
-        [Authorize(Roles ="admin,teacher")]
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult> SearchTeacher(string search)
+        {
+            List<TeacherUserModel> teachers = new List<TeacherUserModel>();
+
+            using (var client = new HttpClient())
+            {
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+
+                client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                try
+                {
+                    //Sending request to find web api REST service resource  
+                    HttpResponseMessage ResFromCourses = await client.GetAsync("api/Teachers/");
+
+
+                    //Checking the response is successful or not which is sent using HttpClient  
+                    if (ResFromCourses.IsSuccessStatusCode)
+                    {
+                        //Storing the response details recieved from web api   
+                        var teacherResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
+
+
+                        //Deserializing the response recieved from web api and storing into the list  
+                        teachers = JsonConvert.DeserializeObject<List<TeacherUserModel>>(teacherResponse);
+
+                    }
+                }
+                catch (Exception)
+                {
+
+                    return new HttpStatusCodeResult(500);
+                }
+
+                //returning the employee list to view  
+                return View(teachers.Where(x => x.FName.StartsWith(search) | search == null).ToList());
+            }
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "admin,teacher")]
         public ActionResult UpdateTeacherProfile(int id = 1)
         {
             using (var client = new HttpClient())
@@ -379,9 +453,9 @@ namespace PrometheusWeb.MVC.Controllers
                     return new HttpStatusCodeResult(500);
                 }
 
-                return RedirectToAction("Index"); 
+                return RedirectToAction("Index");
             }
-            
+
         }
 
         [HttpPost]
@@ -441,58 +515,6 @@ namespace PrometheusWeb.MVC.Controllers
             
         }
 
-        [HttpGet]
-        [Authorize(Roles = "admin")]
-        public async Task<ActionResult> SearchTeacher(string search)
-        {
-            List<TeacherUserModel> teachers = new List<TeacherUserModel>();
-
-            using (var client = new HttpClient())
-            {
-                //Getting Required Data from Identity(App Cookie)
-                var identity = (ClaimsIdentity)User.Identity;
-
-                var token = identity.Claims.Where(c => c.Type == "AcessToken")
-                            .Select(c => c.Value).FirstOrDefault();
-                //Passing service base url  
-                client.BaseAddress = new Uri(Baseurl);
-
-
-                client.DefaultRequestHeaders.Clear();
-
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-                //Define request data format  
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                try
-                {
-                    //Sending request to find web api REST service resource  
-                    HttpResponseMessage ResFromCourses = await client.GetAsync("api/Teachers/");
-
-
-                    //Checking the response is successful or not which is sent using HttpClient  
-                    if (ResFromCourses.IsSuccessStatusCode)
-                    {
-                        //Storing the response details recieved from web api   
-                        var teacherResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
-
-
-                        //Deserializing the response recieved from web api and storing into the list  
-                        teachers = JsonConvert.DeserializeObject<List<TeacherUserModel>>(teacherResponse);
-
-                    }
-                }
-                catch (Exception)
-                {
-
-                    return new HttpStatusCodeResult(500);
-                }
-
-                //returning the employee list to view  
-                return View(teachers.Where(x => x.FName.StartsWith(search) | search == null).ToList());
-            }
-        }
 
         /*public ActionResult UpdateTeacherProfile(int id = 1)
         {
