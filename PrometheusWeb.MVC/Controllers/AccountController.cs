@@ -478,7 +478,7 @@ namespace PrometheusWeb.MVC.Controllers
                         users = JsonConvert.DeserializeObject<List<AdminUserModel>>(userResponse);
                         user = users.Where(x => x.UserID.Equals(userID)).SingleOrDefault();
                         user.SecurityAnswer = String.Empty;
-
+                        user.Password = String.Empty;
                     }
                 }
                 catch (Exception)
