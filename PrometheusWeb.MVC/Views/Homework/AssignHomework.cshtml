@@ -35,8 +35,7 @@
     /* Style the counter cards */
 
 
-     .card {
-
+    .card {
         border: groove;
         border-color: #027dc5;
         border-radius: 10%;
@@ -44,20 +43,19 @@
         padding: 16px;
         text-align: center;
         background: linear-gradient(-45deg, #36d1dc, #5b86e5);
+        .card:hover
 
-
-        .card:hover {
-            transform: scale(1.1);
-        }
+    {
+        transform: scale(1.1);
+    }
 
 
     card text-center {
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
         background-color: #f1f1f1;
     }
-
 </style>
-@using (Html.BeginForm("AssignHomework", "Homework", new { homeworkID = Model.HomeWorkID, CourseID = Model.CourseID, TeacherID = Model.TeacherID }, FormMethod.Post ,new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("AssignHomework", "Homework", new { homeworkID = Model.HomeWorkID, CourseID = Model.CourseID, TeacherID = Model.TeacherID }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     <div class="container" style="padding-left:21%; padding-top:7%">
         <h2 style="padding-left:3%">Assign Homework For Course</h2>
@@ -67,14 +65,14 @@
 
 
                 <div class="card text-center" style="width: 45rem;">
-                    
+
 
                     <div class="card-body">
                         <div>
                             <h4 class="card-subtitle mb-2 text-muted" style="color:black; font-weight:bold">
                                 HomeworkID: # @Html.DisplayFor(model => model.HomeWorkID, new { disabled = "disabled" })
                             </h4>
-                            
+
                         </div>
                         <div>
                         </div>
@@ -82,7 +80,7 @@
                             <h4 class="card-text" style="color:black; font-weight:bold">
 
                                 <label class="control-label col-md-2">Select Course</label>
-                               
+
                                 <div class="col-md-10" style="padding-bottom:10%; margin-bottom:5%; padding-top:3%">
                                     @Html.DropDownListFor(model => model.CourseID, ViewBag.CourseList as SelectList, "---Select Course--", new { @class = "form-control" })
                                 </div>
@@ -102,4 +100,29 @@
 
         </div>
     </div>
+}
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval");
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script>
+        $(function () {
+            $(".datepicker").datepicker({
+                dateFormat: "yy-mm-dd",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "1990:2021"
+            });
+        });
+        $(function () {
+            var successMessage = '@TempData["SuccessMessage"]'
+            if (successMessage != '')
+                alertify.success(successMessage);
+        });
+        $(function () {
+            var errorMessage = '@TempData["ErrorMessage"]'
+            if (errorMessage != '')
+                alertify.error(errorMessage);
+        });
+    </script>
 }

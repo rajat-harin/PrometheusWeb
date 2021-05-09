@@ -7,6 +7,7 @@ using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
@@ -160,12 +161,10 @@ namespace PrometheusWeb.MVC.Controllers
                 try
                 {
                     //if no homework id then perform add operation
-                    if (homework.HomeWorkID == 0)
-                    {
-                        if (homework.Deadline.HasValue)
+                    if (homework.Deadline.HasValue)
                         {
                             //deadline validation
-                            TimeSpan diff = (DateTime)homework.Deadline - System.DateTime.Now;
+                            TimeSpan diff = (DateTime)homework.Deadline - DateTime.Now;
                             if (diff.Days == 0)
                             {
                                 TempData["ErrorMessage"] = "Deadline cannot be Current Date";
@@ -182,7 +181,6 @@ namespace PrometheusWeb.MVC.Controllers
                                 return View();
                             }
                         }
-                    }
                     HttpResponseMessage response = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Homework/", homework).Result;
                     if(response.IsSuccessStatusCode)
                     {
@@ -818,14 +816,14 @@ namespace PrometheusWeb.MVC.Controllers
         [HttpPost]
         public ActionResult AssignHomework(int homeworkID, int courseID, int teacherID)
         {
-            AssignmentUserModel assignment = new AssignmentUserModel()
+            if(courseID != 0)
             {
-                CourseID = courseID,
-                HomeWorkID = homeworkID,
-                TeacherID = teacherID
-            };
-            if (assignment.AssignmentID == 0)
-            {
+                AssignmentUserModel assignment = new AssignmentUserModel()
+                {
+                    CourseID = courseID,
+                    HomeWorkID = homeworkID,
+                    TeacherID = teacherID
+                };
                 try
                 {
                     HttpResponseMessage response = GlobalVariables.WebApiClient.PostAsJsonAsync("api/Assignments/", assignment).Result;
@@ -833,18 +831,26 @@ namespace PrometheusWeb.MVC.Controllers
                     {
                         TempData["SuccessMessage"] = "Assignment Assigned Successfully!";
                     }
+                    else if (response.StatusCode == HttpStatusCode.Conflict)
+                    {
+                        TempData["ErrorMessage"] = "Already Assigned!";
+                        ViewBag.Message = "Already Assigned!";
+                    }
                     else
                     {
-                        TempData["ErrorMessage"] = "Assignment Failed!";
+                        TempData["ErrorMessage"] = "There was error int Assigning Homework!";
+                        ViewBag.Message = "There was error int Assigning Homework!";
                     }
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     return new HttpStatusCodeResult(500);
                 }
             }
-
-
+            else
+            {
+                TempData["ErrorMessage"] = "Please select Course!";
+            }
             return RedirectToAction("ViewHomeworks");
         }
         //old method to be deleted

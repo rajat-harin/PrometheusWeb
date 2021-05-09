@@ -28,7 +28,7 @@ namespace PrometheusWeb.Services.Services
             {
                 AssignmentID = item.AssignmentID,
                 HomeWorkID = item.HomeWorkID,
-                CourseID = item.CourseID,
+                CourseID =(int) item.CourseID,
                 TeacherID = item.TeacherID
             });
         }
@@ -44,7 +44,7 @@ namespace PrometheusWeb.Services.Services
             {
                 AssignmentID = assignment.AssignmentID,
                 HomeWorkID = assignment.HomeWorkID,
-                CourseID = assignment.CourseID,
+                CourseID =(int) assignment.CourseID,
                 TeacherID = assignment.TeacherID
             };
             return userModel;
@@ -147,7 +147,7 @@ namespace PrometheusWeb.Services.Services
             {
                 AssignmentID = assignment.AssignmentID,
                 HomeWorkID = assignment.HomeWorkID,
-                CourseID = assignment.CourseID,
+                CourseID =(int) assignment.CourseID,
                 TeacherID = assignment.TeacherID
             };
         }

@@ -577,7 +577,7 @@ namespace PrometheusWeb.MVC.Controllers
                     if (student.StudentID != 0)
                     {
                         //Sending request to Post web api REST service resource using WebAPIClient and getting the result  
-                        HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Teachers/" + student.StudentID, student).Result;
+                        HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Students/" + student.StudentID, student).Result;
                         TempData["SuccessMessage"] = "Profile Updated Successfully";
                     }
                 }

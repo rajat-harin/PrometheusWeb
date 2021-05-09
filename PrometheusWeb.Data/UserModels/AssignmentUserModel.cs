@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace PrometheusWeb.Data.UserModels
 {
     public class AssignmentUserModel
@@ -8,6 +10,7 @@ namespace PrometheusWeb.Data.UserModels
 
         public int? TeacherID { get; set; }
 
-        public int? CourseID { get; set; }
+        [Required]
+        public int CourseID { get; set; }
     }
 }
