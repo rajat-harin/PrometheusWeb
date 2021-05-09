@@ -401,11 +401,11 @@ namespace PrometheusWeb.MVC.Controllers
                             HttpResponseMessage Res = await client.PutAsJsonAsync("api/Users/", user);
                             if (Res.IsSuccessStatusCode)
                             {
-                                TempData["SuccessMessage"] = "Student Updated Successfully";
+                                TempData["SuccessMessage"] = "Password Updated Successfully";
                             }
                             else
                             {
-                                TempData["ErrorMessage"] = "Student Updation Failed";
+                                TempData["ErrorMessage"] = "Password Updation Failed";
                             }
 
                         }
