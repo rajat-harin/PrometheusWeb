@@ -398,7 +398,7 @@ namespace PrometheusWeb.MVC.Controllers
                         {
 
                             user.Password = guest.Password;
-                            HttpResponseMessage Res = await client.PutAsJsonAsync("api/Users/", user);
+                            HttpResponseMessage Res = await client.PutAsJsonAsync("api/Users/"+user.UserID, user);
                             if (Res.IsSuccessStatusCode)
                             {
                                 TempData["SuccessMessage"] = "Password Updated Successfully";
@@ -477,8 +477,12 @@ namespace PrometheusWeb.MVC.Controllers
                         //Deserializing the response recieved from web api and storing into the list  
                         users = JsonConvert.DeserializeObject<List<AdminUserModel>>(userResponse);
                         user = users.Where(x => x.UserID.Equals(userID)).SingleOrDefault();
-                        user.SecurityAnswer = String.Empty;
-                        user.Password = String.Empty;
+                        if(user!=null)
+                        {
+                            user.SecurityAnswer = String.Empty;
+                            user.Password = String.Empty;
+                        }
+                        
                     }
                 }
                 catch (Exception)
