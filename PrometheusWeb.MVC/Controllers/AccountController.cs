@@ -343,89 +343,89 @@ namespace PrometheusWeb.MVC.Controllers
             return View();
         }
 */
-        //
-        // POST: /Account/ForgotPassword
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<ActionResult> ForgotPassword(string search)
-        {
-            //Hosted web API REST Service base url  
-            const string Baseurl = "https://localhost:44375/";
-            List<AdminUserModel> users = new List<AdminUserModel>();
+        ////
+        //// POST: /Account/ForgotPassword
+        //[AllowAnonymous]
+        //[HttpGet]
+        //public async Task<ActionResult> ForgotPassword(string search)
+        //{
+        //    //Hosted web API REST Service base url  
+        //    const string Baseurl = "https://localhost:44375/";
+        //    List<AdminUserModel> users = new List<AdminUserModel>();
 
-            using (var client = new HttpClient())
-            {
-                var identity = (ClaimsIdentity)User.Identity;
+        //    using (var client = new HttpClient())
+        //    {
+        //        var identity = (ClaimsIdentity)User.Identity;
 
-                var token = identity.Claims.Where(c => c.Type == "AcessToken")
-                            .Select(c => c.Value).FirstOrDefault();
-                //Passing service base url  
-                client.BaseAddress = new Uri(Baseurl);
-
-
-                client.DefaultRequestHeaders.Clear();
-
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-                //Define request data format  
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                try
-                {
-                    //Sending request to find web api REST service resource Get:Students using HttpClient  
-                    HttpResponseMessage ResFromCourses = await client.GetAsync("api/Users/");
+        //        var token = identity.Claims.Where(c => c.Type == "AcessToken")
+        //                    .Select(c => c.Value).FirstOrDefault();
+        //        //Passing service base url  
+        //        client.BaseAddress = new Uri(Baseurl);
 
 
-                    //Checking the response is successful or not which is sent using HttpClient  
-                    if (ResFromCourses.IsSuccessStatusCode)
-                    {
-                        //Storing the response details recieved from web api   
-                        var userResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
+        //        client.DefaultRequestHeaders.Clear();
+
+        //        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        //        //Define request data format  
+        //        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+        //        try
+        //        {
+        //            //Sending request to find web api REST service resource Get:Students using HttpClient  
+        //            HttpResponseMessage ResFromCourses = await client.GetAsync("api/Users/");
 
 
-                        //Deserializing the response recieved from web api and storing into the list  
-                        users = JsonConvert.DeserializeObject<List<AdminUserModel>>(userResponse);
+        //            //Checking the response is successful or not which is sent using HttpClient  
+        //            if (ResFromCourses.IsSuccessStatusCode)
+        //            {
+        //                //Storing the response details recieved from web api   
+        //                var userResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
 
-                    }
-                }
-                catch (Exception)
-                {
-                    return new HttpStatusCodeResult(500);
-                }
 
-                //returning the employee list to view  
-                return View(users.Where(x => x.UserID.StartsWith(search) | search == null).ToList());
-            }
-        }
+        //                //Deserializing the response recieved from web api and storing into the list  
+        //                users = JsonConvert.DeserializeObject<List<AdminUserModel>>(userResponse);
 
-        //
-        // GET: /Account/ResetPassword
-        [AllowAnonymous]
-        public ActionResult ChangePassword(string id)
-        {
-            if (id != null)
-            {
-                HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("api/Users/" + id).Result;
-                return View(response.Content.ReadAsAsync<AdminUserModel>().Result);
-            }
-            return RedirectToAction("ForgotPassword");
-        }
+        //            }
+        //        }
+        //        catch (Exception)
+        //        {
+        //            return new HttpStatusCodeResult(500);
+        //        }
 
-        //
-        // POST: /Account/ResetPassword
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public ActionResult ChangePassword(AdminUserModel model)
-        {
-            User user = new User();
-            if (model.UserID != null)
-            {
-                HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Users/" + model.UserID, model).Result;
-                TempData["SuccessMessage"] = "Password Changed Successfully";
-            }
-            return RedirectToAction("Login");
-        }
+        //        //returning the employee list to view  
+        //        return View(users.Where(x => x.UserID.StartsWith(search) | search == null).ToList());
+        //    }
+        //}
+
+        ////
+        //// GET: /Account/ResetPassword
+        //[AllowAnonymous]
+        //public ActionResult ChangePassword(string id)
+        //{
+        //    if (id != null)
+        //    {
+        //        HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("api/Users/" + id).Result;
+        //        return View(response.Content.ReadAsAsync<AdminUserModel>().Result);
+        //    }
+        //    return RedirectToAction("ForgotPassword");
+        //}
+
+        ////
+        //// POST: /Account/ResetPassword
+        //[HttpPost]
+        //[AllowAnonymous]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult ChangePassword(AdminUserModel model)
+        //{
+        //    User user = new User();
+        //    if (model.UserID != null)
+        //    {
+        //        HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Users/" + model.UserID, model).Result;
+        //        TempData["SuccessMessage"] = "Password Changed Successfully";
+        //    }
+        //    return RedirectToAction("Login");
+        //}
         /*
         if (ModelState.IsValid)
         {

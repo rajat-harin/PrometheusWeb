@@ -175,6 +175,9 @@
         <h4>Create a new course.</h4>
     </div>
     <hr />
+    <button class="btn btn-primary " style="margin-right:1%; color:white">
+        @Html.ActionLink("Admin Menu", "Index", "Admin", null, new { @style = "color:White;" })
+    </button>
     @Html.HiddenFor(model => model.TeacherID)
     @Html.HiddenFor(model => model.UserID)
     @Html.HiddenFor(model => model.IsAdmin)
