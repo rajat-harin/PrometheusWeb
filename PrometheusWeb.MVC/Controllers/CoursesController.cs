@@ -366,7 +366,7 @@ namespace PrometheusWeb.MVC.Controllers
                 }
 
                 //returning the employee list to view  
-                return View(courses.Where(x => x.Name.StartsWith(search) | search == null).ToList());
+                return View(courses.Where(x => x.Name.ToLower().Contains(search.ToLower()) | search == null).ToList());
             }
         }
 
