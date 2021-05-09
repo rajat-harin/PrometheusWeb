@@ -47,10 +47,7 @@ namespace PrometheusWeb.Services.Controllers
         public IHttpActionResult PutUser(string id, AdminUserModel userModel)
         {
             bool result;
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            
             try
             {
                 result = _userService.UpdateUser(id, userModel);
