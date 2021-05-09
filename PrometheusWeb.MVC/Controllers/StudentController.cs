@@ -230,7 +230,6 @@ namespace PrometheusWeb.MVC.Controllers
                 //Passing service base url  
                 client.BaseAddress = new Uri(Baseurl);
 
-
                 client.DefaultRequestHeaders.Clear();
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -241,7 +240,6 @@ namespace PrometheusWeb.MVC.Controllers
                 {
                     HttpResponseMessage response = GlobalVariables.WebApiClient.DeleteAsync("api/Students/" + id.ToString()).Result;
                     TempData["SuccessMessage"] = "Student Deleted Successfully";
-
                 }
                 catch (Exception)
                 {
@@ -390,7 +388,7 @@ namespace PrometheusWeb.MVC.Controllers
                 }
                 
                 //returning the employee list to view  
-                return View(students.Where(x => x.FName.StartsWith(search) | search == null).ToList());
+                return View(students.Where(x => x.FName.ToLower().Contains(search.ToLower()) | search == null).ToList());
             }
         }
 
