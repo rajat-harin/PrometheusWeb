@@ -478,25 +478,116 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
+        [HttpGet]
+        [Authorize(Roles = "student")]
         public ActionResult UpdateStudentProfile(int id = 1)
         {
-            if (id != 0)
+            using (var client = new HttpClient())
             {
-                HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("api/Students/" + id.ToString()).Result;
-                return View(response.Content.ReadAsAsync<StudentUserModel>().Result);
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+                var ID = identity.Claims.Where(c => c.Type == "ID")
+                            .Select(c => c.Value).FirstOrDefault();
+                int studentID;
+                try
+                {
+                    if (ID != null)
+                    {
+                        studentID = Int32.Parse(ID);
+                    }
+                    else
+                    {
+                        throw new PrometheusWebException("Failed to retrieve ID");
+                    }
+                }
+                catch (Exception)
+                {
+                    return new HttpStatusCodeResult(500);
+                }
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+
+                client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
+                {
+                    if (id != 0)
+                    {
+
+                        HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("api/Students/" + studentID.ToString()).Result;
+                        return View(response.Content.ReadAsAsync<StudentUserModel>().Result);
+                    }
+                }
+                catch (Exception)
+                {
+                    return new HttpStatusCodeResult(500);
+                }
+
+                return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
         }
 
         [HttpPost]
+        [Authorize(Roles = "student")]
         public ActionResult UpdateStudentProfile(StudentUserModel student)
         {
-            if (student.StudentID != 0)
+            using (var client = new HttpClient())
             {
-                HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Students/" + student.StudentID, student).Result;
-                TempData["SuccessMessage"] = "Student Updated Successfully";
+                //Getting Required Data from Identity(App Cookie)
+                var identity = (ClaimsIdentity)User.Identity;
+                var ID = identity.Claims.Where(c => c.Type == "ID")
+                            .Select(c => c.Value).FirstOrDefault();
+                int studentID;
+                try
+                {
+                    if (ID != null)
+                    {
+                        studentID = Int32.Parse(ID);
+                    }
+                    else
+                    {
+                        throw new PrometheusWebException("Failed to retrieve ID");
+                    }
+                }
+                catch (Exception)
+                {
+                    return new HttpStatusCodeResult(500);
+                }
+                var token = identity.Claims.Where(c => c.Type == "AcessToken")
+                            .Select(c => c.Value).FirstOrDefault();
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+
+                client.DefaultRequestHeaders.Clear();
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
+                {
+                    if (student.StudentID != 0)
+                    {
+                        //Sending request to Post web api REST service resource using WebAPIClient and getting the result  
+                        HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Teachers/" + student.StudentID, student).Result;
+                        TempData["SuccessMessage"] = "Profile Updated Successfully";
+                    }
+                }
+                catch (Exception)
+                {
+                    return new HttpStatusCodeResult(500);
+                }
+
+                return RedirectToAction("UpdateStudentProfile");
             }
-            return RedirectToAction("Index");
         }
 
     }

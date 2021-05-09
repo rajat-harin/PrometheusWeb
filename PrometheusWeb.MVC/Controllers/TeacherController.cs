@@ -459,6 +459,7 @@ namespace PrometheusWeb.MVC.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin,teacher")]
         public ActionResult UpdateTeacherProfile(TeacherUserModel teacher)
         {
             using (var client = new HttpClient())
