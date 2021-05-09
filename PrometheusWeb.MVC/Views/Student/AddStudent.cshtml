@@ -178,6 +178,9 @@
 <div style="padding-left:700px; ">
     <h2>Add Student</h2>
 </div>
+<button class="btn btn-primary " style="margin-right:1%; color:white">
+    @Html.ActionLink("Admin Menu", "Index", "Admin", null, new { @style = "color:White;" })
+</button>
 @using (Html.BeginForm("AddStudent", "Student", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()

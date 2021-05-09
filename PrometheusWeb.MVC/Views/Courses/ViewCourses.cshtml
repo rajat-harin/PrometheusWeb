@@ -42,6 +42,9 @@
 </body>
 <div class="container" style="background:#f8f8f6">
     <p>
+        <button class="btn btn-primary " style="margin-right:1%; color:white">
+            @Html.ActionLink("Admin Menu", "Index", "Admin", null, new { @style = "color:White;" })
+        </button>
         <button class="btn btn-primary">
             @Html.ActionLink("Create New", "AddCourse", null, //   Route args if needed; null if not.
     new { @style = "color:White;" })

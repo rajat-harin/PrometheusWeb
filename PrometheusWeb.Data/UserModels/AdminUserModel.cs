@@ -24,6 +24,9 @@ namespace PrometheusWeb.Data.UserModels
         public string LName { get; set; }
 
         [Required]
+        [StringLength(30, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 4)]
+        [RegularExpression(@"^.*(?=.{6,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!*@#$%^&+=]).*$",
+         ErrorMessage = "Follow Password Guidelines: 1 UpperCase, 1 LowerCase, 1 Character mandatory")]
         [Display(Name = "UserID")]
         public string UserID { get; set; }
 
@@ -54,7 +57,7 @@ namespace PrometheusWeb.Data.UserModels
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [RegularExpression(@"^.*(?=.{6,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!*@#$%^&+=]).*$",
-         ErrorMessage = "Follow Password Guidelines")]
+         ErrorMessage = "Follow Password Guidelines: 1 UpperCase, 1 LowerCase, 1 Character mandatory")]
         [Display(Name = "Password")]
         public string Password { get; set; }
 
