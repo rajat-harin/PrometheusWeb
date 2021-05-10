@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
+using System.Web.Http.Results;
 
 namespace PrometheusWeb.Services.Controllers.Tests
 {
@@ -91,49 +93,106 @@ namespace PrometheusWeb.Services.Controllers.Tests
         [TestMethod()]
         public void GetHomeworkPlansTest()
         {
-            Assert.Fail();
+            //Arrange
+            HomeworkPlansController controller = new HomeworkPlansController(this.MockProductsRepository);
+
+            //Act
+            var result = controller.GetHomeworkPlans();
+
+            //Assert
+            Assert.IsNotNull(result); // Test if null
+            //Assert.IsInstanceOfType(result, typeof(IQueryable<HomeworkPlanUserModel>)); // Test type
         }
 
         [TestMethod()]
         public void GetHomeworkPlansTest1()
         {
-            Assert.Fail();
+            //Arrange
+            HomeworkPlansController controller = new HomeworkPlansController(this.MockProductsRepository);
+
+            //Act
+            var result = controller.GetHomeworkPlans();
+
+            //Assert
+            //Assert.IsNotNull(result); // Test if null
+            Assert.IsInstanceOfType(result, typeof(IQueryable<HomeworkPlanUserModel>)); // Test type
         }
 
         [TestMethod()]
         public void GetHomeworkPlanTest()
         {
-            Assert.Fail();
+            //Arrange
+            HomeworkPlansController controller = new HomeworkPlansController(this.MockProductsRepository);
+            int id = 1;
+
+            //Act
+            var result = controller.GetHomeworkPlan(id);
+
+            //Assert
+            Assert.IsNotNull(result); // Test if null
+
+            Assert.IsInstanceOfType(result, typeof(IHttpActionResult)); // Test type of returned object
         }
 
         [TestMethod()]
         public void PutHomeworkPlanTest()
         {
-            Assert.Fail();
+            //Arrange
+            HomeworkPlansController controller = new HomeworkPlansController(this.MockProductsRepository);
+            int id = 1;
+            HomeworkPlanUserModel userModel = new HomeworkPlanUserModel
+            {
+                HomeworkPlanID = id,
+                HomeworkID = 2,
+                isCompleted = true,
+                PriorityLevel = 9
+            };
+            //Act
+            var result = controller.PutHomeworkPlan(id, userModel);
+
+            //Assert
+            Assert.IsNotNull(result); // Test if null
+
+            Assert.IsInstanceOfType(result, typeof(IHttpActionResult)); // Test type of returned object
+            Assert.IsInstanceOfType(result, typeof(OkResult)); // Test type
         }
 
         [TestMethod()]
         public void PostHomeworkPlanTest()
         {
-            Assert.Fail();
+            //Arrange
+            HomeworkPlansController controller = new HomeworkPlansController(this.MockProductsRepository);
+            int id = 1;
+            HomeworkPlanUserModel userModel = new HomeworkPlanUserModel
+            {
+                
+                HomeworkID = 2,
+                isCompleted = true,
+                PriorityLevel = 9
+            };
+            //Act
+            var result = controller.PostHomeworkPlan(userModel);
+
+            //Assert
+            Assert.IsNotNull(result); // Test if null
+
+            Assert.IsInstanceOfType(result, typeof(IHttpActionResult));
         }
 
-        [TestMethod()]
-        public void PostHomeworkPlansTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void DeleteHomeworkPlanTest()
-        {
-            Assert.Fail();
-        }
+        
 
         [TestMethod()]
         public void DeleteHomeworkPlansTest()
         {
-            Assert.Fail();
+            //Arrange
+            HomeworkPlansController controller = new HomeworkPlansController(this.MockProductsRepository);
+            int id = 1;
+
+            //Act
+            var result = controller.DeleteHomeworkPlan(id);
+
+            //Assert
+            Assert.IsNotNull(result); // Test if null
         }
     }
 }
