@@ -99,7 +99,7 @@ namespace PrometheusWeb.MVC.Controllers.Tests
         {
             //Arrange
             var controller = new StudentController();
-            int id = 3;
+             int id = 4;
             //Act
             var result = controller.DeleteStudent(id);
             //Assert
