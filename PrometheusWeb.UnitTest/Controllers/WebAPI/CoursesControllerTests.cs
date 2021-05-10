@@ -86,32 +86,71 @@ namespace PrometheusWeb.Services.Controllers.Tests
 
         [TestMethod()]
         public void GetCoursesTest()
-        {
-            Assert.Fail();
+        {    
+            //Arrange
+            CoursesController coursesController = new CoursesController(this.MockProductsRepository);
+            //Act
+            var result = coursesController.GetCourses();
+            //Assert
+            Assert.IsNotNull(result); // Test if null
+           
         }
 
         [TestMethod()]
         public void GetCourseTest()
         {
-            Assert.Fail();
+
+            //Arrange
+            CoursesController coursesController = new CoursesController(this.MockProductsRepository);
+            int id = 1;
+            //Act
+            var result = coursesController.GetCourse(id);
+            //Assert
+            Assert.IsNotNull(result); // Test if null   
         }
 
+           
         [TestMethod()]
         public void PutCourseTest()
         {
-            Assert.Fail();
+            //Arrange
+            CoursesController coursesController = new CoursesController(this.MockProductsRepository);
+            CourseUserModel courseUserModel = new CourseUserModel();
+            int id = 1;
+            //Act
+            var result = coursesController.PutCourse(id,courseUserModel);
+            //Assert
+            Assert.IsNotNull(result); // Test if null   
         }
 
-        [TestMethod()]
+            [TestMethod()]
         public void PostCourseTest()
         {
-            Assert.Fail();
+            //Arrange
+            CoursesController coursesController = new CoursesController(this.MockProductsRepository);
+            CourseUserModel courseUserModel = new CourseUserModel();
+            int id = 1;
+            //Act
+            var result = coursesController.PostCourse( courseUserModel);
+            //Assert
+            Assert.IsNotNull(result); // Test if null   
+
         }
 
         [TestMethod()]
         public void DeleteCourseTest()
         {
-            Assert.Fail();
+
+            //Arrange
+            CoursesController coursesController = new CoursesController(this.MockProductsRepository);
+            CourseUserModel courseUserModel = new CourseUserModel();
+            int id = 1;
+            //Act
+            var result = coursesController.DeleteCourse(id);
+            //Assert
+            Assert.IsNotNull(result); // Test if null   
+
+
         }
     }
 }

@@ -87,31 +87,69 @@ namespace PrometheusWeb.Services.Controllers.Tests
         [TestMethod()]
         public void GetAssignmentsTest()
         {
-            Assert.Fail();
+            //Arrange
+            AssignmentsController controller = new AssignmentsController(this.MockProductsRepository);
+
+            //Act
+            var result = controller.GetAssignments ();
+
+            //Assert
+            Assert.IsNotNull(result); // Test if null
         }
 
         [TestMethod()]
         public void GetAssignmentTest()
         {
-            Assert.Fail();
+            //Arrange
+            AssignmentsController controller = new AssignmentsController(this.MockProductsRepository);
+            int id = 1;
+            //Act
+            var result = controller.GetAssignment(id);
+
+            //Assert
+            Assert.IsNotNull(result); // Test if null   
         }
 
-        [TestMethod()]
+            [TestMethod()]
         public void PutAssignmentTest()
         {
-            Assert.Fail();
+            //Arrange
+            AssignmentsController controller = new AssignmentsController(this.MockProductsRepository);
+            AssignmentUserModel assignmentUserModel = new AssignmentUserModel();
+            int id = 1;
+            //Act
+            var result = controller.PutAssignment(id,assignmentUserModel);
+
+            //Assert
+            Assert.IsNotNull(result); // Test if null
+
         }
 
         [TestMethod()]
         public void PostAssignmentTest()
         {
-            Assert.Fail();
+            //Arrange
+            AssignmentsController controller = new AssignmentsController(this.MockProductsRepository);
+            AssignmentUserModel assignmentUserModel = new AssignmentUserModel();
+            int id = 1;
+            //Act
+            var result = controller.PostAssignment(assignmentUserModel);
+
+            //Assert
+            Assert.IsNotNull(result); // Test if null
         }
 
         [TestMethod()]
         public void DeleteAssignmentTest()
         {
-            Assert.Fail();
+            //Arrange
+            AssignmentsController controller = new AssignmentsController(this.MockProductsRepository);
+            int id = 1;
+            //Act
+            var result = controller.DeleteAssignment(id);
+
+            //Assert
+            Assert.IsNotNull(result); // Test if null
         }
     }
 }
