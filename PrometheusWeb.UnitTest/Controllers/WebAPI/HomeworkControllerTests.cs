@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
+using System.Web.Http.Results;
 
 namespace PrometheusWeb.Services.Controllers.Tests
 {
@@ -90,31 +92,99 @@ namespace PrometheusWeb.Services.Controllers.Tests
         [TestMethod()]
         public void GetHomeworksTest()
         {
-            Assert.Fail();
+            //Arrange
+            HomeworkController controller = new HomeworkController(this.MockProductsRepository);
+
+            //Act
+            var result = controller.GetHomeworks();
+
+            //Assert
+            Assert.IsNotNull(result); // Test if null
+            Assert.IsInstanceOfType(result, typeof(IQueryable<HomeworkUserModel>)); // Test type
         }
 
         [TestMethod()]
         public void GetHomeworkTest()
         {
-            Assert.Fail();
+            //Arrange
+            HomeworkController controller = new HomeworkController(this.MockProductsRepository);
+            int id = 1;
+
+            //Act
+            var result = controller.GetHomework(id);
+
+            //Assert
+            Assert.IsNotNull(result); // Test if null
+
+            Assert.IsInstanceOfType(result, typeof(IHttpActionResult)); // Test type of returned object
+                                                                        // Assert.IsInstanceOfType(result, typeof(IHttpActionResult)); // Test type
         }
 
         [TestMethod()]
         public void PutHomeworkTest()
         {
-            Assert.Fail();
+            //Arrange
+            HomeworkController controller = new HomeworkController(this.MockProductsRepository);
+            int id = 1;
+            HomeworkUserModel userModel = new HomeworkUserModel
+            {
+                HomeWorkID = id,
+                Description = "Inheritance",
+                LongDescription = "Implement All Types",
+                Deadline = DateTime.Now,
+                ReqTime = DateTime.Now,
+
+            };
+            //Act
+            var result = controller.PutHomework(id, userModel);
+
+            //Assert
+            Assert.IsNotNull(result); // Test if null
+
+            Assert.IsInstanceOfType(result, typeof(IHttpActionResult)); // Test type of returned object
+            Assert.IsInstanceOfType(result, typeof(OkResult)); // Test type
         }
 
         [TestMethod()]
         public void PostHomeworkTest()
         {
-            Assert.Fail();
+            //Arrange
+            HomeworkController controller = new HomeworkController(this.MockProductsRepository);
+            int id = 1;
+            HomeworkUserModel userModel = new HomeworkUserModel
+            {
+                HomeWorkID = id,
+                Description = "Inheritance",
+                LongDescription = "Implement All Types",
+                Deadline = DateTime.Now,
+                ReqTime = DateTime.Now,
+
+            };
+            //Act
+            var result = controller.PostHomework(userModel);
+
+            //Assert
+            Assert.IsNotNull(result); // Test if null
+
+            Assert.IsInstanceOfType(result, typeof(IHttpActionResult)); // Test type of returned object
         }
 
         [TestMethod()]
         public void DeleteHomeworkTest()
         {
-            Assert.Fail();
+            //Arrange
+            HomeworkController controller = new HomeworkController(this.MockProductsRepository);
+            int id = 1;
+
+            //Act
+            var result = controller.DeleteHomework(id);
+
+            //Assert
+            Assert.IsNotNull(result); // Test if null
+
+            Assert.IsInstanceOfType(result, typeof(IHttpActionResult)); // Test type of returned object
+                                                                        // Assert.IsInstanceOfType(result, typeof(IHttpActionResult)); // Test type
+
         }
     }
 }
