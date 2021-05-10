@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
+using System.Web.Http.Results;
 
 namespace PrometheusWeb.Services.Controllers.Tests
 {
@@ -100,31 +102,102 @@ namespace PrometheusWeb.Services.Controllers.Tests
         [TestMethod()]
         public void GetStudentsTest()
         {
-            Assert.Fail();
+            //Arrange
+            StudentsController controller = new StudentsController(this.MockProductsRepository);
+
+            //Act
+            var result = controller.GetStudents();
+
+            //Assert
+            Assert.IsNotNull(result); // Test if null
+            Assert.IsInstanceOfType(result, typeof(IQueryable<EnrollmentUserModel>)); // Test type
         }
 
         [TestMethod()]
         public void GetStudentTest()
         {
-            Assert.Fail();
+            //Arrange
+            StudentsController controller = new StudentsController(this.MockProductsRepository);
+            int id = 1;
+
+            //Act
+            var result = controller.GetStudent(id);
+
+            //Assert
+            Assert.IsNotNull(result); // Test if null
+
+            Assert.IsInstanceOfType(result, typeof(IHttpActionResult)); // Test type of returned object
+                                                                        // Assert.IsInstanceOfType(result, typeof(IHttpActionResult)); // Test type
         }
 
         [TestMethod()]
         public void PutStudentTest()
         {
-            Assert.Fail();
+            //Arrange
+            StudentsController controller = new StudentsController(this.MockProductsRepository);
+            int id = 1;
+            StudentUserModel userModel = new StudentUserModel
+            {
+                StudentID = 1,
+                FName = "Ram",
+                LName = "Sharma",
+                DOB = DateTime.Now,
+                UserID = "New1919",
+                Address = "XYZ",
+                City = "LV",
+                MobileNo = "0000000000"
+            };
+            //Act
+            var result = controller.PutStudent(id, userModel);
+
+            //Assert
+            Assert.IsNotNull(result); // Test if null
+
+            Assert.IsInstanceOfType(result, typeof(IHttpActionResult)); // Test type of returned object
+            Assert.IsInstanceOfType(result, typeof(OkResult)); // Test type
         }
 
         [TestMethod()]
         public void PostStudentTest()
         {
-            Assert.Fail();
+            //Arrange
+            StudentsController controller = new StudentsController(this.MockProductsRepository);
+            int id = 1;
+            StudentUserModel userModel = new StudentUserModel
+            {
+                StudentID = 1,
+                FName = "Ram",
+                LName = "Sharma",
+                DOB = DateTime.Now,
+                UserID = "New1919",
+                Address = "XYZ",
+                City = "LV",
+                MobileNo = "0000000000"
+            };
+            //Act
+            var result = controller.PostStudent(userModel);
+
+            //Assert
+            Assert.IsNotNull(result); // Test if null
+
+            Assert.IsInstanceOfType(result, typeof(IHttpActionResult)); // Test type of returned object
         }
 
         [TestMethod()]
         public void DeleteStudentTest()
         {
-            Assert.Fail();
+            //Arrange
+            StudentsController controller = new StudentsController(this.MockProductsRepository);
+            int id = 1;
+
+            //Act
+            var result = controller.DeleteStudent(id);
+
+            //Assert
+            Assert.IsNotNull(result); // Test if null
+
+            Assert.IsInstanceOfType(result, typeof(IHttpActionResult)); // Test type of returned object
+
         }
     }
 }
