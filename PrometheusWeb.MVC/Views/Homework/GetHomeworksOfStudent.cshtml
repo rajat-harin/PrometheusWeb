@@ -46,7 +46,7 @@
                 @Html.DisplayNameFor(model => model.AssignmentID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.HomeworkID)
+                @Html.DisplayNameFor(model => model.HomeWorkID)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Description)
@@ -63,13 +63,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.CourseName)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TeacherID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CourseID)
-            </th>
-            <th></th>
+            
         </tr>
 
         @foreach (var item in Model)
@@ -79,7 +73,7 @@
                     @Html.DisplayFor(modelItem => item.AssignmentID)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.HomeworkID)
+                    @Html.DisplayFor(modelItem => item.HomeWorkID)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Description)
@@ -96,12 +90,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.CourseName)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TeacherID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CourseID)
-                </td>
+                
             </tr>
         }
 

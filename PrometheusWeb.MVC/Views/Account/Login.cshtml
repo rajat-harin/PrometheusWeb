@@ -138,13 +138,20 @@
 </style>
 
 <body>
-    
-        <div style="padding-left:700px; ">
-            <h2>@ViewBag.Title.</h2>
-        </div>
-        @using (Html.BeginForm("Login", "Account"))
+
+    <div style="padding-left:700px; ">
+        <h2>@ViewBag.Title.</h2>
+    </div>
+    @*@using (Html.BeginForm("ForgotPassword", "Account",new { UserID = Model.UserID } ,FormMethod.Get))
         {
-            <div>
+            <input type="text" name="search" placeholder="Enter UserID Name" style="color:black; font-weight:600;" />
+            <input type="submit" name="submit" value="Search" style="background-color:greenyellow; color:black; font-weight:600;" />
+        }*@
+
+    @*"ChangePassword", "Account", new { UserID = Model.UserID }, FormMethod.Get)*@
+    @using (Html.BeginForm("Login", "Account"))
+    {
+        <div>
             @Html.AntiForgeryToken()
             <div style="color:red;">@Html.ValidationSummary()</div>
             <div class="row">
@@ -156,55 +163,52 @@
 
 
 
+        </div>
+
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-2"></div>
+                <div class="col-lg-6 col-md-8 login-box">
+                    <div class="col-lg-12 login-key">
+                        <i class="fa fa-key" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-lg-12 login-title">
+                        LOGIN
+                    </div>
+
+                    <div class="col-lg-12 login-form">
+                        <div class="col-lg-12 login-form">
+                            <form>
+                                <div class="form-group">
+                                    <label class="form-control-label">USERNAME</label>
+                                    @Html.TextBoxFor(a => a.UserID, new { @class = "form-control" })
+                                    @*<input type="text" class="form-control">*@
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-control-label">PASSWORD</label>
+                                    @Html.TextBoxFor(a => a.Password, new { @class = "form-control", type = "Password" })
+                                    @*<input type="password" class="form-control" i>*@
+                                </div>
+                                <div>@Html.ActionLink("Forgot Password", "ForgotPassword", "Account")</div>
+                                <div class="col-lg-12 loginbttm">
+                                    <div class="col-lg-6 login-btm login-text">
+                                        <!-- Error Message -->
+                                    </div>
+                                    <div class="col-lg-6 login-btm login-button">
+                                        <button type="submit" class="btn btn-outline-primary">LOGIN</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-2"></div>
+                </div>
             </div>
 
-
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-3 col-md-2"></div>
-                    <div class="col-lg-6 col-md-8 login-box">
-                        <div class="col-lg-12 login-key">
-                            <i class="fa fa-key" aria-hidden="true"></i>
-                        </div>
-                        <div class="col-lg-12 login-title">
-                            LOGIN
-                        </div>
-
-                        <div class="col-lg-12 login-form">
-                            <div class="col-lg-12 login-form">
-                                <form>
-                                    <div class="form-group">
-                                        <label class="form-control-label">USERNAME</label>
-                                        @Html.TextBoxFor(a => a.UserID, new { @class = "form-control" })
-                                        @*<input type="text" class="form-control">*@
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-control-label">PASSWORD</label>
-                                        @Html.TextBoxFor(a => a.Password, new { @class = "form-control", type = "Password" })
-                                        @*<input type="password" class="form-control" i>*@
-                                    </div>
-
-                                    <div class="col-lg-12 loginbttm">
-                                        <div class="col-lg-6 login-btm login-text">
-                                            <!-- Error Message -->
-                                        </div>
-                                        <div class="col-lg-6 login-btm login-button">
-                                            <button type="submit" class="btn btn-outline-primary">LOGIN</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-2"></div>
-                    </div>
-                </div>
-                
         </div>
-        }
+    }
 </body>
-
-
-
 
     @section Scripts {
         @Scripts.Render("~/bundles/jqueryval")

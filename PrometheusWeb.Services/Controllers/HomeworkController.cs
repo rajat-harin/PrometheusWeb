@@ -24,6 +24,7 @@ namespace PrometheusWeb.Services.Controllers
             _homeworkService = homeworkService;
         }
 
+        //Get All Homeworks
         // GET: api/Homework
         public IQueryable<HomeworkUserModel> GetHomeworks()
         {
@@ -38,6 +39,8 @@ namespace PrometheusWeb.Services.Controllers
             }
         }
 
+
+        //Get  Homeworks By ID
         // GET: api/Homework/5
         [ResponseType(typeof(HomeworkUserModel))]
         public IHttpActionResult GetHomework(int id)

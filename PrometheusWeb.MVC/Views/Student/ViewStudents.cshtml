@@ -72,7 +72,11 @@
 
 <body style="background:#d9dad9;"></body>
 <div class="container" style="background:#f8f8f6;">
+    <h2 style="padding-left:35%">Students List</h2>
     <p>
+        <button class="btn btn-primary " style="margin-right:1%; color:white">
+            @Html.ActionLink("Admin Menu", "Index", "Admin", null, new { @style = "color:White;" })
+        </button>
         <button class="btn btn-primary">
             @Html.ActionLink("Create New", "AddStudent", null, //   Route args if needed; null if not.
            new { @style = "color:White;" })
@@ -83,7 +87,7 @@
             <input type="submit" name="submit" value="Search" style="background-color:greenyellow; color:black; font-weight:600;" />
         }
     </p>
-    <table class="table">
+    <table class="table table-striped">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.StudentID)

@@ -1,6 +1,7 @@
 ﻿using PrometheusWeb.Data;
 using PrometheusWeb.Data.DataModels;
 using PrometheusWeb.Data.UserModels;
+using PrometheusWeb.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -27,7 +28,7 @@ namespace PrometheusWeb.Services.Services
             {
                 AssignmentID = item.AssignmentID,
                 HomeWorkID = item.HomeWorkID,
-                CourseID = item.CourseID,
+                CourseID =(int) item.CourseID,
                 TeacherID = item.TeacherID
             });
         }
@@ -43,7 +44,7 @@ namespace PrometheusWeb.Services.Services
             {
                 AssignmentID = assignment.AssignmentID,
                 HomeWorkID = assignment.HomeWorkID,
-                CourseID = assignment.CourseID,
+                CourseID =(int) assignment.CourseID,
                 TeacherID = assignment.TeacherID
             };
             return userModel;
@@ -52,6 +53,7 @@ namespace PrometheusWeb.Services.Services
         //METHOD: Insert Assignments to db
         public bool AddAssignment(AssignmentUserModel userModel)
         {
+            
             Assignment assignment = new Assignment
             {
                 AssignmentID = userModel.AssignmentID,
@@ -63,13 +65,27 @@ namespace PrometheusWeb.Services.Services
             
             try
             {
+                //save changes to DB
                 db.Assignments.Add(assignment);
                 db.SaveChanges();
+            }
+            catch (DbUpdateException ex)
+            {
+                //check the constraints if id already assigned
+                if (ex.InnerException.InnerException.Message.Contains("UQ__Assignments__"))
+                {
+                    throw new PrometheusWebException("Assignment Already Assigned");
+                }
+                else
+                {
+                    throw;
+                }
             }
             catch (Exception)
             {
                 throw;
             }
+
 
             return true;
         }
@@ -131,7 +147,7 @@ namespace PrometheusWeb.Services.Services
             {
                 AssignmentID = assignment.AssignmentID,
                 HomeWorkID = assignment.HomeWorkID,
-                CourseID = assignment.CourseID,
+                CourseID =(int) assignment.CourseID,
                 TeacherID = assignment.TeacherID
             };
         }

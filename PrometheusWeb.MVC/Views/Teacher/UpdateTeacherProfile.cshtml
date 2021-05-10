@@ -163,10 +163,10 @@
         padding: 0px;
     }
 </style>
-<h2>Update Teacher</h2>
+<h2>My Profiler</h2>
 
 <div style="padding-left:700px; ">
-    <h2 style="padding-left:7%;">Edit Teacher</h2>
+    <h2 style="padding-left:2%;">Update My Profile</h2>
 </div>
 @using (Html.BeginForm("UpdateTeacherProfile", "Teacher", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
@@ -222,7 +222,9 @@
     </div>
     <div class="form-group" style="padding-left:750px">
         <input type="submit" value="Submit" class="btn-primary" />
-        <input type="reset" value="Reset" class="btn-danger" />
+        <button class="btn btn-primary " style="margin-right:1%; color:white">
+            @Html.ActionLink("Teacher Menu", "Index", "Teacher", null, new { @style = "color:White;" })
+        </button>
     </div>
 }
 <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />

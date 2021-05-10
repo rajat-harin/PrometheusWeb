@@ -29,7 +29,7 @@ namespace PrometheusWeb.MVC.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -41,9 +41,9 @@ namespace PrometheusWeb.MVC.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -116,7 +116,7 @@ namespace PrometheusWeb.MVC.Controllers
 
                 HttpResponseMessage result = httpClient.PostAsync(getTokenUrl, content).Result;
                 HttpResponseMessage userData = httpClient.GetAsync("https://localhost:44375/api/Users/").Result;
-                
+
                 string resultContent = result.Content.ReadAsStringAsync().Result;
                 string userDataContent = userData.Content.ReadAsStringAsync().Result;
                 if (result.IsSuccessStatusCode && userData.IsSuccessStatusCode)
@@ -130,9 +130,9 @@ namespace PrometheusWeb.MVC.Controllers
                     options.IsPersistent = true;
                     options.ExpiresUtc = DateTime.UtcNow.AddSeconds(token.ExpiresIn);
                     int ID;
-                    if(user.Role.Equals("student"))
+                    if (user.Role.Equals("student"))
                     {
-                        HttpResponseMessage ResfromStudent = httpClient.GetAsync("https://localhost:44375/api/Student/GetID/?userID="+model.UserID).Result;
+                        HttpResponseMessage ResfromStudent = httpClient.GetAsync("https://localhost:44375/api/Student/GetID/?userID=" + model.UserID).Result;
                         string resultID = ResfromStudent.Content.ReadAsStringAsync().Result;
                         ID = JsonConvert.DeserializeObject<int>(resultID);
 
@@ -155,11 +155,11 @@ namespace PrometheusWeb.MVC.Controllers
                     Request.GetOwinContext().Authentication.SignIn(options, identity);
 
 
-                    if(user.Role.Equals("admin"))
+                    if (user.Role.Equals("admin"))
                     {
                         return RedirectToAction("Index", "Admin");
                     }
-                    else if(user.Role.Equals("teacher"))
+                    else if (user.Role.Equals("teacher"))
                     {
                         return RedirectToAction("Index", "Teacher");
                     }
@@ -168,7 +168,7 @@ namespace PrometheusWeb.MVC.Controllers
                         return RedirectToAction("Index", "Student");
                     }
 
-                    
+
                 }
                 else
                 {
@@ -206,7 +206,7 @@ namespace PrometheusWeb.MVC.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -241,8 +241,8 @@ namespace PrometheusWeb.MVC.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
@@ -336,40 +336,43 @@ namespace PrometheusWeb.MVC.Controllers
         }
 
         //
-        // GET: /Account/ForgotPassword
+        // Post: /Account/ForgotPassword
         [AllowAnonymous]
-        public ActionResult ForgotPassword()
+        [HttpPost]
+        public ActionResult ForgotPassword(AdminUserModel guest)
         {
-            return View();
+            return RedirectToAction("ChangePassword", "Account", new { UserID = guest.UserID });
         }
 
         //
-        // POST: /Account/ForgotPassword
-        [HttpPost]
+        // GET: /Account/ForgotPassword
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ForgotPasswordAsync(string id)
+        [HttpGet]
+
+        public ActionResult ForgotPassword()
         {
-            string Baseurl = "https://localhost:44375/";
-            List<User> users = new List<User>();
+            return View(new AdminUserModel());
+        }
+        // GET: /Account/ForgotPassword
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<ActionResult> ChangePassword(AdminUserModel guest)
+        {
+            //Hosted web API REST Service base url  
+            const string Baseurl = "https://localhost:44375/";
+            List<AdminUserModel> users = new List<AdminUserModel>();
+            AdminUserModel user = new AdminUserModel();
 
             using (var client = new HttpClient())
             {
-                var list = new List<string>() { "What is your Pet Name?", "What is your Nick Name", "What is your School Name?" };
-                ViewBag.list = list;
 
-                //Getting Required Data from Identity(App Cookie)
-                var identity = (ClaimsIdentity)User.Identity;
-
-                var token = identity.Claims.Where(c => c.Type == "AcessToken")
-                            .Select(c => c.Value).FirstOrDefault();
                 //Passing service base url  
                 client.BaseAddress = new Uri(Baseurl);
 
 
                 client.DefaultRequestHeaders.Clear();
 
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
 
                 //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -377,22 +380,39 @@ namespace PrometheusWeb.MVC.Controllers
                 try
                 {
                     //Sending request to find web api REST service resource Get:Students using HttpClient  
-                    HttpResponseMessage ResFromUsers = await client.GetAsync("api/Users/");
+                    HttpResponseMessage ResFromCourses = await client.GetAsync("api/Users/");
 
 
                     //Checking the response is successful or not which is sent using HttpClient  
-                    if (ResFromUsers.IsSuccessStatusCode)
+                    if (ResFromCourses.IsSuccessStatusCode)
                     {
                         //Storing the response details recieved from web api   
-                        var userResponse = ResFromUsers.Content.ReadAsStringAsync().Result;
+                        var userResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
 
 
                         //Deserializing the response recieved from web api and storing into the list  
-                        users = JsonConvert.DeserializeObject<List<User>>(userResponse);
-                        //if (users.Where(list.Exists("UserID")))
-                        //{
+                        users = JsonConvert.DeserializeObject<List<AdminUserModel>>(userResponse);
+                        user = users.Where(x => x.UserID.Equals(guest.UserID)).SingleOrDefault();
 
-                        //}
+                        if (guest.SecurityAnswer.Equals(user.SecurityAnswer))
+                        {
+
+                            user.Password = guest.Password;
+                            HttpResponseMessage Res = await client.PutAsJsonAsync("api/Users/"+user.UserID, user);
+                            if (Res.IsSuccessStatusCode)
+                            {
+                                TempData["SuccessMessage"] = "Password Updated Successfully";
+                            }
+                            else
+                            {
+                                TempData["ErrorMessage"] = "Password Updation Failed";
+                            }
+
+                        }
+                        else
+                        {
+                            TempData["ErrorMessage"] = "Wrong Answer!";
+                        }
                     }
                 }
                 catch (Exception)
@@ -400,67 +420,104 @@ namespace PrometheusWeb.MVC.Controllers
                     return new HttpStatusCodeResult(500);
                 }
 
-                return View();
+                //returning the employee list to view  
+                return View(user);
             }
-            /*
-            if (ModelState.IsValid)
+        }
+
+
+
+        //
+        // GET: /Account/ResetPassword
+
+        [AllowAnonymous]
+
+        public ActionResult ChangePassword(string userID)
+        {
+            /*User user = new User();
+            if (model.UserID != null)
             {
-                var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Users/" + model.UserID, model).Result;
+                TempData["SuccessMessage"] = "Password Changed Successfully";
+            }
+            return RedirectToAction("Login");*/
+
+            //Hosted web API REST Service base url  
+            const string Baseurl = "https://localhost:44375/";
+            List<AdminUserModel> users = new List<AdminUserModel>();
+            AdminUserModel user = new AdminUserModel();
+
+            using (var client = new HttpClient())
+            {
+
+                //Passing service base url  
+                client.BaseAddress = new Uri(Baseurl);
+
+
+                client.DefaultRequestHeaders.Clear();
+
+
+
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                try
                 {
-                    // Don't reveal that the user does not exist or is not confirmed
-                    return View("ForgotPasswordConfirmation");
+                    //Sending request to find web api REST service resource Get:Students using HttpClient  
+                    HttpResponseMessage ResFromCourses = client.GetAsync("api/Users/").Result;
+
+
+                    //Checking the response is successful or not which is sent using HttpClient  
+                    if (ResFromCourses.IsSuccessStatusCode)
+                    {
+                        //Storing the response details recieved from web api   
+                        var userResponse = ResFromCourses.Content.ReadAsStringAsync().Result;
+
+
+                        //Deserializing the response recieved from web api and storing into the list  
+                        users = JsonConvert.DeserializeObject<List<AdminUserModel>>(userResponse);
+                        user = users.Where(x => x.UserID.Equals(userID)).SingleOrDefault();
+                        if(user!=null)
+                        {
+                            user.SecurityAnswer = String.Empty;
+                            user.Password = String.Empty;
+                        }
+                        
+                    }
+                }
+                catch (Exception)
+                {
+                    return new HttpStatusCodeResult(500);
                 }
 
-                // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                // Send an email with this link
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                //returning the employee list to view  
+                return View(user);
             }
-            */
         }
+        /*
+        if (ModelState.IsValid)
+        {
+            var user = await UserManager.FindByNameAsync(model.Email);
+            if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+            {
+                // Don't reveal that the user does not exist or is not confirmed
+                return View("ForgotPasswordConfirmation");
+            }
+
+            // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
+            // Send an email with this link
+            // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+            // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
+            // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+            // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+        }
+        */
 
         //
         // GET: /Account/ForgotPasswordConfirmation
         [AllowAnonymous]
         public ActionResult ForgotPasswordConfirmation()
         {
-            return View();
-        }
-
-        //
-        // GET: /Account/ResetPassword
-        [AllowAnonymous]
-        public ActionResult ResetPassword(string code)
-        {
-            return code == null ? View("Error") : View();
-        }
-
-        //
-        // POST: /Account/ResetPassword
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-            var user = await UserManager.FindByNameAsync(model.Email);
-            if (user == null)
-            {
-                // Don't reveal that the user does not exist
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
-            }
-            var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
-            if (result.Succeeded)
-            {
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
-            }
-            AddErrors(result);
             return View();
         }
 

@@ -157,18 +157,18 @@ namespace PrometheusWeb.MVC.Controllers.Tests
 
         }
 
-        [TestMethod()]
-        public void EnrolledStudentTest()
-        {
-            //Arrange
-            var controller = new StudentController();
+        //[TestMethod()]
+        //public void EnrolledStudentTest()
+        //{
+        //    //Arrange
+        //    var controller = new StudentController();
           
-            //Act
-            var result = controller.EnrolledStudents();
-            //Assert
-            Assert.IsNotNull(result);
+        //    //Act
+        //    var result = controller.EnrolledStudents();
+        //    //Assert
+        //    Assert.IsNotNull(result);
 
-        }
+        //}
 
        
         /*

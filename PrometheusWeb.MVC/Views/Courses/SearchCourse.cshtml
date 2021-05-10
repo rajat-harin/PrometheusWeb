@@ -3,6 +3,8 @@
 @{
     ViewBag.Title = "SearchCourse";
 }
+
+<h2>Search Course</h2>
 <style>
     table {
         width: 150px;
@@ -38,7 +40,11 @@
 <body style="background:#d9d9dad9">
 </body>
 <div class="container" style="background:#f8f8f6">
+    <h2 style="padding-left:35%">Search Courses</h2>
     <p>
+        <button class="btn btn-primary " style="margin-right:1%; color:white">
+            @Html.ActionLink("Admin Menu", "Index", "Admin", null, new { @style = "color:White;" })
+        </button>
         @*@Html.ActionLink("Create New", "Create")*@
         @using (Html.BeginForm("SearchCourse", "Courses", FormMethod.Get))
         {
@@ -47,7 +53,6 @@
         }
     </p>
     <table class="table">
-        <h2 style="padding-left:33%;">Search Course</h2>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.CourseID)
