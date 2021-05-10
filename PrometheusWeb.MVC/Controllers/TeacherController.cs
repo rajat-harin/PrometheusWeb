@@ -27,7 +27,7 @@ namespace PrometheusWeb.MVC.Controllers
             return View();
         }
 
-        // GET: Admin/ViewTeachers
+        // GET: Teacher/ViewTeachers
         [Authorize(Roles = "admin")]
         public async Task<ActionResult> ViewTeachers()
         {
@@ -79,7 +79,7 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
-        // POST: Admin/AddTeacher
+        // POST: Teacher/AddTeacher
         [Authorize(Roles = "admin")]
         public ActionResult AddTeacher(int id = 0)
         {
@@ -218,7 +218,7 @@ namespace PrometheusWeb.MVC.Controllers
 
         }
 
-        // DELETE: Admin/DeleteTeacher
+        // DELETE: Teacher/DeleteTeacher
         [Authorize(Roles = "admin")]
         public ActionResult DeleteTeacher(int id)
         {
@@ -247,7 +247,6 @@ namespace PrometheusWeb.MVC.Controllers
                 }
                 catch (Exception)
                 {
-
                     return new HttpStatusCodeResult(500);
                 }
 
@@ -255,7 +254,7 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
-        // POST: Admin/EditTeacherProfile
+        // POST: Teacher/UpdateTeacher
         [Authorize(Roles = "admin")]
         public ActionResult UpdateTeacher(int id = 0)
         {
@@ -500,6 +499,22 @@ namespace PrometheusWeb.MVC.Controllers
                 {
                     if (teacher.TeacherID != 0)
                     {
+                        if (teacher.DOB.HasValue)
+                        {
+                            TimeSpan diff = DateTime.Now - (DateTime)teacher.DOB;
+                            if (diff.Days == 0)
+                            {
+                                TempData["ErrorMessage"] = "DOB cannot be same with CurrentDate";
+                                ViewBag.Message = "DOB cannot be same with CurrentDate";
+                                return View();
+                            }
+                            if (teacher.DOB > DateTime.Now)
+                            {
+                                TempData["ErrorMessage"] = "DOB cannot be CurrentDate or after CurrentDate";
+                                ViewBag.Message = "DOB cannot be same with CurrentDate";
+                                return View();
+                            }
+                        }
                         //Sending request to Post web api REST service resource using WebAPIClient and getting the result  
                         HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Teachers/" + teacher.TeacherID, teacher).Result;
                         TempData["SuccessMessage"] = "Profile Updated Successfully";

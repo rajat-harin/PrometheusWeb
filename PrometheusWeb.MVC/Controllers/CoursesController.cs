@@ -134,11 +134,11 @@ namespace PrometheusWeb.MVC.Controllers
                 {
                     return new HttpStatusCodeResult(500);
                 }
-                return RedirectToAction("ViewCourses");
+                return RedirectToAction("AddCourse");
             }
         }
 
-        // POST: Admin/EditTeacherProfile
+        // POST: Courses/UpdateCourse
         [Authorize(Roles = "admin")]
         public ActionResult UpdateCourse(int id = 0)
         {
@@ -232,7 +232,7 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
-        // DELETE: Course/Delete
+        // DELETE: Courses/DeleteCourse
         [Authorize(Roles = "admin")]
         public ActionResult DeleteCourse(int id)
         {
@@ -257,16 +257,16 @@ namespace PrometheusWeb.MVC.Controllers
                 {
                     HttpResponseMessage response = GlobalVariables.WebApiClient.DeleteAsync("api/Courses/" + id.ToString()).Result;
                     TempData["SuccessMessage"] = "Course Deleted Successfully";
-                    return RedirectToAction("ViewCourses");
                 }
                 catch (Exception)
                 {
                     return new HttpStatusCodeResult(500);
                 }
+                return RedirectToAction("ViewCourses");
             }    
         }
 
-        // GET: Course/ViewCourses
+        // GET: Courses/ViewCourses
         [Authorize(Roles = "admin")]
         public async Task<ActionResult> ViewCourses()
         {

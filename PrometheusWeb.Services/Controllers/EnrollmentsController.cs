@@ -26,7 +26,6 @@ namespace PrometheusWeb.Services.Controllers
         }
 
         // GET: api/Enrollments
-        
         public IQueryable<EnrollmentUserModel> GetEnrollments()
         {
             try
