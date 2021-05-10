@@ -56,6 +56,7 @@ namespace PrometheusWeb.MVC.Controllers
         }
 
         [Authorize]
+        [HttpGet]
         // GET: Homework/ViewHomeworks
         public async Task<ActionResult> ViewHomeworks()
         {
@@ -107,6 +108,7 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
+
         [Authorize(Roles = "admin,teacher")]
         public ActionResult AddHomeworks(int id = 0)
         {
@@ -123,12 +125,13 @@ namespace PrometheusWeb.MVC.Controllers
                 //clear the default request headers
                 client.DefaultRequestHeaders.Clear();
 
+                //get the token
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
                 try
                 {
                     if (id == 0)
-                        return View(new HomeworkUserModel());
+                        return View(new HomeworkUserModel());//move to new view page
                 }
                 catch(Exception)
                 {
@@ -254,12 +257,9 @@ namespace PrometheusWeb.MVC.Controllers
                             .Select(c => c.Value).FirstOrDefault();
                 //Passing service base url  
                 client.BaseAddress = new Uri(Baseurl);
-
-
                 client.DefaultRequestHeaders.Clear();
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
 
                 try
                 {
@@ -289,8 +289,6 @@ namespace PrometheusWeb.MVC.Controllers
                         {
                             TempData["SuccessMessage"] = "Homework Updated Successfully";
                         }
-
-                        
                     }
 
                 }
