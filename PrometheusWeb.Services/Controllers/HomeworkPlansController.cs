@@ -25,7 +25,6 @@ namespace PrometheusWeb.Services.Controllers
         }
 
         // GET: api/HomeworkPlans
-        [Authorize(Roles ="student")]
         public IQueryable<HomeworkPlanUserModel> GetHomeworkPlans()
         {
             return _homeworkPlanService.GetHomeworkPlans();
@@ -33,7 +32,6 @@ namespace PrometheusWeb.Services.Controllers
 
         // GET: api/HomeworkPlansByStudentID
         [Route("api/HomeworkPlansByStudentID/{StudentID}")]
-        [Authorize(Roles = "student")]
         public IQueryable<HomeworkPlanUserModel> GetHomeworkPlans(int StudentID)
         {
             return _homeworkPlanService.GetHomeworkPlans(StudentID);
@@ -42,7 +40,6 @@ namespace PrometheusWeb.Services.Controllers
 
 
         // GET: api/HomeworkPlans/5
-        [Authorize(Roles = "student")]
         [ResponseType(typeof(HomeworkPlanUserModel))]
         public IHttpActionResult GetHomeworkPlan(int id)
         {
@@ -57,7 +54,6 @@ namespace PrometheusWeb.Services.Controllers
 
         // PUT: api/HomeworkPlans/5
         [ResponseType(typeof(void))]
-        [Authorize(Roles = "student")]
         public IHttpActionResult PutHomeworkPlan(int id, HomeworkPlanUserModel homeworkPlan)
         {
             bool result;
@@ -87,7 +83,6 @@ namespace PrometheusWeb.Services.Controllers
         // POST: api/HomeworkPlans
      
         [ResponseType(typeof(HomeworkPlan))]
-        [Authorize(Roles = "student")]
         public IHttpActionResult PostHomeworkPlan(HomeworkPlanUserModel homeworkPlan)
         {
             var result = _homeworkPlanService.AddHomeworkPlan(homeworkPlan);
@@ -101,7 +96,6 @@ namespace PrometheusWeb.Services.Controllers
         [HttpPost]
         [Route("api/HomeworkPlans/Many")]
         [ResponseType(typeof(HomeworkPlan))]
-        [Authorize(Roles = "student")]
         public IHttpActionResult PostHomeworkPlans(List<HomeworkPlanUserModel> homeworkPlans)
         {
             var result = _homeworkPlanService.AddHomeworkPlans(homeworkPlans.AsQueryable());
@@ -113,7 +107,6 @@ namespace PrometheusWeb.Services.Controllers
 
         // DELETE: api/HomeworkPlans/5
         [ResponseType(typeof(HomeworkPlan))]
-        [Authorize(Roles = "student")]
         public IHttpActionResult DeleteHomeworkPlan(int id)
         {
             HomeworkPlanUserModel homeworkPlan = _homeworkPlanService.DeleteHomeworkPlan(id);
@@ -123,7 +116,6 @@ namespace PrometheusWeb.Services.Controllers
 
         // DELETE: api/HomeworkPlansByStudentID/5
         [ResponseType(typeof(bool))]
-        [Authorize(Roles = "student")]
         public IHttpActionResult DeleteHomeworkPlans(int StudentID)
         {
             var result = _homeworkPlanService.DeleteHomeworkPlans(StudentID);

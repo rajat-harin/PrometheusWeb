@@ -576,6 +576,22 @@ namespace PrometheusWeb.MVC.Controllers
                 {
                     if (student.StudentID != 0)
                     {
+                        if (student.DOB.HasValue)
+                        {
+                            TimeSpan diff = DateTime.Now - (DateTime)student.DOB;
+                            if (diff.Days == 0)
+                            {
+                                TempData["ErrorMessage"] = "DOB cannot be same with CurrentDate";
+                                ViewBag.Message = "DOB cannot be same with CurrentDate";
+                                return View();
+                            }
+                            if (student.DOB > DateTime.Now)
+                            {
+                                TempData["ErrorMessage"] = "DOB cannot be CurrentDate or after CurrentDate";
+                                ViewBag.Message = "DOB cannot be same with CurrentDate";
+                                return View();
+                            }
+                        }
                         //Sending request to Post web api REST service resource using WebAPIClient and getting the result  
                         HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("api/Students/" + student.StudentID, student).Result;
                         TempData["SuccessMessage"] = "Profile Updated Successfully";

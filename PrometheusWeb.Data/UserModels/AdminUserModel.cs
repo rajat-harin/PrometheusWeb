@@ -46,7 +46,7 @@ namespace PrometheusWeb.Data.UserModels
         [Phone]
         [StringLength(10, ErrorMessage = "The Phone Number should be 10 digits only.", MinimumLength = 10 )]
         [RegularExpression(@"^[0-9]{10}$",
-         ErrorMessage = "Characters are not allowed.")]
+         ErrorMessage = "Characters are not allowed and 10 digits only ")]
         [Display(Name = "Phone Number")]
         public string MobileNo { get; set; }
         

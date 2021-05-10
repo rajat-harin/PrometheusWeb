@@ -134,7 +134,7 @@ namespace PrometheusWeb.MVC.Controllers
                 {
                     return new HttpStatusCodeResult(500);
                 }
-                return RedirectToAction("ViewCourses");
+                return RedirectToAction("AddCourse");
             }
         }
 
@@ -257,12 +257,12 @@ namespace PrometheusWeb.MVC.Controllers
                 {
                     HttpResponseMessage response = GlobalVariables.WebApiClient.DeleteAsync("api/Courses/" + id.ToString()).Result;
                     TempData["SuccessMessage"] = "Course Deleted Successfully";
-                    return RedirectToAction("ViewCourses");
                 }
                 catch (Exception)
                 {
                     return new HttpStatusCodeResult(500);
                 }
+                return RedirectToAction("ViewCourses");
             }    
         }
 
