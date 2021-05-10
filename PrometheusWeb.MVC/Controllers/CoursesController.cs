@@ -138,7 +138,7 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
-        // POST: Admin/EditTeacherProfile
+        // POST: Courses/UpdateCourse
         [Authorize(Roles = "admin")]
         public ActionResult UpdateCourse(int id = 0)
         {
@@ -232,7 +232,7 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
-        // DELETE: Course/Delete
+        // DELETE: Courses/DeleteCourse
         [Authorize(Roles = "admin")]
         public ActionResult DeleteCourse(int id)
         {
@@ -266,7 +266,7 @@ namespace PrometheusWeb.MVC.Controllers
             }    
         }
 
-        // GET: Course/ViewCourses
+        // GET: Courses/ViewCourses
         [Authorize(Roles = "admin")]
         public async Task<ActionResult> ViewCourses()
         {

@@ -29,7 +29,7 @@ namespace PrometheusWeb.MVC.Controllers
             return View();
         }
 
-        // POST: Admin/AddStudent
+        // POST: Student/AddStudent
         [Authorize(Roles = "admin")]
         public ActionResult AddStudent(int id = 0)
         {
@@ -165,7 +165,7 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
-        // GET: Admin/ViewStudents
+        // GET: Student/ViewStudents
         [Authorize(Roles = "admin")]
         public async Task<ActionResult> ViewStudents()
         {
@@ -216,7 +216,7 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
-        // DELETE: Admin/DeleteStudent
+        // DELETE: Student/DeleteStudent
         [Authorize(Roles = "admin")]
         public ActionResult DeleteStudent(int id)
         {
@@ -250,7 +250,7 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
-        // POST: Admin/EditStudent
+        // POST: Student/UpdateStudent
         [Authorize(Roles = "admin")]
         public ActionResult UpdateStudent(int id = 0)
         {

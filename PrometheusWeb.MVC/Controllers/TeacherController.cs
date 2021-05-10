@@ -27,7 +27,7 @@ namespace PrometheusWeb.MVC.Controllers
             return View();
         }
 
-        // GET: Admin/ViewTeachers
+        // GET: Teacher/ViewTeachers
         [Authorize(Roles = "admin")]
         public async Task<ActionResult> ViewTeachers()
         {
@@ -79,7 +79,7 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
-        // POST: Admin/AddTeacher
+        // POST: Teacher/AddTeacher
         [Authorize(Roles = "admin")]
         public ActionResult AddTeacher(int id = 0)
         {
@@ -218,7 +218,7 @@ namespace PrometheusWeb.MVC.Controllers
 
         }
 
-        // DELETE: Admin/DeleteTeacher
+        // DELETE: Teacher/DeleteTeacher
         [Authorize(Roles = "admin")]
         public ActionResult DeleteTeacher(int id)
         {
@@ -247,7 +247,6 @@ namespace PrometheusWeb.MVC.Controllers
                 }
                 catch (Exception)
                 {
-
                     return new HttpStatusCodeResult(500);
                 }
 
@@ -255,7 +254,7 @@ namespace PrometheusWeb.MVC.Controllers
             }
         }
 
-        // POST: Admin/EditTeacherProfile
+        // POST: Teacher/UpdateTeacher
         [Authorize(Roles = "admin")]
         public ActionResult UpdateTeacher(int id = 0)
         {
